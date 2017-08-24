@@ -125,3 +125,29 @@ def test_dataframe_data_types():
 
     assert type(df[['first_col']]) == CustomDataFrame
     assert type(df[['first_col', 'second_col']]) == CustomDataFrame
+
+
+def test_dataframe_sub_frame_data_types():
+    s1 = CustomSeries([pd.Series([1, 2, 3], index=['a', 'b', 'c']),
+                       pd.Series([4, 5, 6], index=['d', 'e', 'g'])])
+    s2 = CustomSeries([1, 2, 3])
+    s3 = CustomSeries([{"k1": "v1"}, {"k2": 'v2'}])
+    s4 = CustomSeries(['f', 's', 't'])
+
+    df = CustomDataFrame({
+        'first_col': s1,
+        'second_col': s2,
+        'third_col': s3,
+        'fourth_col': s4
+    })
+
+    sub_df = df.loc[:2]
+
+    assert type(sub_df) == CustomDataFrame
+    assert sub_df['first_col'].data_type == pd.Series
+    assert sub_df['second_col'].data_type == np.int64
+    assert sub_df['third_col'].data_type == dict
+    assert sub_df['fourth_col'].data_type == str
+
+    assert type(sub_df[['first_col']]) == CustomDataFrame
+    assert type(sub_df[['first_col', 'second_col']]) == CustomDataFrame
