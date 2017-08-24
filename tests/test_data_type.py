@@ -31,6 +31,23 @@ def test_series_type_primiteves():
     assert s2.data_type == str
 
 
+def test_series_different_data_type_exception():
+    try:
+        s1 = CustomSeries([
+            pd.Series([1, 2, 3], index=['a', 'b', 'c']),
+            pd.DataFrame({})
+        ])
+
+        s2 = CustomSeries([
+            1, 2, 'abs'
+        ])
+    except ValueError:
+        assert True
+        return
+
+    assert False
+
+
 def test_series_type_data_frame():
     s = CustomSeries([
         pd.DataFrame({
@@ -87,4 +104,24 @@ def test_series_custom_class_type():
     assert sub_s.data_type == MySubClass
 
 
+def test_dataframe_data_types():
+    s1 = CustomSeries([pd.Series([1, 2, 3], index=['a', 'b', 'c']),
+                       pd.Series([4, 5, 6], index=['d', 'e', 'g'])])
+    s2 = CustomSeries([1, 2, 3])
+    s3 = CustomSeries([{"k1": "v1"}, {"k2": 'v2'}])
+    s4 = CustomSeries(['f', 's', 't'])
 
+    df = CustomDataFrame({
+        'first_col': s1,
+        'second_col': s2,
+        'third_col': s3,
+        'fourth_col': s4
+    })
+
+    assert df['first_col'].data_type == pd.Series
+    assert df['second_col'].data_type == np.int64
+    assert df['third_col'].data_type == dict
+    assert df['fourth_col'].data_type == str
+
+    assert type(df[['first_col']]) == CustomDataFrame
+    assert type(df[['first_col', 'second_col']]) == CustomDataFrame
