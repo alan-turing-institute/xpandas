@@ -43,9 +43,27 @@ class CustomSeries(pd.Series):
             raise ValueError('Not all elements the same type')
 
         if data_type is not None:
-            self.data_type = data_type
+            self._data_type = data_type
         else:
-            self.data_type = type(data._values[0])
+            self._data_type = type(data._values[0])
+
+    def apply(self, *args, **kwargs):
+        func = kwargs.get('func')
+        if func is None:
+            func = args[0]
+
+        print(func)
+
+    @property
+    def data_type(self):
+        local_data_type = self._data_type
+        first_element_data_type = type(self[0])
+        self._data_type = first_element_data_type
+        return self._data_type
+
+    @data_type.setter
+    def data_type(self, data_type):
+        self._data_type = data_type
 
     def to_pandas_series(self):
         # TODO
