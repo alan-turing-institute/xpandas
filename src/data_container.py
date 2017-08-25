@@ -52,11 +52,21 @@ class CustomSeries(pd.Series):
         if func is None:
             func = args[0]
 
-        print(func)
+        mapped_series = self.map(func)
+        mapped_data_type = mapped_series.data_type
+
+        if mapped_data_type == dict:
+            custom_df = CustomDataFrame.from_records(mapped_series.values)
+            series_name = self.name
+
+            if series_name is not None:
+                custom_df.columns = custom_df.columns.map(lambda x: '{}_{}'.format(series_name, x))
+            return custom_df
+
+        return mapped_series
 
     @property
     def data_type(self):
-        local_data_type = self._data_type
         first_element_data_type = type(self[0])
         self._data_type = first_element_data_type
         return self._data_type
