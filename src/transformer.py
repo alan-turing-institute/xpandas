@@ -33,15 +33,19 @@ class CustomTransformer(BaseTransformer):
     def _check_input(self, input_data):
         if type(input_data) != CustomDataFrame and type(input_data) != CustomSeries:
             raise ValueError('X must be CustomDataFrame or CustomSeries type')
+        elif self.data_types is not None and input_data.data_type not in self.data_types:
+            raise ValueError('Estimator does not support {} type'.format(input_data.data_type))
 
-    def fit(self, X, **kwargs):
-        self._check_input(X)
+    def fit(self, X=None, **kwargs):
+        if X is not None:
+            self._check_input(X)
         return self
 
     def _transform_series(self, custom_series):
         return custom_series.apply(self.transform_func)
 
     def _transform_data_frame(self, custom_data_frame):
+        # TODO
         pass
 
     def transform(self, X):
@@ -56,17 +60,25 @@ class CustomTransformer(BaseTransformer):
         return self._transform_data_frame(X)
 
 
-class TimeSeriesTransformer(BaseTransformer):
-    def __init__(self, **params):
-        self.accepted_fields = [
+class TimeSeriesTransformer(CustomTransformer):
+    def __init__(self, **kwargs):
+        accepted_types = [
             pd.Series
         ]
 
-    def fit(self, X, y=None):
-        return self
+        def series_transform(series):
+            return {
+                'mean': series.mean(),
+                'std': series.std()
+            }
 
-    def transform(self, X):
-        pass
+        super(TimeSeriesTransformer, self).__init__(data_types=accepted_types,
+                                                    columns=None,
+                                                    transform_function=series_transform)
+
+    def fit(self, X=None, **kwargs):
+        super(TimeSeriesTransformer, self).fit(X, **kwargs)
+        return self
 
 
 class PipeLineChain(BaseTransformer):
