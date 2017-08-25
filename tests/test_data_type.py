@@ -22,7 +22,7 @@ def test_series_type_primiteves():
         1, 2, 3
     ])
 
-    assert s1.data_type == int
+    assert s1.data_type == np.int64
 
     s2 = CustomSeries([
         'a', 'b', 'c'
@@ -151,3 +151,25 @@ def test_dataframe_sub_frame_data_types():
 
     assert type(sub_df[['first_col']]) == CustomDataFrame
     assert type(sub_df[['first_col', 'second_col']]) == CustomDataFrame
+
+
+def test_series_map_transformer():
+    s = CustomSeries([
+        pd.Series([1, 2, 3], index=['a', 'b', 'c']),
+        pd.Series([4, 5, 6], index=['d', 'e', 'g'])
+    ])
+
+    func = lambda series: series + 1
+    mapped_s = s.map(func)
+    assert mapped_s.data_type == pd.Series
+    assert mapped_s[0].equals(pd.Series([2, 3, 4], index=['a', 'b', 'c']))
+
+    func = lambda series: series.mean()
+    mapped_s = s.map(func)
+    assert mapped_s.data_type == np.float64
+
+    # print('Type {}'.format(s.data_type))
+    # assert type(mapped_s) == CustomSeries
+
+    # print(type(mapped_s[0]))
+    # print(mapped_s.data_type)
