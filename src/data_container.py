@@ -80,6 +80,10 @@ class CustomSeries(pd.Series):
         # Transform self to pandas.Series if data_type is a primitive type
         raise NotImplemented()
 
+    def __str__(self):
+        s = super(CustomSeries, self).__str__()
+        return '{}\ndata_type: {}'.format(s, self.data_type)
+
 
 class CustomDataFrame(pd.DataFrame):
     @property
