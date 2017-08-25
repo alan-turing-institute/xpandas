@@ -47,6 +47,11 @@ class CustomSeries(pd.Series):
         else:
             self.data_type = type(data._values[0])
 
+    def to_pandas_series(self):
+        # TODO
+        # Transform self to pandas.Series if data_type is a primitive type
+        raise NotImplemented()
+
 
 class CustomDataFrame(pd.DataFrame):
     @property
@@ -80,3 +85,7 @@ class CustomDataFrame(pd.DataFrame):
         ]
 
         return self[columns_to_select]
+
+    def to_pandas_dataframe(self):
+        # TODO return Pandas object
+        raise NotImplemented()
