@@ -168,8 +168,13 @@ def test_series_map_transformer():
     mapped_s = s.map(func)
     assert mapped_s.data_type == np.float64
 
-    # print('Type {}'.format(s.data_type))
-    # assert type(mapped_s) == CustomSeries
 
-    # print(type(mapped_s[0]))
-    # print(mapped_s.data_type)
+def test_series_extract_features_with_apply_func():
+    s = CustomSeries([
+        pd.Series([1, 2, 3], index=['a', 'b', 'c']),
+        pd.Series([4, 5, 6], index=['d', 'e', 'g'])
+    ], name='MySuperSeries')
+
+    func = lambda series: {'mean': series.mean(), 'std': series.std()}
+    mapped_s = s.apply(func)
+    assert type(mapped_s) == CustomDataFrame
