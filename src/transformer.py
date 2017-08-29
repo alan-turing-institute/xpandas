@@ -33,8 +33,14 @@ class CustomTransformer(BaseTransformer):
     def _check_input(self, input_data):
         if type(input_data) != MultiDataFrame and type(input_data) != MultiSeries:
             raise ValueError('X must be MultiDataFrame or MultiSeries type')
-        elif self.data_types is not None and input_data.data_type not in self.data_types:
+        elif type(input_data) == MultiSeries and self.data_types is not None \
+                and input_data.data_type not in self.data_types:
             raise ValueError('Estimator does not support {} type'.format(input_data.data_type))
+        elif type(input_data) == MultiDataFrame:
+            data_types = input_data.get_data_types()
+            intersection = set(self.data_types) & set(data_types)
+            if len(intersection) == 0:
+                raise ValueError('No column for given data type. Available columns {}'.format(data_types))
 
     def fit(self, X=None, **kwargs):
         if X is not None:
@@ -45,8 +51,18 @@ class CustomTransformer(BaseTransformer):
         return custom_series.apply(self.transform_func)
 
     def _transform_data_frame(self, custom_data_frame):
-        # TODO
-        pass
+        sub_df, columns = custom_data_frame.get_columns_of_type(self.data_types)
+        transformers_df = custom_data_frame.copy()
+        print(columns)
+        for col in columns:
+            transformed_series = self._transform_series(transformers_df[col])
+            if type(transformed_series) == MultiSeries:
+                transformers_df[col] = transformed_series
+            else:
+                transformers_df.drop(col, inplace=True, axis=1)
+                transformers_df = pd.concat([transformers_df, transformed_series], axis=1)
+
+        return transformers_df
 
     def transform(self, X):
         self._check_input(X)
