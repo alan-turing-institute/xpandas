@@ -20,19 +20,19 @@ class ObjectWrapper(object):
         self.type = type(obj)
 
 
-class CustomSeries(pd.Series):
+class MultiSeries(pd.Series):
     _metadata = ['data_type']
 
     @property
     def _constructor(self):
-        return CustomSeries
+        return MultiSeries
 
     @property
     def _constructor_expanddim(self):
-        return CustomDataFrame
+        return MultiDataFrame
 
     def __init__(self, *args, **kwargs):
-        super(CustomSeries, self).__init__(*args, **kwargs)
+        super(MultiSeries, self).__init__(*args, **kwargs)
 
         data = kwargs.get('data')
         if data is None:
@@ -56,7 +56,7 @@ class CustomSeries(pd.Series):
         mapped_data_type = mapped_series.data_type
 
         if mapped_data_type == dict:
-            custom_df = CustomDataFrame.from_records(mapped_series.values)
+            custom_df = MultiDataFrame.from_records(mapped_series.values)
             series_name = self.name
 
             if series_name is not None:
@@ -81,18 +81,18 @@ class CustomSeries(pd.Series):
         raise NotImplemented()
 
     def __str__(self):
-        s = super(CustomSeries, self).__str__()
+        s = super(MultiSeries, self).__str__()
         return '{}\ndata_type: {}'.format(s, self.data_type)
 
 
-class CustomDataFrame(pd.DataFrame):
+class MultiDataFrame(pd.DataFrame):
     @property
     def _constructor(self):
-        return CustomDataFrame
+        return MultiDataFrame
 
     @property
     def _constructor_sliced(self):
-        return CustomSeries
+        return MultiSeries
 
     def __init__(self, *args, **kwargs):
         data = kwargs.get('data')
@@ -106,9 +106,9 @@ class CustomDataFrame(pd.DataFrame):
             data_to_check = data.values()
 
         for d in data_to_check:
-            if not isinstance(d, CustomSeries):
-                raise ValueError('All data must be CustomSeries instances')
-        super(CustomDataFrame, self).__init__(*args, **kwargs)
+            if not isinstance(d, MultiSeries):
+                raise ValueError('All data must be MultiSeries instances')
+        super(MultiDataFrame, self).__init__(*args, **kwargs)
 
     def get_columns_of_type(self, column_type):
         columns_to_select = [

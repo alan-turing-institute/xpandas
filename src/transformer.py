@@ -1,4 +1,4 @@
-from .data_container import CustomDataFrame, CustomSeries
+from .data_container import MultiDataFrame, MultiSeries
 import pandas as pd
 
 
@@ -31,8 +31,8 @@ class CustomTransformer(BaseTransformer):
         self.columns = columns
 
     def _check_input(self, input_data):
-        if type(input_data) != CustomDataFrame and type(input_data) != CustomSeries:
-            raise ValueError('X must be CustomDataFrame or CustomSeries type')
+        if type(input_data) != MultiDataFrame and type(input_data) != MultiSeries:
+            raise ValueError('X must be MultiDataFrame or MultiSeries type')
         elif self.data_types is not None and input_data.data_type not in self.data_types:
             raise ValueError('Estimator does not support {} type'.format(input_data.data_type))
 
@@ -52,10 +52,10 @@ class CustomTransformer(BaseTransformer):
         self._check_input(X)
         x_type = type(X)
 
-        if x_type == CustomSeries:
+        if x_type == MultiSeries:
             return self._transform_series(X)
 
-        # If X is not CustomSeries, then it's CustomDataFrame
+        # If X is not MultiSeries, then it's MultiDataFrame
         # Because of self._check_input function
         return self._transform_data_frame(X)
 
