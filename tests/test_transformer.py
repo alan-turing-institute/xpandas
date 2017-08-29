@@ -7,6 +7,7 @@ from src.data_container import MultiSeries, MultiDataFrame
 from src.transformer import *
 import pandas as pd
 import numpy as np
+from sklearn.pipeline import Pipeline
 
 
 def test_transformer_custom():
@@ -123,3 +124,27 @@ def test_transformer_data_frame():
     transformers_df = data_frame_transformer.transform(df)
 
     assert transformers_df.shape[1] == 6
+
+
+def test_pipeline_transformer_for_series():
+    s1 = MultiSeries([
+        pd.Series(np.random.normal(size=10)),
+        pd.Series(np.random.normal(size=15))
+    ])
+
+    pipeline = PipeLineChain(
+        [
+            ('first_transformer', TimeSeriesWindowTransformer()),
+            ('mean_transformer', TimeSeriesTransformer())
+        ]
+    )
+    pipeline = pipeline.fit(s1)
+    transformed_df = pipeline.transform(s1)
+    print(transformed_df)
+    # pipeline = Pipeline(
+    #     [
+    #         ('first_transformer', TimeSeriesWindowTransformer()),
+    #         ('final_transformer', None)
+    #     ]
+    # )
+    #

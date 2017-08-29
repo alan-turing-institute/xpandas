@@ -53,7 +53,7 @@ class CustomTransformer(BaseTransformer):
     def _transform_data_frame(self, custom_data_frame):
         sub_df, columns = custom_data_frame.get_columns_of_type(self.data_types)
         transformers_df = custom_data_frame.copy()
-        print(columns)
+
         for col in columns:
             transformed_series = self._transform_series(transformers_df[col])
             if type(transformed_series) == MultiSeries:
@@ -118,11 +118,16 @@ class PipeLineChain(BaseTransformer):
             is_ok = False
         return is_ok
 
-    def __init__(self, **params):
-        super(PipeLineChain, self).__init__(**params)
-        transforms = params.get('transforms')
-        if transforms is None:
+
+    @property
+    def transformers(self):
+        return self._transformers
+
+    def __init__(self, *args, **kwargs):
+        transforms = kwargs.get('transforms')
+        if transforms is None and len(args) == 0:
             raise ValueError('Please pass transforms arguments')
+        transforms = args[0]
 
         if isinstance(transforms, list):
             is_ok = self._check_list_of_transforms(transforms)
@@ -134,4 +139,18 @@ class PipeLineChain(BaseTransformer):
         if not is_ok:
             raise TypeError('Wrong value shape of data')
 
-        self.transforms = transforms
+        self._transformers = transforms
+
+    def fit(self, X, **kwargs):
+        self.transforms = [
+            (t_name, t.fit(X))
+            for t_name, t in self._transformers
+        ]
+        return self
+
+    def transform(self, X):
+        transformed_X = X.copy()
+        for t_name, t in self._transformers:
+            transformed_X = t.transform(transformed_X)
+
+        return transformed_X
