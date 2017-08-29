@@ -52,7 +52,8 @@ class MultiSeries(pd.Series):
         if func is None:
             func = args[0]
 
-        mapped_series = self.map(func)
+        mapped_series = self.dropna()
+        mapped_series = mapped_series.map(func, na_action='ignore')
         mapped_data_type = mapped_series.data_type
 
         if mapped_data_type == dict:
@@ -111,12 +112,24 @@ class MultiDataFrame(pd.DataFrame):
         super(MultiDataFrame, self).__init__(*args, **kwargs)
 
     def get_columns_of_type(self, column_type):
+        if type(column_type) != list:
+            column_type = column_type
+
         columns_to_select = [
-            col_name for col_name in self.columns
-            if self[col_name].data_type == column_type
+            col_name
+            for col_name in self
+            if self[col_name].data_type in column_type
         ]
 
-        return self[columns_to_select]
+        return self[columns_to_select], columns_to_select
+
+
+    def get_data_types(self):
+        data_types = [
+            self[column].data_type
+            for column in self
+        ]
+        return data_types
 
     def to_pandas_dataframe(self):
         # TODO return Pandas object
