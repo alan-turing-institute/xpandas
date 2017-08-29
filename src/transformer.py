@@ -76,9 +76,19 @@ class TimeSeriesTransformer(CustomTransformer):
                                                     columns=None,
                                                     transform_function=series_transform)
 
-    def fit(self, X=None, **kwargs):
-        super(TimeSeriesTransformer, self).fit(X, **kwargs)
-        return self
+
+class TimeSeriesWindowTransformer(CustomTransformer):
+    def __init__(self, **kwargs):
+        accepted_types = [
+            pd.Series
+        ]
+
+        def series_transform(series, **params):
+            return series.rolling(window=3).mean()
+
+        super(TimeSeriesWindowTransformer, self).__init__(data_types=accepted_types,
+                                                          columns=None,
+                                                          transform_function=series_transform)
 
 
 class PipeLineChain(BaseTransformer):

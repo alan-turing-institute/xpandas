@@ -4,7 +4,7 @@ here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
 from src.data_container import MultiSeries, MultiDataFrame
-from src.transformer import CustomTransformer, TimeSeriesTransformer
+from src.transformer import *
 import pandas as pd
 import numpy as np
 
@@ -65,3 +65,18 @@ def test_transformer_series_transformer():
     transformed_series = series_transformer.transform(s)
 
     assert type(transformed_series) == MultiDataFrame
+
+
+def test_transformer_series_to_series_transformer():
+    s = MultiSeries([
+        pd.Series(np.random.normal(0, 10, 100)),
+        pd.Series(np.random.uniform(-100, 100, 150)),
+        pd.Series(np.random.random_integers(0, 500, 200))
+    ])
+
+    series_to_series_transformer = TimeSeriesWindowTransformer().fit()
+    transformed_series = series_to_series_transformer.transform(s)
+
+    assert series_to_series_transformer.transform_func(s[0]).equals(transformed_series[0])
+    assert transformed_series.data_type == pd.Series
+    assert type(transformed_series) == MultiSeries
