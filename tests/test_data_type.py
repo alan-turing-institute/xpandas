@@ -106,7 +106,7 @@ def test_series_custom_class_type():
 
 def test_dataframe_data_types():
     s1 = MultiSeries([pd.Series([1, 2, 3], index=['a', 'b', 'c']),
-                       pd.Series([4, 5, 6], index=['d', 'e', 'g'])])
+                      pd.Series([4, 5, 6], index=['d', 'e', 'g'])])
     s2 = MultiSeries([1, 2, 3])
     s3 = MultiSeries([{"k1": "v1"}, {"k2": 'v2'}])
     s4 = MultiSeries(['f', 's', 't'])
@@ -129,7 +129,7 @@ def test_dataframe_data_types():
 
 def test_dataframe_sub_frame_data_types():
     s1 = MultiSeries([pd.Series([1, 2, 3], index=['a', 'b', 'c']),
-                       pd.Series([4, 5, 6], index=['d', 'e', 'g'])])
+                      pd.Series([4, 5, 6], index=['d', 'e', 'g'])])
     s2 = MultiSeries([1, 2, 3])
     s3 = MultiSeries([{"k1": "v1"}, {"k2": 'v2'}])
     s4 = MultiSeries(['f', 's', 't'])
@@ -199,6 +199,49 @@ def test_series_replace_element():
         assert False
 
 
-# TODO
-# Check that it's not possible to change element of MultiSeries of different type
-# http://timeseriesclassification.com/ for data sets
+def test_series_to_pandas_series():
+    s = MultiSeries([
+        pd.Series([1, 2, 3], index=['a', 'b', 'c']),
+        pd.Series([4, 5, 6], index=['d', 'e', 'g'])
+    ], name='MySuperSeries')
+    s = MultiSeries(['a', 'b', 'c'], name='MySuperSeries')
+    s = s.to_pandas_series()
+
+    assert type(s) == pd.Series
+
+
+def test_dataframe_to_pandas_dataframe():
+    s1 = MultiSeries([pd.Series([1, 2, 3], index=['a', 'b', 'c']),
+                      pd.Series([4, 5, 6], index=['d', 'e', 'g'])])
+    s2 = MultiSeries([1, 2, 3])
+    s3 = MultiSeries([{"k1": "v1"}, {"k2": 'v2'}])
+    s4 = MultiSeries(['f', 's', 't'])
+
+    df = MultiDataFrame({
+        'first_col': s1,
+        'second_col': s2,
+        'third_col': s3,
+        'fourth_col': s4
+    })
+
+    try:
+        df.to_pandas_dataframe()
+        assert False
+    except:
+        assert True
+
+    s1 = MultiSeries([4, 5, 6])
+    s2 = MultiSeries([1, 2, 3])
+
+    df = MultiDataFrame({
+        'first_col': s1,
+        'second_col': s2,
+    })
+
+    try:
+        df = df.to_pandas_dataframe()
+        assert True
+    except:
+        assert False
+
+    assert type(df) == pd.DataFrame

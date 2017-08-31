@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 def check_all_elements_have_the_same_property(array, func):
@@ -14,10 +15,19 @@ def check_all_elements_have_the_same_property(array, func):
     return do_all_have_property, first_element_type
 
 
-class ObjectWrapper(object):
-    def __init__(self, obj):
-        self.obj = obj
-        self.type = type(obj)
+def _is_class_a_primitive(cls):
+    '''
+    Check if class is a number or string including numpy numbers
+    :param cls: any class
+    :return: True if class is a primitive class, else False
+    '''
+    primitives = [
+        np.float16, np.float32, np.float64, np.float128,
+        np.int8, np.int16, np.int32, np.int64,
+        bool, str, np.uint8, np.uint16, np.uint32, np.uint64,
+        int, float
+    ]
+    return cls in primitives
 
 
 class MultiSeries(pd.Series):
@@ -77,9 +87,12 @@ class MultiSeries(pd.Series):
         self._data_type = data_type
 
     def to_pandas_series(self):
-        # TODO
-        # Transform self to pandas.Series if data_type is a primitive type
-        raise NotImplemented()
+        is_primitive = _is_class_a_primitive(self.data_type)
+        if is_primitive:
+            self.__class__ = pd.Series
+        else:
+            raise ValueError('Unable to cast to pd.Series. {} is not a primitive type.'.format(self.data_type))
+        return self
 
     def __str__(self):
         s = super(MultiSeries, self).__str__()
@@ -135,7 +148,6 @@ class MultiDataFrame(pd.DataFrame):
 
         return self[columns_to_select], columns_to_select
 
-
     def get_data_types(self):
         data_types = [
             self[column].data_type
@@ -145,4 +157,13 @@ class MultiDataFrame(pd.DataFrame):
 
     def to_pandas_dataframe(self):
         # TODO return Pandas object
-        raise NotImplemented()
+        data_types = self.get_data_types()
+        is_all_columns_are_primitive = all(
+            _is_class_a_primitive(dt)
+            for dt in data_types
+        )
+        if is_all_columns_are_primitive:
+            self.__class__ = pd.DataFrame
+        else:
+            raise ValueError('Unable to cast to pd.DataFrame. {} is not all primitives.'.format(self.data_types))
+        return self
