@@ -178,3 +178,27 @@ def test_series_extract_features_with_apply_func():
     func = lambda series: {'mean': series.mean(), 'std': series.std()}
     mapped_s = s.apply(func)
     assert type(mapped_s) == MultiDataFrame
+
+
+def test_series_replace_element():
+    s = MultiSeries([
+        pd.Series([1, 2, 3], index=['a', 'b', 'c']),
+        pd.Series([4, 5, 6], index=['d', 'e', 'g'])
+    ], name='MySuperSeries')
+
+    try:
+        s[0] = 111
+        assert False
+    except:
+        assert True
+
+    try:
+        s[0] = pd.Series(np.random.normal(size=100))
+        assert True
+    except:
+        assert False
+
+
+# TODO
+# Check that it's not possible to change element of MultiSeries of different type
+# http://timeseriesclassification.com/ for data sets

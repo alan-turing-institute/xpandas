@@ -85,6 +85,18 @@ class MultiSeries(pd.Series):
         s = super(MultiSeries, self).__str__()
         return '{}\ndata_type: {}'.format(s, self.data_type)
 
+    def __getitem__(self, key):
+        return super(MultiSeries, self).__getitem__(key)
+
+    def __setitem__(self, key, value):
+        value_type = type(value)
+        if value_type != self.data_type:
+            raise ValueError('Can not assign key {} with {} wrong data_type {} correct is {}'.format(
+                key, value, value_type, self.data_type
+            ))
+
+        return super(MultiSeries, self).__setitem__(key, value)
+
 
 class MultiDataFrame(pd.DataFrame):
     @property
