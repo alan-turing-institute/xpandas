@@ -1,34 +1,18 @@
 from .data_container import MultiDataFrame, MultiSeries
 import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
 
 
-class BaseTransformer(object):
-    def __init__(self, data_types=None, columns=None, **kwargs):
-        raise NotImplemented('Please implement a constructor')
-
-    def fit(self, X, **kwargs):
-        raise NotImplemented('Please implement a fit method')
-
-    def transform(self, X):
-        raise NotImplemented('Please implement a transform method')
-
-    def fit_transform(self, X):
-        obj = self.fit(X)
-        transformed_df = obj.transform(X)
-        return obj, transformed_df
-
-
-class CustomTransformer(BaseTransformer):
-    def __init__(self, data_types=None, columns=None, **kwargs):
+class CustomTransformer(BaseEstimator, TransformerMixin):
+    def __init__(self, data_types=None, **kwargs):
         transform_func = kwargs.get('transform_function')
-        if transform_func is None:
-            raise ValueError('You mast pass transform_func argument with a function')
-        elif not callable(transform_func):
+        # if transform_func is None:
+        #     raise ValueError('You mast pass transform_func argument with a function')
+        if transform_func is not None and not callable(transform_func):
             raise ValueError('transform_func must be callable')
 
         self.transform_func = transform_func
         self.data_types = data_types
-        self.columns = columns
 
     def _check_input(self, input_data):
         if type(input_data) != MultiDataFrame and type(input_data) != MultiSeries:
@@ -40,7 +24,7 @@ class CustomTransformer(BaseTransformer):
             data_types = input_data.get_data_types()
             intersection = set(self.data_types) & set(data_types)
             if len(intersection) == 0:
-                raise ValueError('No column for given data type. Available columns {}'.format(data_types))
+                raise ValueError('No column for given data type. Available columns types {}'.format(data_types))
 
     def fit(self, X=None, **kwargs):
         if X is not None:
@@ -64,7 +48,7 @@ class CustomTransformer(BaseTransformer):
 
         return transformers_df
 
-    def transform(self, X):
+    def transform(self, X, columns=None):
         self._check_input(X)
         x_type = type(X)
 
@@ -94,20 +78,45 @@ class TimeSeriesTransformer(CustomTransformer):
 
 
 class TimeSeriesWindowTransformer(CustomTransformer):
-    def __init__(self, **kwargs):
+    def __init__(self, windows_size=3, **kwargs):
         accepted_types = [
             pd.Series
         ]
 
         def series_transform(series, **params):
-            return series.rolling(window=3).mean()
+            return series.rolling(window=windows_size).mean()
 
         super(TimeSeriesWindowTransformer, self).__init__(data_types=accepted_types,
                                                           columns=None,
                                                           transform_function=series_transform)
 
+# TODO
+# test total mean() - single mean()
 
-class PipeLineChain(BaseTransformer):
+
+class MeanSeriesTransformer(CustomTransformer):
+    def __init__(self, **kwargs):
+        self.total_mean = None
+        accepted_types = [
+            pd.Series
+        ]
+
+        super(MeanSeriesTransformer, self).__init__(data_types=accepted_types)
+
+    def fit(self, X, **kwargs):
+        sum_and_size = X.apply(lambda s: (s.sum(), len(s)))
+        sum_total = sum([x[0] for x in sum_and_size])
+        total_size = sum([x[1] for x in sum_and_size])
+        self.total_mean = sum_total / total_size
+        return super(MeanSeriesTransformer, self).fit(X, **kwargs)
+
+    def transform(self, X, columns=None):
+        f = lambda s: self.total_mean - s.mean()
+        self.transform_func = f
+        return super(MeanSeriesTransformer, self).transform(X, columns)
+
+
+class PipeLineChain(TransformerMixin):
     def _check_list_of_transforms(self, transforms):
         try:
             is_ok = all(
@@ -117,7 +126,6 @@ class PipeLineChain(BaseTransformer):
         except:
             is_ok = False
         return is_ok
-
 
     @property
     def transformers(self):

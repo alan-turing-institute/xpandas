@@ -156,7 +156,6 @@ class MultiDataFrame(pd.DataFrame):
         return data_types
 
     def to_pandas_dataframe(self):
-        # TODO return Pandas object
         data_types = self.get_data_types()
         is_all_columns_are_primitive = all(
             _is_class_a_primitive(dt)

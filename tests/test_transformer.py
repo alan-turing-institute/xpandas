@@ -75,7 +75,10 @@ def test_transformer_series_to_series_transformer():
         pd.Series(np.random.random_integers(0, 500, 200))
     ])
 
-    series_to_series_transformer = TimeSeriesWindowTransformer().fit()
+    series_to_series_transformer = TimeSeriesWindowTransformer(windows_size=5)
+    series_to_series_transformer.set_params(windows_size=3)
+    print(series_to_series_transformer.get_params())
+    series_to_series_transformer.fit()
     transformed_series = series_to_series_transformer.transform(s)
 
     assert series_to_series_transformer.transform_func(s[0]).equals(transformed_series[0])
@@ -85,7 +88,7 @@ def test_transformer_series_to_series_transformer():
 
 def test_transformer_data_frame():
     s1 = MultiSeries([pd.Series([1, 2, 3], index=['a', 'b', 'c']),
-                       pd.Series([4, 5, 6], index=['d', 'e', 'g'])])
+                      pd.Series([4, 5, 6], index=['d', 'e', 'g'])])
     s2 = MultiSeries([1, 2, 3])
     s3 = MultiSeries([{"k1": "v1"}, {"k2": 'v2'}])
     s4 = MultiSeries(['f', 's', 't'])
@@ -140,7 +143,6 @@ def test_pipeline_transformer_for_series():
     )
     pipeline = pipeline.fit(s1)
     transformed_df = pipeline.transform(s1)
-    print(transformed_df)
     # pipeline = Pipeline(
     #     [
     #         ('first_transformer', TimeSeriesWindowTransformer()),
@@ -148,3 +150,14 @@ def test_pipeline_transformer_for_series():
     #     ]
     # )
     #
+
+
+def test_mean_transformer():
+    s1 = MultiSeries([
+        pd.Series(np.random.normal(size=10)),
+        pd.Series(np.random.normal(size=15))
+    ])
+
+    tr = MeanSeriesTransformer()
+    tr = tr.fit(s1)
+    print(tr.transform(s1))
