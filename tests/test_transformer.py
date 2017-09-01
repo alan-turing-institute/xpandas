@@ -1,13 +1,12 @@
-import os, sys
+import os
+import sys
 
 here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
-from src.data_container import MultiSeries, MultiDataFrame
-from src.transformer import *
+from src.transformers.transformer import *
 import pandas as pd
 import numpy as np
-from sklearn.pipeline import Pipeline
 
 
 def test_transformer_custom():
@@ -77,7 +76,6 @@ def test_transformer_series_to_series_transformer():
 
     series_to_series_transformer = TimeSeriesWindowTransformer(windows_size=5)
     series_to_series_transformer.set_params(windows_size=3)
-    print(series_to_series_transformer.get_params())
     series_to_series_transformer.fit()
     transformed_series = series_to_series_transformer.transform(s)
 
@@ -157,7 +155,36 @@ def test_mean_transformer():
         pd.Series(np.random.normal(size=10)),
         pd.Series(np.random.normal(size=15))
     ])
+    s2 = MultiSeries([
+        pd.Series(np.random.normal(size=10)),
+        pd.Series(np.random.normal(size=15)),
+        pd.Series(np.random.normal(size=100))
+    ])
+
 
     tr = MeanSeriesTransformer()
     tr = tr.fit(s1)
-    print(tr.transform(s1))
+
+    transformed_s = tr.transform(s2)
+
+    assert transformed_s.shape[0] == 3
+    assert type(transformed_s) == MultiSeries
+
+
+# def test_tesfresh_transformer():
+#     with open('../examples/FordA.csv') as f:
+#         lines = f.readlines()
+#         lines = lines[505:1000]
+#         lines = [list(map(float, l.split(','))) for l in lines]
+#         Y = MultiSeries([l[-1] for l in lines])
+#         X = MultiSeries([pd.Series(l[:15]) for l in lines])
+#
+#     df = MultiDataFrame({
+#         'X': X,
+#         'Y': Y
+#     })
+#
+#     tr = TsFreshSeriesTransformer()
+#     transformed_df = tr.transform(df)
+#
+#     print(transformed_df)
