@@ -73,6 +73,8 @@ class MultiSeries(pd.Series):
             if series_name is not None:
                 custom_df.columns = custom_df.columns.map(lambda x: '{}_{}'.format(series_name, x))
             return custom_df
+        elif mapped_data_type == pd.DataFrame:
+            return pd.concat(mapped_series.values, ignore_index=True)
 
         return mapped_series
 
