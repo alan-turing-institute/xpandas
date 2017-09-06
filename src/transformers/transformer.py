@@ -35,8 +35,14 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
     def _transform_series(self, custom_series):
         return custom_series.apply(self.transform_function)
 
-    def _transform_data_frame(self, custom_data_frame):
+    def _transform_data_frame(self, custom_data_frame, custom_columns=None):
         sub_df, columns = custom_data_frame.get_columns_of_type(self.data_types)
+        if custom_columns is not None:
+            columns = [
+                col for col in columns
+                if col in custom_columns
+            ]
+
         transformers_df = custom_data_frame.copy()
 
         for col in columns:
@@ -61,7 +67,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
 
         # If X is not MultiSeries, then it's MultiDataFrame
         # Because of self._check_input function
-        return self._transform_data_frame(X)
+        return self._transform_data_frame(X, columns)
 
 
 class TimeSeriesSimpleTransformer(CustomTransformer):
@@ -77,7 +83,7 @@ class TimeSeriesSimpleTransformer(CustomTransformer):
             }
 
         super(TimeSeriesSimpleTransformer, self).__init__(data_types=accepted_types,
-                                                    transform_function=series_transform)
+                                                          transform_function=series_transform)
 
 
 class TimeSeriesWindowTransformer(CustomTransformer):
@@ -137,7 +143,7 @@ class PipeLineChain(TransformerMixin):
     def _check_list_of_transforms(self, transforms):
         try:
             is_ok = all(
-                len(t) == 2 and type(t[0]) == str
+                len(t) > 1 and type(t[0]) == str
                 for t in transforms
             )
         except:
@@ -156,8 +162,6 @@ class PipeLineChain(TransformerMixin):
 
         if isinstance(transforms, list):
             is_ok = self._check_list_of_transforms(transforms)
-        elif isinstance(transforms, dict):
-            is_ok = True
         else:
             is_ok = False
 
@@ -167,15 +171,26 @@ class PipeLineChain(TransformerMixin):
         self._transformers = transforms
 
     def fit(self, X, **kwargs):
-        self.transforms = [
-            (t_name, t.fit(X))
-            for t_name, t in self._transformers
-        ]
+        transforms_buf = []
+
+        for t in self._transformers:
+            if len(t) == 2:
+                t_name, transformer = t
+                cols = None
+            else:
+                t_name, transformer, cols = t
+
+            transforms_buf.append(
+                (t_name, transformer.fit(X), cols)
+            )
+
+        self._transformers = transforms_buf
+
         return self
 
     def transform(self, X):
         transformed_X = X.copy()
-        for t_name, t in self._transformers:
-            transformed_X = t.transform(transformed_X)
+        for t_name, t, cols in self._transformers:
+            transformed_X = t.transform(transformed_X, columns=cols)
 
         return transformed_X
