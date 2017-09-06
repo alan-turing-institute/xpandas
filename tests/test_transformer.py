@@ -171,6 +171,33 @@ def test_mean_transformer():
     assert type(transformed_s) == MultiSeries
 
 
+def test_dataframe_with_cols_transformer():
+    s1 = MultiSeries([
+        pd.Series(np.random.normal(size=10)),
+        pd.Series(np.random.normal(size=15))
+    ])
+    s2 = MultiSeries([
+        pd.Series(np.random.normal(size=10)),
+        pd.Series(np.random.normal(size=10))
+    ])
+    s3 = MultiSeries([{"k1": "v1"}, {"k2": 'v2'}])
+    s4 = MultiSeries(['f', 's', 't'])
+    df = MultiDataFrame({
+        'first_col': s1,
+        'second_col': s2,
+        'third_col': s3,
+        'fourth_col': s4
+    })
+
+    tr = TimeSeriesWindowTransformer()
+    tr = tr.fit(df)
+
+    transformed_s = tr.transform(df, columns=['first_col'])
+
+    print(transformed_s.first_col)
+
+
+
 # def test_tesfresh_transformer():
 #     with open('../examples/FordA.csv') as f:
 #         lines = f.readlines()
