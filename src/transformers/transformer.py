@@ -5,14 +5,14 @@ import tsfresh
 
 
 class CustomTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, data_types=None, **kwargs):
-        transform_func = kwargs.get('transform_function')
-        # if transform_func is None:
-        #     raise ValueError('You mast pass transform_func argument with a function')
-        if transform_func is not None and not callable(transform_func):
-            raise ValueError('transform_func must be callable')
+    _TRANSFORM_ARG_FUNCTION_NAME = 'transform_function'
 
-        self.transform_func = transform_func
+    def __init__(self, data_types=None, **kwargs):
+        transform_function = kwargs.get(self._TRANSFORM_ARG_FUNCTION_NAME)
+        if transform_function is not None and not callable(transform_function):
+            raise ValueError('transform_function must be callable')
+
+        self.transform_function = transform_function
         self.data_types = data_types
 
     def _check_input(self, input_data):
@@ -33,7 +33,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def _transform_series(self, custom_series):
-        return custom_series.apply(self.transform_func)
+        return custom_series.apply(self.transform_function)
 
     def _transform_data_frame(self, custom_data_frame):
         sub_df, columns = custom_data_frame.get_columns_of_type(self.data_types)
@@ -50,6 +50,9 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         return transformers_df
 
     def transform(self, X, columns=None):
+        if not hasattr(self, self._TRANSFORM_ARG_FUNCTION_NAME):
+            raise ValueError('You mast pass transform_function argument with a function')
+
         self._check_input(X)
         x_type = type(X)
 
@@ -61,7 +64,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         return self._transform_data_frame(X)
 
 
-class TimeSeriesTransformer(CustomTransformer):
+class TimeSeriesSimpleTransformer(CustomTransformer):
     def __init__(self, **kwargs):
         accepted_types = [
             pd.Series
@@ -73,8 +76,7 @@ class TimeSeriesTransformer(CustomTransformer):
                 'std': series.std()
             }
 
-        super(TimeSeriesTransformer, self).__init__(data_types=accepted_types,
-                                                    columns=None,
+        super(TimeSeriesSimpleTransformer, self).__init__(data_types=accepted_types,
                                                     transform_function=series_transform)
 
 
@@ -88,7 +90,6 @@ class TimeSeriesWindowTransformer(CustomTransformer):
             return series.rolling(window=windows_size).mean()
 
         super(TimeSeriesWindowTransformer, self).__init__(data_types=accepted_types,
-                                                          columns=None,
                                                           transform_function=series_transform)
 
 
@@ -110,7 +111,7 @@ class MeanSeriesTransformer(CustomTransformer):
 
     def transform(self, X, columns=None):
         f = lambda s: self.total_mean - s.mean()
-        self.transform_func = f
+        self.transform_function = f
         return super(MeanSeriesTransformer, self).transform(X, columns)
 
 

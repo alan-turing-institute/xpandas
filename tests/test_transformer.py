@@ -59,7 +59,7 @@ def test_transformer_series_transformer():
         pd.Series([4, 5, 6], index=['d', 'e', 'g'])
     ])
 
-    series_transformer = TimeSeriesTransformer()
+    series_transformer = TimeSeriesSimpleTransformer()
     series_transformer = series_transformer.fit()
 
     transformed_series = series_transformer.transform(s)
@@ -79,7 +79,7 @@ def test_transformer_series_to_series_transformer():
     series_to_series_transformer.fit()
     transformed_series = series_to_series_transformer.transform(s)
 
-    assert series_to_series_transformer.transform_func(s[0]).equals(transformed_series[0])
+    assert series_to_series_transformer.transform_function(s[0]).equals(transformed_series[0])
     assert transformed_series.data_type == pd.Series
     assert type(transformed_series) == MultiSeries
 
@@ -97,7 +97,7 @@ def test_transformer_data_frame():
         'fourth_col': s4
     })
 
-    data_frame_transformer = TimeSeriesTransformer().fit()
+    data_frame_transformer = TimeSeriesSimpleTransformer().fit()
     try:
         data_frame_transformer.transform(df)
         assert False
@@ -121,7 +121,7 @@ def test_transformer_data_frame():
         'fourth_col': s4
     })
 
-    data_frame_transformer = TimeSeriesTransformer().fit()
+    data_frame_transformer = TimeSeriesSimpleTransformer().fit()
     transformers_df = data_frame_transformer.transform(df)
 
     assert transformers_df.shape[1] == 6
@@ -136,7 +136,7 @@ def test_pipeline_transformer_for_series():
     pipeline = PipeLineChain(
         [
             ('first_transformer', TimeSeriesWindowTransformer()),
-            ('mean_transformer', TimeSeriesTransformer())
+            ('mean_transformer', TimeSeriesSimpleTransformer())
         ]
     )
     pipeline = pipeline.fit(s1)
