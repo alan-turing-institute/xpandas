@@ -70,19 +70,42 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         return self._transform_data_frame(X, columns)
 
 
-class TimeSeriesSimpleTransformer(CustomTransformer):
+class TimeSeriesTransformer(CustomTransformer):
+    FEATURES = [
+        'mean', 'std', 'max', 'min',
+        'median', 'quantile_25', 'quantile_75',
+        'quantile_90', 'quantile_95'
+    ]
+
+
     def __init__(self, **kwargs):
         accepted_types = [
             pd.Series
         ]
 
-        def series_transform(series):
-            return {
-                'mean': series.mean(),
-                'std': series.std()
-            }
+        features = kwargs.get('features')
+        if features is None:
+            features = self.FEATURES
+        else:
+            for f in features:
+                if f not in features:
+                    raise ValueError('Unrecognized feature {}. Available features {}'.format(f, self.FEATURES))
 
-        super(TimeSeriesSimpleTransformer, self).__init__(data_types=accepted_types,
+        def series_transform(series):
+            transformed_series = {}
+
+            for f in features:
+                if f.startswith('quantile_'):
+                    quant_rate = int(f.split('_')[1]) / 100.
+                    transformed_series[f] = series.quantile(quant_rate)
+                else:
+                    method_to_call = getattr(series, f)
+                    result = method_to_call()
+                    transformed_series[f] = result
+
+            return transformed_series
+
+        super(TimeSeriesTransformer, self).__init__(data_types=accepted_types,
                                                           transform_function=series_transform)
 
 
