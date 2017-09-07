@@ -66,13 +66,15 @@ class MultiSeries(pd.Series):
         mapped_series = mapped_series.map(func, na_action='ignore')
         mapped_data_type = mapped_series.data_type
 
+        custom_prefix = kwargs.get('prefix')
+        if custom_prefix is None:
+            custom_prefix = self.name
+
         if mapped_data_type == dict:
             custom_df = MultiDataFrame.from_records(mapped_series.values)
-            series_name = self.name
 
-            if series_name is not None:
-                # TODO change names
-                custom_df.columns = custom_df.columns.map(lambda x: '{}_{}'.format(series_name, x))
+            if custom_prefix is not None:
+                custom_df.columns = custom_df.columns.map(lambda x: '{}_{}'.format(custom_prefix, x))
             return custom_df
         elif mapped_data_type == pd.DataFrame:
             return pd.concat(mapped_series.values, ignore_index=True)

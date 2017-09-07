@@ -124,7 +124,7 @@ def test_transformer_data_frame():
     data_frame_transformer = TimeSeriesTransformer().fit()
     transformers_df = data_frame_transformer.transform(df)
 
-    print(transformers_df)
+    # print(transformers_df)
     # assert transformers_df.shape[1] == 6
 
 
@@ -190,7 +190,7 @@ def test_dataframe_with_cols_transformer():
         'fourth_col': s4
     })
 
-    tr = TimeSeriesTransformer()
+    tr = TimeSeriesTransformer(features=['mean'])
     tr = tr.fit(df)
 
     transformed_df = tr.transform(df, columns=['first_col'])

@@ -29,4 +29,4 @@ lines = [pd.Series(l) for l in lines]
 # create a MultiSeries series of pd.Series objects
 X = MultiSeries(lines)
 
-windows_transformed_data =
+# windows_transformed_data =

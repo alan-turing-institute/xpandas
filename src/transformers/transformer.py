@@ -33,7 +33,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def _transform_series(self, custom_series):
-        return custom_series.apply(self.transform_function)
+        return custom_series.apply(func=self.transform_function)
 
     def _transform_data_frame(self, custom_data_frame, custom_columns=None):
         sub_df, columns = custom_data_frame.get_columns_of_type(self.data_types)
@@ -77,17 +77,16 @@ class TimeSeriesTransformer(CustomTransformer):
         'quantile_90', 'quantile_95'
     ]
 
-    def __init__(self, **kwargs):
+    def __init__(self, features=None, **kwargs):
         accepted_types = [
             pd.Series
         ]
 
-        features = kwargs.get('features')
         if features is None:
             features = self.FEATURES
         else:
             for f in features:
-                if f not in features:
+                if f not in self.FEATURES:
                     raise ValueError('Unrecognized feature {}. Available features {}'.format(f, self.FEATURES))
 
         def series_transform(series):
