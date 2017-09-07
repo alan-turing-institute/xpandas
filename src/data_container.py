@@ -71,6 +71,7 @@ class MultiSeries(pd.Series):
             series_name = self.name
 
             if series_name is not None:
+                # TODO change names
                 custom_df.columns = custom_df.columns.map(lambda x: '{}_{}'.format(series_name, x))
             return custom_df
         elif mapped_data_type == pd.DataFrame:

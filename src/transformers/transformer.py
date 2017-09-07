@@ -77,7 +77,6 @@ class TimeSeriesTransformer(CustomTransformer):
         'quantile_90', 'quantile_95'
     ]
 
-
     def __init__(self, **kwargs):
         accepted_types = [
             pd.Series
@@ -106,7 +105,7 @@ class TimeSeriesTransformer(CustomTransformer):
             return transformed_series
 
         super(TimeSeriesTransformer, self).__init__(data_types=accepted_types,
-                                                          transform_function=series_transform)
+                                                    transform_function=series_transform)
 
 
 class TimeSeriesWindowTransformer(CustomTransformer):
