@@ -142,8 +142,13 @@ class MultiDataFrame(pd.DataFrame):
         super(MultiDataFrame, self).__init__(*args, **kwargs)
 
     def get_columns_of_type(self, column_type):
+        '''
+        :param column_type: list of types
+        :return: Return columns from MultiDataFrame (list of names)
+                + sub MultiDataFrame
+        '''
         if type(column_type) != list:
-            column_type = column_type
+            column_type = [column_type]
 
         columns_to_select = [
             col_name
