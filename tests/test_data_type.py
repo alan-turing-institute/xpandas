@@ -4,7 +4,7 @@ import sys
 here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
-from src import MultiSeries, MultiDataFrame
+from ..transformers.transformers import MultiSeries, MultiDataFrame
 import pandas as pd
 import numpy as np
 
