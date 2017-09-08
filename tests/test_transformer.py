@@ -4,7 +4,7 @@ import sys
 here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
-from src.transformers.transformer import *
+from transformers.transformers.transformer import *
 import pandas as pd
 import numpy as np
 

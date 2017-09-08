@@ -1,16 +1,11 @@
+import sys
 from io import BytesIO
-from zipfile import ZipFile
 from urllib.request import urlopen
+from zipfile import ZipFile
 
-import numpy as np
 import pandas as pd
-import os, sys
-import requests
 
 sys.path.insert(0, '..')
-
-from src.data_container import *
-from src.transformers.transformer import MeanSeriesTransformer, TimeSeriesWindowTransformer
 
 # Read a TimeSeries from URL
 url = urlopen("http://timeseriesclassification.com/Downloads/FordA.zip")
