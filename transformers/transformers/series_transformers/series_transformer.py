@@ -56,11 +56,18 @@ class TimeSeriesWindowTransformer(CustomTransformer):
 class MeanSeriesTransformer(CustomTransformer):
     def __init__(self, **kwargs):
         self.total_mean = None
+
+        def mean_minus_mean_function(s, total_mean=None):
+            if total_mean is None:
+                total_mean = self.total_mean
+            return s.mean() - total_mean
+
         accepted_types = [
             pd.Series
         ]
 
-        super(MeanSeriesTransformer, self).__init__(data_types=accepted_types)
+        super(MeanSeriesTransformer, self).__init__(data_types=accepted_types,
+                                                    transform_function=mean_minus_mean_function)
 
     def fit(self, X, **kwargs):
         super(MeanSeriesTransformer, self).fit(X, **kwargs)
@@ -68,12 +75,8 @@ class MeanSeriesTransformer(CustomTransformer):
         sum_total = sum([x[0] for x in sum_and_size])
         total_size = sum([x[1] for x in sum_and_size])
         self.total_mean = sum_total / total_size
-        return self
 
-    def transform(self, X, columns=None):
-        f = lambda s: self.total_mean - s.mean()
-        self.transform_function = f
-        return super(MeanSeriesTransformer, self).transform(X, columns)
+        return self
 
 
 class TsFreshSeriesTransformer(CustomTransformer):

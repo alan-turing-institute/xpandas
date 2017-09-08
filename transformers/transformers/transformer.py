@@ -29,6 +29,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
     def fit(self, X=None, **kwargs):
         if X is not None:
             self._check_input(X)
+
         return self
 
     def _transform_series(self, custom_series):
