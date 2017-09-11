@@ -17,6 +17,11 @@ class PipeLineChain(TransformerMixin):
         return self._transformers
 
     def __init__(self, *args, **kwargs):
+        '''
+        transforms: list of tuples (transformer_name, transformer_object, columns_to_apply)
+        :param args:
+        :param kwargs:
+        '''
         transforms = kwargs.get('transforms')
         if transforms is None and len(args) == 0:
             raise ValueError('Please pass transforms arguments')

@@ -16,8 +16,6 @@ def test_transformer_custom():
         pd.Series([4, 5, 6], index=['d', 'e', 'g'])
     ])
 
-    print(s)
-
     series_transformer = CustomTransformer(transform_function=lambda series: series.mean())
     series_transformer = series_transformer.fit()
 
