@@ -1,4 +1,5 @@
 from sklearn.base import BaseEstimator, TransformerMixin
+from ...data_container import MultiDataFrame, MultiSeries
 
 
 class PipeLineChain(TransformerMixin):
@@ -58,5 +59,8 @@ class PipeLineChain(TransformerMixin):
 
         for t_name, t in self._transformers:
             transformed_X = t.transform(transformed_X)
+
+        if type(transformed_X) != MultiSeries and type(transformed_X) != MultiDataFrame:
+            transformed_X = MultiDataFrame(transformed_X)
 
         return transformed_X
