@@ -122,11 +122,15 @@ def test_transformer_data_frame():
         'fourth_col': s4
     })
 
-    data_frame_transformer = TimeSeriesTransformer().fit()
-    transformers_df = data_frame_transformer.transform(df)
+    data_frame_transformer = DataFrameTransformer(transformations={
+        'first_col': TimeSeriesTransformer(),
+        'second_col': TimeSeriesTransformer()
+    })
 
-    # print(transformers_df)
-    # assert transformers_df.shape[1] == 6
+    data_frame_transformer.fit(df)
+
+    transformers_df = data_frame_transformer.transform(df)
+    # print(transformers_df.head())
 
 
 def test_pipeline_transformer_for_series():
@@ -142,7 +146,8 @@ def test_pipeline_transformer_for_series():
         ]
     )
     pipeline = pipeline.fit(s1)
-    transformed_df = pipeline.transform(s1)
+    transformed_ts = pipeline.transform(s1)
+    print(transformed_ts)
     # pipeline = Pipeline(
     #     [
     #         ('first_transformer', TimeSeriesWindowTransformer()),
@@ -172,30 +177,6 @@ def test_mean_transformer():
     assert type(transformed_s) == MultiSeries
 
 
-def test_dataframe_with_cols_transformer():
-    s1 = MultiSeries([
-        pd.Series(np.random.normal(size=10)),
-        pd.Series(np.random.normal(size=15))
-    ])
-    s2 = MultiSeries([
-        pd.Series(np.random.normal(size=10)),
-        pd.Series(np.random.normal(size=10))
-    ])
-    s3 = MultiSeries([{"k1": "v1"}, {"k2": 'v2'}])
-    s4 = MultiSeries(['f', 's', 't'])
-    df = MultiDataFrame({
-        'first_col': s1,
-        'second_col': s2,
-        'third_col': s3,
-        'fourth_col': s4
-    })
-
-    tr = TimeSeriesTransformer(features=['mean'])
-    tr = tr.fit(df)
-
-    transformed_df = tr.transform(df)
-
-
 def test_mean_transformer_data_frame():
     s1 = MultiSeries([
         pd.Series(np.random.normal(size=10)),
@@ -212,27 +193,31 @@ def test_mean_transformer_data_frame():
     })
 
     tr = MeanSeriesTransformer()
-    tr = tr.fit(df)
+    try:
+        tr = tr.fit(df)
+        assert False
+    except:
+        assert True
 
-    # transformed_df = tr.transform(df)
+        # transformed_df = tr.transform(df)
 
-    # print(transformed_df.s1)
+        # print(transformed_df.s1)
 
 
-    # def test_tesfresh_transformer():
-    #     with open('../examples/FordA.csv') as f:
-    #         lines = f.readlines()
-    #         lines = lines[505:1000]
-    #         lines = [list(map(float, l.split(','))) for l in lines]
-    #         Y = MultiSeries([l[-1] for l in lines])
-    #         X = MultiSeries([pd.Series(l[:15]) for l in lines])
-    #
-    #     df = MultiDataFrame({
-    #         'X': X,
-    #         'Y': Y
-    #     })
-    #
-    #     tr = TsFreshSeriesTransformer()
-    #     transformed_df = tr.transform(df)
-    #
-    #     print(transformed_df)
+        # def test_tesfresh_transformer():
+        #     with open('../examples/FordA.csv') as f:
+        #         lines = f.readlines()
+        #         lines = lines[505:1000]
+        #         lines = [list(map(float, l.split(','))) for l in lines]
+        #         Y = MultiSeries([l[-1] for l in lines])
+        #         X = MultiSeries([pd.Series(l[:15]) for l in lines])
+        #
+        #     df = MultiDataFrame({
+        #         'X': X,
+        #         'Y': Y
+        #     })
+        #
+        #     tr = TsFreshSeriesTransformer()
+        #     transformed_df = tr.transform(df)
+        #
+        #     print(transformed_df)
