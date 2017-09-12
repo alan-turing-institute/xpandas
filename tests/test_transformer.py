@@ -134,8 +134,15 @@ def test_transformer_data_frame():
 
 
 def test_pipeline_transformer_for_series():
+    from sklearn.decomposition import PCA
+
     s1 = MultiSeries([
-        pd.Series(np.random.normal(size=10)),
+        pd.Series(np.random.normal(size=15)),
+        pd.Series(np.random.normal(size=15)),
+        pd.Series(np.random.normal(size=15)),
+        pd.Series(np.random.normal(size=15)),
+        pd.Series(np.random.normal(size=15)),
+        pd.Series(np.random.normal(size=15)),
         pd.Series(np.random.normal(size=15))
     ])
 
@@ -147,14 +154,16 @@ def test_pipeline_transformer_for_series():
     )
     pipeline = pipeline.fit(s1)
     transformed_ts = pipeline.transform(s1)
-    print(transformed_ts)
-    # pipeline = Pipeline(
-    #     [
-    #         ('first_transformer', TimeSeriesWindowTransformer()),
-    #         ('final_transformer', None)
-    #     ]
-    # )
-    #
+
+    pipeline = PipeLineChain(
+        [
+            ('first_transformer', TimeSeriesWindowTransformer()),
+            ('mean_transformer', TimeSeriesTransformer()),
+            ('pca', PCA(n_components=4))
+        ]
+    )
+    pipeline.fit(s1)
+    transformed_ts = pipeline.transform(s1)
 
 
 def test_mean_transformer():

@@ -38,26 +38,25 @@ class PipeLineChain(TransformerMixin):
         self._transformers = transforms
 
     def fit(self, X, **kwargs):
-        transforms_buf = []
+        self._transformation_steps = [X]
 
-        for t in self._transformers:
-            if len(t) == 2:
-                t_name, transformer = t
-                cols = None
-            else:
-                t_name, transformer, cols = t
+        for i, (t_name, transformer) in enumerate(self._transformers):
+            data_to_fit_transform = self._transformation_steps[i]
 
-            transforms_buf.append(
-                (t_name, transformer.fit(X), cols)
+            transformer.fit(
+                data_to_fit_transform
             )
 
-        self._transformers = transforms_buf
+            self._transformation_steps.append(
+                transformer.transform(data_to_fit_transform)
+            )
 
         return self
 
     def transform(self, X):
         transformed_X = X.copy()
-        for t_name, t, cols in self._transformers:
-            transformed_X = t.transform(transformed_X, columns=cols)
+
+        for t_name, t in self._transformers:
+            transformed_X = t.transform(transformed_X)
 
         return transformed_X
