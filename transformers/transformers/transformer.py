@@ -27,7 +27,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def _transform_series(self, custom_series):
-        return custom_series.фзздy(func=self.transform_function)
+        return custom_series.apply(func=self.transform_function)
 
     def transform(self, X, columns=None):
         if not hasattr(self, self._TRANSFORM_ARG_FUNCTION_NAME):
