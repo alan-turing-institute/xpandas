@@ -176,3 +176,7 @@ class MultiDataFrame(pd.DataFrame):
         else:
             raise ValueError('Unable to cast to pd.DataFrame. {} is not all primitives.'.format(self.data_types))
         return self
+
+    @classmethod
+    def concat_dataframes(cls, data_frames):
+        return pd.concat(data_frames, axis=1)
