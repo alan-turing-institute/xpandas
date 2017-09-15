@@ -1,4 +1,5 @@
-scikit-learn
-pandas
 numpy
+scipy
+pandas
+scikit-learn
 nose
