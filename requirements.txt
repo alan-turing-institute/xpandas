@@ -2,4 +2,5 @@ numpy
 scipy
 pandas
 scikit-learn
+tsfresh
 nose
