@@ -1,0 +1,39 @@
+from collections import Counter
+
+import numpy as np
+import pandas as pd
+
+from ..transformer import CustomTransformer
+
+
+class BagOfFeaturesTransformer(CustomTransformer):
+    def __init__(self, dictionary=None, **kwargs):
+        self.dictionary = dictionary
+
+        accepted_types = [
+            pd.Series, list, np.array, tuple
+        ]
+
+        def bag_of_words_transform_function(corpus):
+            counter = Counter(corpus)
+            for el in self.dictionary:
+                if counter.get(el) is None:
+                    counter[el] = 0
+            return counter
+
+        super(BagOfFeaturesTransformer, self).__init__(data_types=accepted_types,
+                                                       columns=None,
+                                                       transform_function=bag_of_words_transform_function)
+
+    def __calculate_dictionary(self, X):
+        dictionary = set()
+        for el in X:
+            dictionary = dictionary.union(el)
+        return dictionary
+
+    def fit(self, X=None, y=None, **kwargs):
+        super(BagOfFeaturesTransformer, self).fit(X, y, **kwargs)
+        if self.dictionary is not None:
+            return self
+        self.dictionary = self.__calculate_dictionary(X)
+        return self
