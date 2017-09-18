@@ -70,6 +70,6 @@ def test_ts_fresh_chain():
     pipe.fit(s1)
     transformed_df = pipe.transform(s1)
 
-    print(transformed_df.head())
+    # print(transformed_df.head())
 
     assert type(transformed_df) == MultiDataFrame
