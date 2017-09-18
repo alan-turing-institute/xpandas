@@ -9,6 +9,16 @@ def check_all_elements_have_the_same_property(array, func):
         first_element_type = func(array[0])
     except:
         return True, None
+    #
+    # if len(array) == 3:
+    #     print('\n\n\n')
+    #     print(array)
+    #     array = array[~np.isnan(array)]
+    #     array = [
+    #         x for x in array
+    #         if not np.isnan(x)
+    #     ]
+    #
     do_all_have_property = all(func(x) == first_element_type
                                for x in array)
 
@@ -62,8 +72,13 @@ class MultiSeries(pd.Series):
         if func is None:
             func = args[0]
 
+        # nan_index = self.isnull()
+
+        # TODO
+        # Possibly change!!! to handle NaN also
         mapped_series = self.dropna()
         mapped_series = mapped_series.map(func, na_action='ignore')
+        # print(mapped_series.shape)
         mapped_data_type = mapped_series.data_type
 
         custom_prefix = kwargs.get('prefix')
@@ -83,7 +98,7 @@ class MultiSeries(pd.Series):
 
     @property
     def data_type(self):
-        first_element_data_type = type(self[0])
+        first_element_data_type = type(self.iloc[0])
         self._data_type = first_element_data_type
         return self._data_type
 
