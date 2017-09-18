@@ -27,6 +27,10 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def _transform_series(self, custom_series):
+        # print(custom_series)
+        # print(type(custom_series))
+        # import numpy as np
+        # print(np.isnan(custom_series[2]))
         return custom_series.apply(func=self.transform_function)
 
     def transform(self, X, columns=None):
@@ -35,7 +39,16 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
 
         self._check_input(X)
 
-        return self._transform_series(X)
+        # print(X.shape)
+
+        transform_series = self._transform_series(X)
+        # print(type(X))
+        # print(X.index)
+        # print(transform_series.index)
+        # print(1)
+        transform_series.index = X.index
+
+        return transform_series
 
 
 class DataFrameTransformer(BaseEstimator, TransformerMixin):
@@ -74,6 +87,9 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
 
         for col_name, transformer in self.transformations.items():
             new_col_name = columns_mapping.get(col_name, col_name)
+            # print(
+            #     X[new_col_name].shape
+            # )
             transformed_column = transformer.transform(X[new_col_name])
 
             if type(transformed_column) == MultiSeries:
