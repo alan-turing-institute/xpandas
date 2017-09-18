@@ -11,29 +11,30 @@ from sklearn.datasets import fetch_20newsgroups
 from sklearn.decomposition import PCA
 from sklearn.svm import LinearSVC
 import string
-#
-# def test_bag_of_words_for_series():
-#     dataset = fetch_20newsgroups(shuffle=True, random_state=1,
-#                                  remove=('headers', 'footers', 'quotes'))
-#
-#     series = MultiSeries(dataset.data[:10])
-#     assert series.data_type == str
-#
-#     translator = str.maketrans('', '', string.punctuation)
-#     tokenizer_transformer = CustomTransformer(
-#         transform_function=lambda text: text.lower().translate(translator).strip().split()
-#     )
-#
-#     transformed_series = tokenizer_transformer.fit_transform(series)
-#     # print(transformed_series)
-#
-#     bag_transform = BagOfFeaturesTransformer()
-#
-#     transformed_series = bag_transform.fit_transform(transformed_series)
-#
-#     # print(transformed_series)
-#
-#     assert type(transformed_series) == MultiDataFrame
+
+def test_bag_of_words_for_series():
+    dataset = fetch_20newsgroups(shuffle=True, random_state=1,
+                                 remove=('headers', 'footers', 'quotes'))
+
+    series = MultiSeries(dataset.data[:10])
+    print(series.data_type)
+    assert series.data_type == str
+
+    translator = str.maketrans('', '', string.punctuation)
+    tokenizer_transformer = CustomTransformer(
+        transform_function=lambda text: text.lower().translate(translator).strip().split()
+    )
+
+    transformed_series = tokenizer_transformer.fit_transform(series)
+    # print(transformed_series)
+
+    bag_transform = BagOfFeaturesTransformer()
+
+    transformed_series = bag_transform.fit_transform(transformed_series)
+
+    # print(transformed_series)
+
+    assert type(transformed_series) == MultiDataFrame
 
 
 # def test_bag_of_words_for_series_pipeline():
