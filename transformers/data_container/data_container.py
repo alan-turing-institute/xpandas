@@ -85,7 +85,7 @@ class MultiSeries(pd.Series):
         if custom_prefix is None:
             custom_prefix = self.name
 
-        if mapped_data_type == dict:
+        if mapped_series.__is_data_type_dict_like():
             custom_df = MultiDataFrame.from_records(mapped_series.values)
 
             if custom_prefix is not None:
@@ -95,6 +95,9 @@ class MultiSeries(pd.Series):
             return pd.concat(mapped_series.values, ignore_index=True)
 
         return mapped_series
+
+    def __is_data_type_dict_like(self):
+        return isinstance(self.iloc[0], dict)
 
     @property
     def data_type(self):
