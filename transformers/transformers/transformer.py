@@ -6,8 +6,7 @@ from ..data_container import MultiDataFrame, MultiSeries
 class CustomTransformer(BaseEstimator, TransformerMixin):
     _TRANSFORM_ARG_FUNCTION_NAME = 'transform_function'
 
-    def __init__(self, data_types=None, name=None, **kwargs):
-        transform_function = kwargs.get(self._TRANSFORM_ARG_FUNCTION_NAME)
+    def __init__(self, transform_function=None, data_types=None, name=None, **kwargs):
         if transform_function is not None and not callable(transform_function):
             raise ValueError('transform_function must be callable')
 
@@ -26,7 +25,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
                 and input_data.data_type not in self.data_types:
             raise ValueError('Estimator does not support {} type'.format(input_data.data_type))
 
-    def fit(self, X=None, **kwargs):
+    def fit(self, X=None, y=None, **kwargs):
         if X is not None:
             self._check_input(X)
 
@@ -72,7 +71,7 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
         self._validate_transformations(transformations)
         self.transformations = transformations
 
-    def fit(self, X=None, **kwargs):
+    def fit(self, X=None, y=None, **kwargs):
         if not isinstance(X, MultiDataFrame):
             raise TypeError('X must be a MultiDataFrame type. Not {}'.format(type(X)))
 
