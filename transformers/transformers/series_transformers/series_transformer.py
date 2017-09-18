@@ -1,8 +1,11 @@
-from ..transformer import CustomTransformer
+from functools import partial
+
 import pandas as pd
 from tsfresh.feature_extraction.extraction import _do_extraction_on_chunk
 from tsfresh.feature_extraction.settings import ComprehensiveFCParameters
-from functools import partial
+
+from ..transformer import CustomTransformer
+
 
 class TimeSeriesTransformer(CustomTransformer):
     FEATURES = [
@@ -48,7 +51,7 @@ class TimeSeriesWindowTransformer(CustomTransformer):
         ]
 
         def series_transform(series, **params):
-            return series.rolling(window=windows_size).mean()
+            return series.rolling(window=windows_size).mean().dropna()
 
         super(TimeSeriesWindowTransformer, self).__init__(data_types=accepted_types,
                                                           transform_function=series_transform)
@@ -92,7 +95,10 @@ class TsFreshSeriesTransformer(CustomTransformer):
                                       kind_to_fc_parameters=None)
 
         def series_transform(series):
-            series_name = self.name
+            series_name = series.name
+            if series_name is None:
+                series_name = self.name
+
             input_series = (
                 1, series_name, series
             )
@@ -102,7 +108,6 @@ class TsFreshSeriesTransformer(CustomTransformer):
                 for x in extracted_data
             }
             return extracted_data_flat
-
 
         super(TsFreshSeriesTransformer, self).__init__(data_types=accepted_types,
                                                        columns=None,

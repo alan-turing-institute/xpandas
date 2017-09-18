@@ -1,17 +1,23 @@
-from ..data_container import MultiDataFrame, MultiSeries
 from sklearn.base import BaseEstimator, TransformerMixin
+
+from ..data_container import MultiDataFrame, MultiSeries
 
 
 class CustomTransformer(BaseEstimator, TransformerMixin):
     _TRANSFORM_ARG_FUNCTION_NAME = 'transform_function'
 
-    def __init__(self, data_types=None, **kwargs):
+    def __init__(self, data_types=None, name=None, **kwargs):
         transform_function = kwargs.get(self._TRANSFORM_ARG_FUNCTION_NAME)
         if transform_function is not None and not callable(transform_function):
             raise ValueError('transform_function must be callable')
 
         self.transform_function = transform_function
         self.data_types = data_types
+
+        if name is None:
+            self.name = self.__class__.__name__
+        else:
+            self.name = name
 
     def _check_input(self, input_data):
         if type(input_data) != MultiSeries:
@@ -31,7 +37,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         # print(type(custom_series))
         # import numpy as np
         # print(np.isnan(custom_series[2]))
-        return custom_series.apply(func=self.transform_function)
+        return custom_series.apply(func=self.transform_function, prefix=self.name)
 
     def transform(self, X, columns=None):
         if not hasattr(self, self._TRANSFORM_ARG_FUNCTION_NAME):
