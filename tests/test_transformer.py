@@ -4,7 +4,9 @@ import sys
 here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
-from ..transformers.transformers import *
+from ..transformers.data_container import MultiDataFrame, MultiSeries
+from ..transformers.transformers import CustomTransformer, TimeSeriesTransformer,\
+    TimeSeriesWindowTransformer, MeanSeriesTransformer, DataFrameTransformer, PipeLineChain
 import pandas as pd
 import numpy as np
 

@@ -73,7 +73,7 @@ class MeanSeriesTransformer(CustomTransformer):
         super(MeanSeriesTransformer, self).__init__(data_types=accepted_types,
                                                     transform_function=mean_minus_mean_function)
 
-    def fit(self, X, **kwargs):
+    def fit(self, X, y=None, **kwargs):
         super(MeanSeriesTransformer, self).fit(X, **kwargs)
         sum_and_size = X.apply(lambda s: (s.sum(), len(s)))
         sum_total = sum([x[0] for x in sum_and_size])
