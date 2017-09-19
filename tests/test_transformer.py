@@ -4,8 +4,9 @@ import sys
 here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
-from ..transformers.data_container import MultiSeries, MultiDataFrame
-from ..transformers.transformers import *
+from ..transformers.data_container import MultiDataFrame, MultiSeries
+from ..transformers.transformers import CustomTransformer, TimeSeriesTransformer,\
+    TimeSeriesWindowTransformer, MeanSeriesTransformer, DataFrameTransformer, PipeLineChain
 import pandas as pd
 import numpy as np
 
@@ -114,7 +115,7 @@ def test_transformer_data_frame():
         pd.Series(np.random.normal(size=10))
     ])
     s3 = MultiSeries([{"k1": "v1"}, {"k2": 'v2'}])
-    s4 = MultiSeries(['f', 's', 't'])
+    s4 = MultiSeries(['f', 's'])
     df = MultiDataFrame({
         'first_col': s1,
         'second_col': s2,
@@ -122,13 +123,16 @@ def test_transformer_data_frame():
         'fourth_col': s4
     })
 
+    # print(
+    #     df['first_col'].shape
+    # )
+
     data_frame_transformer = DataFrameTransformer(transformations={
         'first_col': TimeSeriesTransformer(),
         'second_col': TimeSeriesTransformer()
     })
 
     data_frame_transformer.fit(df)
-
     transformers_df = data_frame_transformer.transform(df)
     # print(transformers_df.head())
 
@@ -207,26 +211,3 @@ def test_mean_transformer_data_frame():
         assert False
     except:
         assert True
-
-        # transformed_df = tr.transform(df)
-
-        # print(transformed_df.s1)
-
-
-        # def test_tesfresh_transformer():
-        #     with open('../examples/FordA.csv') as f:
-        #         lines = f.readlines()
-        #         lines = lines[505:1000]
-        #         lines = [list(map(float, l.split(','))) for l in lines]
-        #         Y = MultiSeries([l[-1] for l in lines])
-        #         X = MultiSeries([pd.Series(l[:15]) for l in lines])
-        #
-        #     df = MultiDataFrame({
-        #         'X': X,
-        #         'Y': Y
-        #     })
-        #
-        #     tr = TsFreshSeriesTransformer()
-        #     transformed_df = tr.transform(df)
-        #
-        #     print(transformed_df)

@@ -1,3 +1,7 @@
-pandas
 numpy
+scipy
+pandas
+scikit-learn
+tsfresh
 nose
+scikit-image

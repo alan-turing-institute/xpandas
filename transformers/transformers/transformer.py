@@ -1,17 +1,22 @@
-from ..data_container import MultiDataFrame, MultiSeries
 from sklearn.base import BaseEstimator, TransformerMixin
+
+from ..data_container import MultiDataFrame, MultiSeries
 
 
 class CustomTransformer(BaseEstimator, TransformerMixin):
     _TRANSFORM_ARG_FUNCTION_NAME = 'transform_function'
 
-    def __init__(self, data_types=None, **kwargs):
-        transform_function = kwargs.get(self._TRANSFORM_ARG_FUNCTION_NAME)
+    def __init__(self, transform_function=None, data_types=None, name=None, **kwargs):
         if transform_function is not None and not callable(transform_function):
             raise ValueError('transform_function must be callable')
 
         self.transform_function = transform_function
         self.data_types = data_types
+
+        if name is None:
+            self.name = self.__class__.__name__
+        else:
+            self.name = name
 
     def _check_input(self, input_data):
         if type(input_data) != MultiSeries:
@@ -20,14 +25,18 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
                 and input_data.data_type not in self.data_types:
             raise ValueError('Estimator does not support {} type'.format(input_data.data_type))
 
-    def fit(self, X=None, **kwargs):
+    def fit(self, X=None, y=None, **kwargs):
         if X is not None:
             self._check_input(X)
 
         return self
 
     def _transform_series(self, custom_series):
-        return custom_series.apply(func=self.transform_function)
+        # print(custom_series)
+        # print(type(custom_series))
+        # import numpy as np
+        # print(np.isnan(custom_series[2]))
+        return custom_series.apply(func=self.transform_function, prefix=self.name)
 
     def transform(self, X, columns=None):
         if not hasattr(self, self._TRANSFORM_ARG_FUNCTION_NAME):
@@ -35,7 +44,16 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
 
         self._check_input(X)
 
-        return self._transform_series(X)
+        # print(X.shape)
+
+        transform_series = self._transform_series(X)
+        # print(type(X))
+        # print(X.index)
+        # print(transform_series.index)
+        # print(1)
+        transform_series.index = X.index
+
+        return transform_series
 
 
 class DataFrameTransformer(BaseEstimator, TransformerMixin):
@@ -53,7 +71,7 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
         self._validate_transformations(transformations)
         self.transformations = transformations
 
-    def fit(self, X=None, **kwargs):
+    def fit(self, X=None, y=None, **kwargs):
         if not isinstance(X, MultiDataFrame):
             raise TypeError('X must be a MultiDataFrame type. Not {}'.format(type(X)))
 
@@ -74,6 +92,9 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
 
         for col_name, transformer in self.transformations.items():
             new_col_name = columns_mapping.get(col_name, col_name)
+            # print(
+            #     X[new_col_name].shape
+            # )
             transformed_column = transformer.transform(X[new_col_name])
 
             if type(transformed_column) == MultiSeries:

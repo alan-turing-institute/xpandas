@@ -1,6 +1,10 @@
-from ..transformer import CustomTransformer
+from functools import partial
+
 import pandas as pd
-import tsfresh
+from tsfresh.feature_extraction.extraction import _do_extraction_on_chunk
+from tsfresh.feature_extraction.settings import ComprehensiveFCParameters
+
+from ..transformer import CustomTransformer
 
 
 class TimeSeriesTransformer(CustomTransformer):
@@ -47,7 +51,7 @@ class TimeSeriesWindowTransformer(CustomTransformer):
         ]
 
         def series_transform(series, **params):
-            return series.rolling(window=windows_size).mean()
+            return series.rolling(window=windows_size).mean().dropna()
 
         super(TimeSeriesWindowTransformer, self).__init__(data_types=accepted_types,
                                                           transform_function=series_transform)
@@ -69,7 +73,7 @@ class MeanSeriesTransformer(CustomTransformer):
         super(MeanSeriesTransformer, self).__init__(data_types=accepted_types,
                                                     transform_function=mean_minus_mean_function)
 
-    def fit(self, X, **kwargs):
+    def fit(self, X, y=None, **kwargs):
         super(MeanSeriesTransformer, self).fit(X, **kwargs)
         sum_and_size = X.apply(lambda s: (s.sum(), len(s)))
         sum_total = sum([x[0] for x in sum_and_size])
@@ -85,13 +89,30 @@ class TsFreshSeriesTransformer(CustomTransformer):
             pd.Series
         ]
 
+        default_fc_parameters = ComprehensiveFCParameters()
+        extraction_function = partial(_do_extraction_on_chunk,
+                                      default_fc_parameters=default_fc_parameters,
+                                      kind_to_fc_parameters=None)
+
         def series_transform(series):
-            _df = pd.DataFrame({
-                'series': series,
-                'id': [1 for _ in range(len(series))]
-            })
-            return tsfresh.extract_features(_df, column_id='id')
+            series_name = series.name
+            if series_name is None:
+                series_name = self.name
+
+            input_series = (
+                1, series_name, series
+            )
+            extracted_data = extraction_function(input_series)
+            extracted_data_flat = {
+                x['variable']: x['value']
+                for x in extracted_data
+            }
+            return extracted_data_flat
 
         super(TsFreshSeriesTransformer, self).__init__(data_types=accepted_types,
                                                        columns=None,
                                                        transform_function=series_transform)
+
+    def transform(self, X, columns=None):
+        self.name = X.name
+        return super(TsFreshSeriesTransformer, self).transform(X, columns)
