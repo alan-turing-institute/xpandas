@@ -2,6 +2,9 @@ This repository presents new model for storing 2d data of any type in Python.
 Inspired by Pandas.
 
 
+[![Build Status](https://travis-ci.com/kiraly-group/transformers.svg?token=WzNyjqtwC8PwsMtns62p&branch=master)](https://travis-ci.com/kiraly-group/transformers)
+
+
 ## Tests
 
 To run tests use command ```nosetests tests``` from the root folder.
