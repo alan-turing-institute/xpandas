@@ -4,3 +4,4 @@ pandas
 scikit-learn
 tsfresh
 nose
+scikit-image
