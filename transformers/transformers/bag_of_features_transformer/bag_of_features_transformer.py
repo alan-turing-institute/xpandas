@@ -6,7 +6,7 @@ import pandas as pd
 from ..transformer import CustomTransformer
 
 
-class BagOfFeaturesTransformer(CustomTransformer):
+class BagOfWordsTransformer(CustomTransformer):
     def __init__(self, dictionary=None, **kwargs):
         self.dictionary = dictionary
 
@@ -21,7 +21,7 @@ class BagOfFeaturesTransformer(CustomTransformer):
                     counter[el] = 0
             return counter
 
-        super(BagOfFeaturesTransformer, self).__init__(data_types=accepted_types,
+        super(BagOfWordsTransformer, self).__init__(data_types=accepted_types,
                                                        columns=None,
                                                        transform_function=bag_of_words_transform_function)
 
@@ -32,7 +32,7 @@ class BagOfFeaturesTransformer(CustomTransformer):
         return dictionary
 
     def fit(self, X=None, y=None, **kwargs):
-        super(BagOfFeaturesTransformer, self).fit(X, y, **kwargs)
+        super(BagOfWordsTransformer, self).fit(X, y, **kwargs)
         if self.dictionary is not None:
             return self
         self.dictionary = self.__calculate_dictionary(X)

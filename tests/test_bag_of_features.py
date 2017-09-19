@@ -5,7 +5,7 @@ from ..transformers.data_container import MultiSeries, MultiDataFrame
 from ..transformers.transformers.pipeline_transformer import PipeLineChain
 from ..transformers.transformers.transformer import DataFrameTransformer
 from ..transformers.transformers import CustomTransformer
-from ..transformers.transformers.bag_of_features_transformer import BagOfFeaturesTransformer
+from ..transformers.transformers.bag_of_features_transformer import BagOfWordsTransformer
 
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.decomposition import PCA
@@ -27,7 +27,7 @@ def test_bag_of_words_for_series():
     transformed_series = tokenizer_transformer.fit_transform(series)
     # print(transformed_series)
 
-    bag_transform = BagOfFeaturesTransformer()
+    bag_transform = BagOfWordsTransformer()
 
     transformed_series = bag_transform.fit_transform(transformed_series)
 
@@ -56,7 +56,7 @@ def test_bag_of_words_for_series_pipeline():
         ('preprocessing', CustomTransformer(
             transform_function=lambda text: text.lower().translate(translator).strip().split()
         )),
-        ('extractor', BagOfFeaturesTransformer()),
+        ('extractor', BagOfWordsTransformer()),
         ('pca', PCA(n_components=10)),
         # ('svc', LinearSVC())
     ])
