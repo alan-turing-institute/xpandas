@@ -22,8 +22,8 @@ class BagOfWordsTransformer(CustomTransformer):
             return counter
 
         super(BagOfWordsTransformer, self).__init__(data_types=accepted_types,
-                                                       columns=None,
-                                                       transform_function=bag_of_words_transform_function)
+                                                    columns=None,
+                                                    transform_function=bag_of_words_transform_function)
 
     def __calculate_dictionary(self, X):
         dictionary = set()

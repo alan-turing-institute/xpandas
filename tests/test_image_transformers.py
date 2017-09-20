@@ -1,9 +1,8 @@
-import os
 import numpy as np
-
-from ..transformers.data_container import MultiSeries, MultiDataFrame
-from ..transformers.transformers.image_transformer import ImageTransformer
 import skimage.transform as skimage_transform
+
+from ..transformers.data_container import MultiSeries
+from ..transformers.transformers.image_transformer import ImageTransformer
 
 n = 20
 m = 20

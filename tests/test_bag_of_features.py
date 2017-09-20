@@ -1,16 +1,14 @@
+import string
+
 import numpy as np
-import pandas as pd
-
-from ..transformers.data_container import MultiSeries, MultiDataFrame
-from ..transformers.transformers.pipeline_transformer import PipeLineChain
-from ..transformers.transformers.transformer import DataFrameTransformer
-from ..transformers.transformers import CustomTransformer
-from ..transformers.transformers.bag_of_features_transformer import BagOfWordsTransformer
-
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.decomposition import PCA
-from sklearn.svm import LinearSVC
-import string
+
+from ..transformers.data_container import MultiSeries, MultiDataFrame
+from ..transformers.transformers import CustomTransformer
+from ..transformers.transformers.bag_of_features_transformer import BagOfWordsTransformer
+from ..transformers.transformers.pipeline_transformer import PipeLineChain
+
 
 def test_bag_of_words_for_series():
     dataset = fetch_20newsgroups(shuffle=True, random_state=1,
@@ -65,4 +63,3 @@ def test_bag_of_words_for_series_pipeline():
     transformed_series = pipeline.transform(series)
 
     # print(transformed_series)
-

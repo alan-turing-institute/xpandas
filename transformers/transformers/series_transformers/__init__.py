@@ -1,2 +1,2 @@
-from .series_transformer import TimeSeriesWindowTransformer, TsFreshSeriesTransformer,\
+from .series_transformer import TimeSeriesWindowTransformer, TsFreshSeriesTransformer, \
     TimeSeriesTransformer, MeanSeriesTransformer
