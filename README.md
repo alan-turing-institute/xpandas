@@ -4,6 +4,7 @@ Inspired by Pandas.
 
 [![Build Status](https://travis-ci.com/kiraly-group/transformers.svg?token=WzNyjqtwC8PwsMtns62p&branch=master)](https://travis-ci.com/kiraly-group/transformers)
 
+![MultiDataFrame](/examples/MultiDataFrame.png)
 
 ## Tests
 
