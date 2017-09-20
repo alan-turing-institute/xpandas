@@ -113,6 +113,6 @@ class TsFreshSeriesTransformer(CustomTransformer):
                                                        columns=None,
                                                        transform_function=series_transform)
 
-    def transform(self, X, columns=None):
+    def transform(self, X):
         self.name = X.name
-        return super(TsFreshSeriesTransformer, self).transform(X, columns)
+        return super(TsFreshSeriesTransformer, self).transform(X)

@@ -78,6 +78,16 @@ class MultiSeries(pd.Series):
             self._data_type = type(data._values[0])
 
     def apply(self, *args, **kwargs):
+        '''
+        Overwrite standart pandas.Series method.
+        Apply transform function to all elements in self.
+        *If transform function return dict like object,
+        transform MultiSeries to MultiDataFrame see MultiDataFrame constructor*
+
+        :param func: function to apply
+        :param prefix: prefix for columns if needs to return MultiDataFrame object
+        :return: MultiSeries of MultiDataFrame depending on transformation
+        '''
         func = kwargs.get('func')
         if func is None:
             func = args[0]
