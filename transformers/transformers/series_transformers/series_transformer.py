@@ -8,6 +8,12 @@ from ..transformer import CustomTransformer
 
 
 class TimeSeriesTransformer(CustomTransformer):
+    '''
+    Extract common features 'mean', 'std', 'max', 'min',
+        'median', 'quantile_25', 'quantile_75',
+        'quantile_90', 'quantile_95' from pandas.Series.
+    Transform MultiSeries to MultiDataFrame.
+    '''
     FEATURES = [
         'mean', 'std', 'max', 'min',
         'median', 'quantile_25', 'quantile_75',
@@ -15,6 +21,9 @@ class TimeSeriesTransformer(CustomTransformer):
     ]
 
     def __init__(self, features=None, **kwargs):
+        '''
+        :param features: list of features from FEATURES property
+        '''
         accepted_types = [
             pd.Series
         ]
@@ -45,7 +54,13 @@ class TimeSeriesTransformer(CustomTransformer):
 
 
 class TimeSeriesWindowTransformer(CustomTransformer):
+    '''
+    Calculate rolling mean over MultiSeries of pandas.Series.
+    '''
     def __init__(self, windows_size=3, **kwargs):
+        '''
+        :param windows_size: size of window for rolling mean
+        '''
         accepted_types = [
             pd.Series
         ]
@@ -60,6 +75,9 @@ class TimeSeriesWindowTransformer(CustomTransformer):
 
 
 class MeanSeriesTransformer(CustomTransformer):
+    '''
+    Example transformer
+    '''
     def __init__(self, **kwargs):
         self.total_mean = None
 
@@ -86,6 +104,10 @@ class MeanSeriesTransformer(CustomTransformer):
 
 
 class TsFreshSeriesTransformer(CustomTransformer):
+    '''
+    Performs transformation with tsfresh http://tsfresh.readthedocs.io/en/latest/ package
+    over MultiSeries of pandas.Series.
+    '''
     def __init__(self, **kwargs):
         accepted_types = [
             pd.Series

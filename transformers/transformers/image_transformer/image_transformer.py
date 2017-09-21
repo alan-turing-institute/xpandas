@@ -4,7 +4,14 @@ from ..transformer import CustomTransformer
 
 
 class ImageTransformer(CustomTransformer):
+    '''
+    Performs image transformation based on skimage transformation function
+    http://scikit-image.org/docs/dev/api/skimage.transform.html
+    '''
     def __init__(self, skimage_function=None, **function_params):
+        '''
+        :param skimage_function: transformation function from skimage
+        '''
         accepted_types = [
             list, np.ndarray, np.array
         ]
