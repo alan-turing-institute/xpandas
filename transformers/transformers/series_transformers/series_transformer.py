@@ -50,8 +50,10 @@ class TimeSeriesWindowTransformer(CustomTransformer):
             pd.Series
         ]
 
+        self.windows_size = windows_size
+
         def series_transform(series, **params):
-            return series.rolling(window=windows_size).mean().dropna()
+            return series.rolling(window=self.windows_size).mean().dropna()
 
         super(TimeSeriesWindowTransformer, self).__init__(data_types=accepted_types,
                                                           transform_function=series_transform)
