@@ -1,6 +1,6 @@
-![Logo](/examples/imgs/Logo.png)
+[![Build Status](https://travis-ci.com/kiraly-group/transformers.svg?token=WzNyjqtwC8PwsMtns62p&branch=development)](https://travis-ci.com/kiraly-group/transformers)
 
-[![Build Status](https://travis-ci.com/kiraly-group/XPandas.svg?token=WzNyjqtwC8PwsMtns62p&branch=master)](https://travis-ci.com/kiraly-group/transformers)
+![Logo](/examples/imgs/Logo.png)
 
 
 **XPandas** project presents data containers for storing 1d/2d data of any type
