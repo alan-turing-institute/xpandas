@@ -3,8 +3,9 @@
 ![Logo](/examples/imgs/Logo.png)
 
 
-**XPandas** project presents data containers for storing 1d/2d data of any type
- and apply transformations over them.
+**XPandas** (extended [`Pandas`](https://pandas.pydata.org/))
+project presents data containers for storing 1d/2d data of any type
+and apply transformations over them.
 
 
 ## Description
@@ -39,7 +40,7 @@ an encapsulation for function `f: XSeries -> XSeries or XDataFrame`.
 ![Transformer](/examples/imgs/Transformer.png)
 
 
-There are several pre implementer transformers that may be useful for several data types
+There are several pre implementer transformers that may be useful for several data types:
 
 ###### Time series
 * `TimeSeriesTransformer(features)` — extract `features` from each series.
@@ -67,8 +68,14 @@ Performs bag-of-features transformer for strings of any categorical data
 There is also a special transformer called `PipeLineChain`. This transformer can
 chain multiple transformers and `scikit-learn` predictor into a single pipeline.
 `PipeLineChain` is based on `scikit-learn`
-[Pipeline](http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline)
+[Pipeline](http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline).
 
+
+
+## Examples
+
+Take a look at `examples/Example Usage.ipynb` for understanding basic
+functionality of `XPandas`.
 
 
 ## Tests
