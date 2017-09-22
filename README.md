@@ -39,6 +39,38 @@ an encapsulation for function `f: XSeries -> XSeries or XDataFrame`.
 ![Transformer](/examples/imgs/Transformer.png)
 
 
+There are several pre implementer transformers that may be useful for several data types
+
+###### Time series
+* `TimeSeriesTransformer(features)` — extract `features` from each series.
+`features` is a subset of [
+        'mean', 'std', 'max', 'min',
+        'median', 'quantile_25', 'quantile_75',
+        'quantile_90', 'quantile_95'
+    ]
+
+* `TimeSeriesWindowTransformer(windows_size)` — calculate rolling mean with given `windows_size`
+* `TsFreshSeriesTransformer` — extract features using [tsfresh](tsfresh.readthedocs.io) package
+
+
+###### Image
+* `ImageTransformer` — Performs image transformation based on 
+skimage
+[transformation function](http://scikit-image.org/docs/dev/api/skimage.transform.html)
+
+
+###### Categorical data
+* `BagOfWordsTransformer(dictionary)` —
+Performs bag-of-features transformer for strings of any categorical data
+
+
+There is also a special transformer called `PipeLineChain`. This transformer can
+chain multiple transformers and `scikit-learn` predictor into a single pipeline.
+`PipeLineChain` is based on `scikit-learn`
+[Pipeline](http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline)
+
+
+
 ## Tests
 
 To run tests use command `pytest` from the root folder.
