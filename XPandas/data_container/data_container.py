@@ -37,32 +37,32 @@ def _is_class_a_primitive(cls):
     return cls in primitives
 
 
-class MultiSeries(pd.Series):
+class XSeries(pd.Series):
     '''
-    MultiSeries is an homogeneous abstract 1d container that encapsulates any data type inside.
+    XSeries is an homogeneous abstract 1d container that encapsulates any data type inside.
     It is an extension of pandas.Series class.
-    MultiSeries has a property data_type that is a type ot objects that are inside MultiSeries.
+    XSeries has a property data_type that is a type ot objects that are inside XSeries.
     '''
     _metadata = ['data_type']
 
     @property
     def _constructor(self):
-        return MultiSeries
+        return XSeries
 
     @property
     def _constructor_expanddim(self):
-        return MultiDataFrame
+        return XDataFrame
 
     def __init__(self, *args, **kwargs):
         '''
         The same arguments as for pandas.Series
         https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html
 
-        In order to create MultiSeries of any data_type, data argument must be a pythons list.
-        For example, to create MultiSeries of pandas.Series, pass data should be
+        In order to create XSeries of any data_type, data argument must be a pythons list.
+        For example, to create XSeries of pandas.Series, pass data should be
         data = [s_1, s2, ..., s3] where s_i is a instance of pandas.Series.
         '''
-        super(MultiSeries, self).__init__(*args, **kwargs)
+        super(XSeries, self).__init__(*args, **kwargs)
 
         data = kwargs.get('data')
         if data is None:
@@ -82,11 +82,11 @@ class MultiSeries(pd.Series):
         Overwrite standart pandas.Series method.
         Apply transform function to all elements in self.
         *If transform function return dict like object,
-        transform MultiSeries to MultiDataFrame see MultiDataFrame constructor*
+        transform XSeries to XDataFrame see XDataFrame constructor*
 
         :param func: function to apply
-        :param prefix: prefix for columns if needs to return MultiDataFrame object
-        :return: MultiSeries of MultiDataFrame depending on transformation
+        :param prefix: prefix for columns if needs to return XDataFrame object
+        :return: XSeries of XDataFrame depending on transformation
         '''
         func = kwargs.get('func')
         if func is None:
@@ -103,7 +103,7 @@ class MultiSeries(pd.Series):
             custom_prefix = self.name
 
         if mapped_series.__is_data_type_dict_like():
-            custom_df = MultiDataFrame.from_records(mapped_series.values)
+            custom_df = XDataFrame.from_records(mapped_series.values)
 
             if custom_prefix is not None:
                 custom_df.columns = custom_df.columns.map(lambda x: '{}_{}'.format(custom_prefix, x))
@@ -154,11 +154,11 @@ class MultiSeries(pd.Series):
         return self
 
     def __str__(self):
-        s = super(MultiSeries, self).__str__()
+        s = super(XSeries, self).__str__()
         return '{}\ndata_type: {}'.format(s, self.data_type)
 
     def __getitem__(self, key):
-        return super(MultiSeries, self).__getitem__(key)
+        return super(XSeries, self).__getitem__(key)
 
     def __setitem__(self, key, value):
         value_type = type(value)
@@ -167,31 +167,31 @@ class MultiSeries(pd.Series):
                 key, value, value_type, self.data_type
             ))
 
-        return super(MultiSeries, self).__setitem__(key, value)
+        return super(XSeries, self).__setitem__(key, value)
 
 
-class MultiDataFrame(pd.DataFrame):
+class XDataFrame(pd.DataFrame):
     '''
-    MultiDataFrame is 2d container that stores MultiSeries objects
-    MultiDataFrame is an extension of pandas.DataFrame object
+    XDataFrame is 2d container that stores XSeries objects
+    XDataFrame is an extension of pandas.DataFrame object
     '''
     @property
     def _constructor(self):
-        return MultiDataFrame
+        return XDataFrame
 
     @property
     def _constructor_sliced(self):
-        return MultiSeries
+        return XSeries
 
     def __init__(self, *args, **kwargs):
         '''
         The same arguments as for pandas.DataFrame
         https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html
 
-        data argument should be a list of MultiSeries objects or dict of MultiSeries objects.
+        data argument should be a list of XSeries objects or dict of XSeries objects.
         In dict is passed, key must be a string and it's indicate appropriate column name.
-        For example, to create MultiDataFrame data should looks like
-        data = {'col_1': s_1, 'col_2': s_2, ..., 'col_n': s_n} where s_i is a MultiSeries
+        For example, to create XDataFrame data should looks like
+        data = {'col_1': s_1, 'col_2': s_2, ..., 'col_n': s_n} where s_i is a XSeries
         '''
         data = kwargs.get('data')
         if data is None:
@@ -204,13 +204,13 @@ class MultiDataFrame(pd.DataFrame):
             data_to_check = data.values()
 
         for d in data_to_check:
-            if not isinstance(d, MultiSeries):
-                raise ValueError('All data must be MultiSeries instances')
-        super(MultiDataFrame, self).__init__(*args, **kwargs)
+            if not isinstance(d, XSeries):
+                raise ValueError('All data must be XSeries instances')
+        super(XDataFrame, self).__init__(*args, **kwargs)
 
     def get_columns_of_type(self, column_type):
         '''
-        Get all columns from MultiDataFrame with given column_type
+        Get all columns from XDataFrame with given column_type
         :param column_type: list of types or a single type
         :return: tuple. the first element is subMultiDataFrame and second
                 is a list of column of a given column_type
@@ -228,7 +228,7 @@ class MultiDataFrame(pd.DataFrame):
 
     def get_data_types(self):
         '''
-        Get a list of data_types of each MultiSeries inside MultiDataFrame
+        Get a list of data_types of each XSeries inside XDataFrame
         :return: list of data_type
         '''
         data_types = [
@@ -240,7 +240,7 @@ class MultiDataFrame(pd.DataFrame):
     def to_pandas_dataframe(self):
         '''
         Convert self to pandas.DataFrame if all columns are primitive types.
-        See more at MultiSeries.to_pandas_series
+        See more at XSeries.to_pandas_series
         :return:
         '''
         data_types = self.get_data_types()
@@ -257,10 +257,10 @@ class MultiDataFrame(pd.DataFrame):
     @classmethod
     def concat_dataframes(cls, data_frames):
         '''
-        Concatenate MultiDataFrame using pandas.concat method
+        Concatenate XDataFrame using pandas.concat method
         https://pandas.pydata.org/pandas-docs/stable/generated/pandas.concat.html
         over columns
-        :param data_frames: list of MultiDataFrame instances
-        :return: MultiDataFrame — concatenated list of data_frames
+        :param data_frames: list of XDataFrame instances
+        :return: XDataFrame — concatenated list of data_frames
         '''
         return pd.concat(data_frames, axis=1)

@@ -4,15 +4,15 @@ import sys
 here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
-from ..transformers.data_container import MultiDataFrame, MultiSeries
-from ..transformers.transformers import CustomTransformer, TimeSeriesTransformer, \
+from ..XPandas.data_container import XDataFrame, XSeries
+from ..XPandas.transformers import CustomTransformer, TimeSeriesTransformer, \
     TimeSeriesWindowTransformer, MeanSeriesTransformer, DataFrameTransformer, PipeLineChain
 import pandas as pd
 import numpy as np
 
 
 def test_transformer_custom():
-    s = MultiSeries([
+    s = XSeries([
         pd.Series([1, 2, 3], index=['a', 'b', 'c']),
         pd.Series([4, 5, 6], index=['d', 'e', 'g'])
     ])
@@ -22,12 +22,12 @@ def test_transformer_custom():
 
     s_transformed = series_transformer.transform(s)
 
-    assert type(s_transformed) == MultiSeries
+    assert type(s_transformed) == XSeries
     assert s_transformed.data_type == np.float64
 
 
 def test_transformer_custom_to_data_frame():
-    s = MultiSeries([
+    s = XSeries([
         pd.Series([1, 2, 3], index=['a', 'b', 'c']),
         pd.Series([4, 5, 6], index=['d', 'e', 'g'])
     ])
@@ -37,11 +37,11 @@ def test_transformer_custom_to_data_frame():
 
     s_transformed = series_transformer.transform(s)
 
-    assert type(s_transformed) == MultiDataFrame
+    assert type(s_transformed) == XDataFrame
 
 
 def test_transformer_custom_series_to_series():
-    s = MultiSeries([
+    s = XSeries([
         pd.Series([1, 2, 3], index=['a', 'b', 'c']),
         pd.Series([4, 5, 6], index=['d', 'e', 'g'])
     ])
@@ -51,12 +51,12 @@ def test_transformer_custom_series_to_series():
 
     s_transformed = series_transformer.transform(s)
 
-    assert type(s_transformed) == MultiSeries
+    assert type(s_transformed) == XSeries
     assert s_transformed.data_type == pd.Series
 
 
 def test_transformer_series_transformer():
-    s = MultiSeries([
+    s = XSeries([
         pd.Series([1, 2, 3], index=['a', 'b', 'c']),
         pd.Series([4, 5, 6], index=['d', 'e', 'g'])
     ])
@@ -66,11 +66,11 @@ def test_transformer_series_transformer():
 
     transformed_series = series_transformer.transform(s)
 
-    assert type(transformed_series) == MultiDataFrame
+    assert type(transformed_series) == XDataFrame
 
 
 def test_transformer_series_to_series_transformer():
-    s = MultiSeries([
+    s = XSeries([
         pd.Series(np.random.normal(0, 10, 100)),
         pd.Series(np.random.uniform(-100, 100, 150)),
         pd.Series(np.random.random_integers(0, 500, 200))
@@ -83,17 +83,17 @@ def test_transformer_series_to_series_transformer():
 
     assert series_to_series_transformer.transform_function(s[0]).equals(transformed_series[0])
     assert transformed_series.data_type == pd.Series
-    assert type(transformed_series) == MultiSeries
+    assert type(transformed_series) == XSeries
 
 
 def test_transformer_data_frame():
-    s1 = MultiSeries([pd.Series([1, 2, 3], index=['a', 'b', 'c']),
+    s1 = XSeries([pd.Series([1, 2, 3], index=['a', 'b', 'c']),
                       pd.Series([4, 5, 6], index=['d', 'e', 'g'])])
-    s2 = MultiSeries([1, 2, 3])
-    s3 = MultiSeries([{"k1": "v1"}, {"k2": 'v2'}])
-    s4 = MultiSeries(['f', 's', 't'])
+    s2 = XSeries([1, 2, 3])
+    s3 = XSeries([{"k1": "v1"}, {"k2": 'v2'}])
+    s4 = XSeries(['f', 's', 't'])
 
-    df = MultiDataFrame({
+    df = XDataFrame({
         'second_col': s2,
         'third_col': s3,
         'fourth_col': s4
@@ -106,17 +106,17 @@ def test_transformer_data_frame():
     except:
         assert True
 
-    s1 = MultiSeries([
+    s1 = XSeries([
         pd.Series(np.random.normal(size=10)),
         pd.Series(np.random.normal(size=15))
     ])
-    s2 = MultiSeries([
+    s2 = XSeries([
         pd.Series(np.random.normal(size=10)),
         pd.Series(np.random.normal(size=10))
     ])
-    s3 = MultiSeries([{"k1": "v1"}, {"k2": 'v2'}])
-    s4 = MultiSeries(['f', 's'])
-    df = MultiDataFrame({
+    s3 = XSeries([{"k1": "v1"}, {"k2": 'v2'}])
+    s4 = XSeries(['f', 's'])
+    df = XDataFrame({
         'first_col': s1,
         'second_col': s2,
         'third_col': s3,
@@ -140,7 +140,7 @@ def test_transformer_data_frame():
 def test_pipeline_transformer_for_series():
     from sklearn.decomposition import PCA
 
-    s1 = MultiSeries([
+    s1 = XSeries([
         pd.Series(np.random.normal(size=15)),
         pd.Series(np.random.normal(size=15)),
         pd.Series(np.random.normal(size=15)),
@@ -171,11 +171,11 @@ def test_pipeline_transformer_for_series():
 
 
 def test_mean_transformer():
-    s1 = MultiSeries([
+    s1 = XSeries([
         pd.Series(np.random.normal(size=10)),
         pd.Series(np.random.normal(size=15))
     ])
-    s2 = MultiSeries([
+    s2 = XSeries([
         pd.Series(np.random.normal(size=10)),
         pd.Series(np.random.normal(size=15)),
         pd.Series(np.random.normal(size=100))
@@ -187,20 +187,20 @@ def test_mean_transformer():
     transformed_s = tr.transform(s2)
 
     assert transformed_s.shape[0] == 3
-    assert type(transformed_s) == MultiSeries
+    assert type(transformed_s) == XSeries
 
 
 def test_mean_transformer_data_frame():
-    s1 = MultiSeries([
+    s1 = XSeries([
         pd.Series(np.random.normal(size=10)),
         pd.Series(np.random.normal(size=15))
     ])
-    s2 = MultiSeries([
+    s2 = XSeries([
         pd.Series(np.random.normal(size=10)),
         pd.Series(np.random.normal(size=15))
     ])
 
-    df = MultiDataFrame({
+    df = XDataFrame({
         's1': s1,
         's2': s2
     })

@@ -1,13 +1,13 @@
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from ..data_container import MultiDataFrame, MultiSeries
+from ..data_container import XDataFrame, XSeries
 
 
 class CustomTransformer(BaseEstimator, TransformerMixin):
     '''
     CustomTransformer is a base class for all custom transformers.
-    CustomTransformer is a high level abstraction to transform MultiSeries of
-    specific data_types to an another MultiSeries or MultiDataFrame.
+    CustomTransformer is a high level abstraction to transform XSeries of
+    specific data_types to an another XSeries or XDataFrame.
     CustomTransformer encapsulates transformation and based on scikit-learn BaseEstimator
     http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html
     '''
@@ -34,13 +34,13 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
 
     def _check_input(self, input_data):
         '''
-        Check that input valid: input_data is MultiSeries and transformer
+        Check that input valid: input_data is XSeries and transformer
         "knows" how to work with input_data.data_type.
         In error raise exception.
         '''
-        if type(input_data) != MultiSeries:
-            raise ValueError('X must be MultiSeries type')
-        elif type(input_data) == MultiSeries and self.data_types is not None \
+        if type(input_data) != XSeries:
+            raise ValueError('X must be XSeries type')
+        elif type(input_data) == XSeries and self.data_types is not None \
                 and input_data.data_type not in self.data_types:
             raise ValueError('Estimator does not support {} type'.format(input_data.data_type))
 
@@ -48,7 +48,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         '''
         Fit transformer for giver data.
         Must be overwritten in child classes
-        :param X: MultiSeries to fit transformer on
+        :param X: XSeries to fit transformer on
         :param y: Labels column for X
         :param kwargs: additional arguments for transformer
         :return: fitted self object
@@ -60,20 +60,20 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
 
     def _transform_series(self, custom_series):
         '''
-        Helper method to transform MultiSeries
-        :param custom_series: MultiSeries object
-        :return: transformed MultiSeries.
-                 it could be MultiSeries or MultiDataFrame object
+        Helper method to transform XSeries
+        :param custom_series: XSeries object
+        :return: transformed XSeries.
+                 it could be XSeries or XDataFrame object
         '''
         return custom_series.apply(func=self.transform_function, prefix=self.name)
 
     def transform(self, X):
         '''
         Apply transformation to X with current transformer
-        :param X: input MultiSeries
+        :param X: input XSeries
         :param columns: deprecated
-        :return: transformed MultiSeries.
-                 it could be MultiSeries or MultiDataFrame object
+        :return: transformed XSeries.
+                 it could be XSeries or XDataFrame object
 
         '''
         if not hasattr(self, self._TRANSFORM_ARG_FUNCTION_NAME):
@@ -90,7 +90,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
 class DataFrameTransformer(BaseEstimator, TransformerMixin):
     '''
     DataFrameTransformer is a set of CustomTransformer instances.
-    DataFrameTransformer can transform MultiDataFrame object to another MultiDataFrame
+    DataFrameTransformer can transform XDataFrame object to another XDataFrame
     based on set of CustomTransformer transformers.
     '''
     def _validate_transformations(self, transformations):
@@ -113,8 +113,8 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
         '''
         Fit each transformer at self.transformations dictionary
         '''
-        if not isinstance(X, MultiDataFrame):
-            raise TypeError('X must be a MultiDataFrame type. Not {}'.format(type(X)))
+        if not isinstance(X, XDataFrame):
+            raise TypeError('X must be a XDataFrame type. Not {}'.format(type(X)))
 
         for col_name in self.transformations.keys():
             self.transformations[col_name].fit(X[col_name])
@@ -136,12 +136,12 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
             new_col_name = columns_mapping.get(col_name, col_name)
             transformed_column = transformer.transform(X[new_col_name])
 
-            if type(transformed_column) == MultiSeries:
+            if type(transformed_column) == XSeries:
                 transformers_df[new_col_name] = transformed_column
             else:
                 transformers_df.drop(new_col_name, inplace=True, axis=1)
 
-                transformers_df = MultiDataFrame.concat_dataframes(
+                transformers_df = XDataFrame.concat_dataframes(
                     [transformers_df, transformed_column]
                 )
 

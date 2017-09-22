@@ -1,14 +1,14 @@
 import numpy as np
 import pandas as pd
 
-from ..transformers.data_container import MultiSeries, MultiDataFrame
-from ..transformers.transformers.pipeline_transformer import PipeLineChain
-from ..transformers.transformers.series_transformers import TsFreshSeriesTransformer, TimeSeriesWindowTransformer
-from ..transformers.transformers.transformer import DataFrameTransformer
+from ..XPandas.data_container import XSeries, XDataFrame
+from ..XPandas.transformers.pipeline_transformer import PipeLineChain
+from ..XPandas.transformers.series_transformers import TsFreshSeriesTransformer, TimeSeriesWindowTransformer
+from ..XPandas.transformers.transformer import DataFrameTransformer
 
 
 def test_ts_fresh_series():
-    series = MultiSeries([
+    series = XSeries([
         pd.Series(np.random.uniform(0, 100, 100)),
         pd.Series(np.random.uniform(0, 100, 100)),
         pd.Series(np.random.uniform(0, 100, 100)),
@@ -25,22 +25,22 @@ def test_ts_fresh_series():
     transformed = transformer.transform(series)
     # print(transformed)
 
-    assert type(transformed) == MultiDataFrame
+    assert type(transformed) == XDataFrame
 
 
 def test_ts_fresh_df():
-    s1 = MultiSeries([
+    s1 = XSeries([
         pd.Series(np.random.uniform(0, 100, 10)),
         pd.Series(np.random.uniform(0, 100, 10)),
         pd.Series(np.random.uniform(0, 100, 10))
     ], name='X')
-    s2 = MultiSeries([
+    s2 = XSeries([
         pd.Series(np.random.uniform(0, 100, 10)),
         pd.Series(np.random.uniform(0, 100, 10)),
         pd.Series(np.random.uniform(0, 100, 10))
     ], name='Y')
 
-    df = MultiDataFrame({
+    df = XDataFrame({
         'X': s1,
         'Y': s2
     })
@@ -53,11 +53,11 @@ def test_ts_fresh_df():
     data_frame_transformer.fit(df)
     transformed_df = data_frame_transformer.transform(df)
 
-    assert type(transformed_df) == MultiDataFrame
+    assert type(transformed_df) == XDataFrame
 
 
 def test_ts_fresh_chain():
-    s1 = MultiSeries([
+    s1 = XSeries([
         pd.Series(np.random.normal(0, 1, 20))
         for _ in range(10)
     ], name='X')
@@ -72,4 +72,4 @@ def test_ts_fresh_chain():
 
     # print(transformed_df.head())
 
-    assert type(transformed_df) == MultiDataFrame
+    assert type(transformed_df) == XDataFrame

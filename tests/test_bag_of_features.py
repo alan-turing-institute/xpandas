@@ -4,17 +4,17 @@ import numpy as np
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.decomposition import PCA
 
-from ..transformers.data_container import MultiSeries, MultiDataFrame
-from ..transformers.transformers import CustomTransformer
-from ..transformers.transformers.bag_of_features_transformer import BagOfWordsTransformer
-from ..transformers.transformers.pipeline_transformer import PipeLineChain
+from ..XPandas.data_container import XSeries, XDataFrame
+from ..XPandas.transformers import CustomTransformer
+from ..XPandas.transformers.bag_of_features_transformer import BagOfWordsTransformer
+from ..XPandas.transformers.pipeline_transformer import PipeLineChain
 
 
 def test_bag_of_words_for_series():
     dataset = fetch_20newsgroups(shuffle=True, random_state=1,
                                  remove=('headers', 'footers', 'quotes'))
 
-    series = MultiSeries(dataset.data[:10])
+    series = XSeries(dataset.data[:10])
     assert series.data_type == str
 
     translator = str.maketrans('', '', string.punctuation)
@@ -31,14 +31,14 @@ def test_bag_of_words_for_series():
 
     # print(transformed_series)
 
-    assert type(transformed_series) == MultiDataFrame
+    assert type(transformed_series) == XDataFrame
 
 
 def test_bag_of_words_for_series_pipeline():
     dataset = fetch_20newsgroups(shuffle=True, random_state=1,
                                  remove=('headers', 'footers', 'quotes'))
     n = 100
-    series = MultiSeries(dataset.data[:n])
+    series = XSeries(dataset.data[:n])
     assert series.data_type == str
 
     translator = str.maketrans('', '', string.punctuation)
