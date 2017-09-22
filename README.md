@@ -17,7 +17,13 @@ do map-reduce style complex transformations but not limited to it.
 For example you may want to store `pandas.Series` objects inside `XSeries`.
 `XSeries` can be visualised according to a schema
 
-![XSeries](/examples/imgs/XSeries.png =250x250)
+![XSeries](/examples/imgs/XSeries.png)
+
+
+`XDataFrame` is based on `pandas.DataFrame` and can store set of `XSeries`.
+For example you may want to store `pandas.Series` objects inside `XSeries`.
+`XSeries` can be visualised according to a schema
+
 
 
 ## Tests
