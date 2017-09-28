@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/kiraly-group/transformers.svg?token=WzNyjqtwC8PwsMtns62p&branch=development)](https://travis-ci.com/kiraly-group/transformers)
+[![Build Status](https://travis-ci.com/kiraly-group/XPandas.svg?token=WzNyjqtwC8PwsMtns62p&branch=development)](https://travis-ci.com/kiraly-group/XPandas)
 
 ![Logo](/examples/imgs/Logo.png)
 
