@@ -11,7 +11,7 @@ class PipeLineChain(Pipeline):
             transformed_object = MultiDataFrame(transformed_object)
         return transformed_object
 
-
+    # TODO: remove this comment
     # def _check_list_of_transforms(self, transforms):
     #     try:
     #         is_ok = all(

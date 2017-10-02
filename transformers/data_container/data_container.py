@@ -9,7 +9,7 @@ def check_all_elements_have_the_same_property(array, func):
         first_element_type = func(array[0])
     except:
         return True, None
-    #
+    # TODO: remove comment block
     # if len(array) == 3:
     #     print('\n\n\n')
     #     print(array)
