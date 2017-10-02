@@ -8,6 +8,12 @@ from ..transformer import CustomTransformer
 
 
 class TimeSeriesTransformer(CustomTransformer):
+    '''
+    Extract common features 'mean', 'std', 'max', 'min',
+        'median', 'quantile_25', 'quantile_75',
+        'quantile_90', 'quantile_95' from pandas.Series.
+    Transform XSeries to XDataFrame.
+    '''
     FEATURES = [
         'mean', 'std', 'max', 'min',
         'median', 'quantile_25', 'quantile_75',
@@ -15,6 +21,9 @@ class TimeSeriesTransformer(CustomTransformer):
     ]
 
     def __init__(self, features=None, **kwargs):
+        '''
+        :param features: list of features from FEATURES property
+        '''
         accepted_types = [
             pd.Series
         ]
@@ -45,19 +54,30 @@ class TimeSeriesTransformer(CustomTransformer):
 
 
 class TimeSeriesWindowTransformer(CustomTransformer):
+    '''
+    Calculate rolling mean over XSeries of pandas.Series.
+    '''
     def __init__(self, windows_size=3, **kwargs):
+        '''
+        :param windows_size: size of window for rolling mean
+        '''
         accepted_types = [
             pd.Series
         ]
 
+        self.windows_size = windows_size
+
         def series_transform(series, **params):
-            return series.rolling(window=windows_size).mean().dropna()
+            return series.rolling(window=self.windows_size).mean().dropna()
 
         super(TimeSeriesWindowTransformer, self).__init__(data_types=accepted_types,
                                                           transform_function=series_transform)
 
 
 class MeanSeriesTransformer(CustomTransformer):
+    '''
+    Example transformer
+    '''
     def __init__(self, **kwargs):
         self.total_mean = None
 
@@ -84,6 +104,10 @@ class MeanSeriesTransformer(CustomTransformer):
 
 
 class TsFreshSeriesTransformer(CustomTransformer):
+    '''
+    Performs transformation with tsfresh http://tsfresh.readthedocs.io/en/latest/ package
+    over XSeries of pandas.Series.
+    '''
     def __init__(self, **kwargs):
         accepted_types = [
             pd.Series
@@ -113,6 +137,6 @@ class TsFreshSeriesTransformer(CustomTransformer):
                                                        columns=None,
                                                        transform_function=series_transform)
 
-    def transform(self, X, columns=None):
+    def transform(self, X):
         self.name = X.name
-        return super(TsFreshSeriesTransformer, self).transform(X, columns)
+        return super(TsFreshSeriesTransformer, self).transform(X)

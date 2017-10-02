@@ -7,7 +7,13 @@ from ..transformer import CustomTransformer
 
 
 class BagOfWordsTransformer(CustomTransformer):
+    '''
+    Performs bag-of-features transformer for strings of any categorical data.
+    '''
     def __init__(self, dictionary=None, **kwargs):
+        '''
+        :param dictionary: custom dictionary to count against. if None, calculate dictionary from dataset
+        '''
         self.dictionary = dictionary
 
         accepted_types = [
@@ -22,8 +28,8 @@ class BagOfWordsTransformer(CustomTransformer):
             return counter
 
         super(BagOfWordsTransformer, self).__init__(data_types=accepted_types,
-                                                       columns=None,
-                                                       transform_function=bag_of_words_transform_function)
+                                                    columns=None,
+                                                    transform_function=bag_of_words_transform_function)
 
     def __calculate_dictionary(self, X):
         dictionary = set()

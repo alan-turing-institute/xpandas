@@ -1,12 +1,26 @@
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from ..data_container import MultiDataFrame, MultiSeries
+from ..data_container import XDataFrame, XSeries
 
 
 class CustomTransformer(BaseEstimator, TransformerMixin):
+    '''
+    CustomTransformer is a base class for all custom transformers.
+    CustomTransformer is a high level abstraction to transform XSeries of
+    specific data_types to an another XSeries or XDataFrame.
+    CustomTransformer encapsulates transformation and based on scikit-learn BaseEstimator
+    http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html
+    '''
     _TRANSFORM_ARG_FUNCTION_NAME = 'transform_function'
 
     def __init__(self, transform_function=None, data_types=None, name=None, **kwargs):
+        '''
+        :param transform_function: Callable that performs actual transform
+        :param data_types: list of data_type that this transformer can work with. if None,
+                            error might be raised at run time
+        :param name: name for transformer. if none, class name is default
+        :param kwargs: additional arguments
+        '''
         if transform_function is not None and not callable(transform_function):
             raise ValueError('transform_function must be callable')
 
@@ -19,44 +33,66 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
             self.name = name
 
     def _check_input(self, input_data):
-        if type(input_data) != MultiSeries:
-            raise ValueError('X must be MultiSeries type')
-        elif type(input_data) == MultiSeries and self.data_types is not None \
+        '''
+        Check that input valid: input_data is XSeries and transformer
+        "knows" how to work with input_data.data_type.
+        In error raise exception.
+        '''
+        if type(input_data) != XSeries:
+            raise ValueError('X must be XSeries type')
+        elif type(input_data) == XSeries and self.data_types is not None \
                 and input_data.data_type not in self.data_types:
             raise ValueError('Estimator does not support {} type'.format(input_data.data_type))
 
     def fit(self, X=None, y=None, **kwargs):
+        '''
+        Fit transformer for giver data.
+        Must be overwritten in child classes
+        :param X: XSeries to fit transformer on
+        :param y: Labels column for X
+        :param kwargs: additional arguments for transformer
+        :return: fitted self object
+        '''
         if X is not None:
             self._check_input(X)
 
         return self
 
     def _transform_series(self, custom_series):
-        # print(custom_series)
-        # print(type(custom_series))
-        # import numpy as np
-        # print(np.isnan(custom_series[2]))
+        '''
+        Helper method to transform XSeries
+        :param custom_series: XSeries object
+        :return: transformed XSeries.
+                 it could be XSeries or XDataFrame object
+        '''
         return custom_series.apply(func=self.transform_function, prefix=self.name)
 
-    def transform(self, X, columns=None):
+    def transform(self, X):
+        '''
+        Apply transformation to X with current transformer
+        :param X: input XSeries
+        :param columns: deprecated
+        :return: transformed XSeries.
+                 it could be XSeries or XDataFrame object
+
+        '''
         if not hasattr(self, self._TRANSFORM_ARG_FUNCTION_NAME):
             raise ValueError('You mast pass transform_function argument with a function')
 
         self._check_input(X)
 
-        # print(X.shape)
-
         transform_series = self._transform_series(X)
-        # print(type(X))
-        # print(X.index)
-        # print(transform_series.index)
-        # print(1)
         transform_series.index = X.index
 
         return transform_series
 
 
 class DataFrameTransformer(BaseEstimator, TransformerMixin):
+    '''
+    DataFrameTransformer is a set of CustomTransformer instances.
+    DataFrameTransformer can transform XDataFrame object to another XDataFrame
+    based on set of CustomTransformer transformers.
+    '''
     def _validate_transformations(self, transformations):
         for k, v in transformations.items():
             if not isinstance(k, str):
@@ -66,14 +102,19 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self, transformations):
         '''
+        Init DataFrameTransformer with a dict of transformations.
+        Each transformation specify column and transformer object
         :param transformations: dict {column_name: Transformer object}
         '''
         self._validate_transformations(transformations)
         self.transformations = transformations
 
     def fit(self, X=None, y=None, **kwargs):
-        if not isinstance(X, MultiDataFrame):
-            raise TypeError('X must be a MultiDataFrame type. Not {}'.format(type(X)))
+        '''
+        Fit each transformer at self.transformations dictionary
+        '''
+        if not isinstance(X, XDataFrame):
+            raise TypeError('X must be a XDataFrame type. Not {}'.format(type(X)))
 
         for col_name in self.transformations.keys():
             self.transformations[col_name].fit(X[col_name])
@@ -82,7 +123,8 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
 
     def transform(self, X, columns_mapping=None):
         '''
-        :param columns_mapping: {old_col: new_col} mapping
+        Transform X with fitted dictionary self.transformations.
+        :param columns_mapping: {old_col: new_col} mapping between columns in fit dataset and current X
         :return:
         '''
         if columns_mapping is None:
@@ -92,17 +134,14 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
 
         for col_name, transformer in self.transformations.items():
             new_col_name = columns_mapping.get(col_name, col_name)
-            # print(
-            #     X[new_col_name].shape
-            # )
             transformed_column = transformer.transform(X[new_col_name])
 
-            if type(transformed_column) == MultiSeries:
+            if type(transformed_column) == XSeries:
                 transformers_df[new_col_name] = transformed_column
             else:
                 transformers_df.drop(new_col_name, inplace=True, axis=1)
 
-                transformers_df = MultiDataFrame.concat_dataframes(
+                transformers_df = XDataFrame.concat_dataframes(
                     [transformers_df, transformed_column]
                 )
 

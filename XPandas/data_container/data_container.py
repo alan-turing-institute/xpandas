@@ -2,23 +2,20 @@ import numpy as np
 import pandas as pd
 
 
-def check_all_elements_have_the_same_property(array, func):
+def _check_all_elements_have_the_same_property(array, func):
+    '''
+    Helper function that checks if all elements have the same func(element) value.
+    :param array: input values
+    :param func: any callable object
+    :return: tuple. the first element indicates is all elements are have the same func(element) value,
+             second element is a value of func(element)
+    '''
     if len(array) == 0:
         return True, None
     try:
         first_element_type = func(array[0])
     except:
         return True, None
-    #
-    # if len(array) == 3:
-    #     print('\n\n\n')
-    #     print(array)
-    #     array = array[~np.isnan(array)]
-    #     array = [
-    #         x for x in array
-    #         if not np.isnan(x)
-    #     ]
-    #
     do_all_have_property = all(func(x) == first_element_type
                                for x in array)
 
@@ -40,25 +37,38 @@ def _is_class_a_primitive(cls):
     return cls in primitives
 
 
-class MultiSeries(pd.Series):
+class XSeries(pd.Series):
+    '''
+    XSeries is an homogeneous abstract 1d container that encapsulates any data type inside.
+    It is an extension of pandas.Series class.
+    XSeries has a property data_type that is a type ot objects that are inside XSeries.
+    '''
     _metadata = ['data_type']
 
     @property
     def _constructor(self):
-        return MultiSeries
+        return XSeries
 
     @property
     def _constructor_expanddim(self):
-        return MultiDataFrame
+        return XDataFrame
 
     def __init__(self, *args, **kwargs):
-        super(MultiSeries, self).__init__(*args, **kwargs)
+        '''
+        The same arguments as for pandas.Series
+        https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html
+
+        In order to create XSeries of any data_type, data argument must be a pythons list.
+        For example, to create XSeries of pandas.Series, pass data should be
+        data = [s_1, s2, ..., s3] where s_i is a instance of pandas.Series.
+        '''
+        super(XSeries, self).__init__(*args, **kwargs)
 
         data = kwargs.get('data')
         if data is None:
             data = args[0]
 
-        check_result, data_type = check_all_elements_have_the_same_property(data, type)
+        check_result, data_type = _check_all_elements_have_the_same_property(data, type)
         if not check_result:
             raise ValueError('Not all elements the same type')
 
@@ -68,17 +78,24 @@ class MultiSeries(pd.Series):
             self._data_type = type(data._values[0])
 
     def apply(self, *args, **kwargs):
+        '''
+        Overwrite standart pandas.Series method.
+        Apply transform function to all elements in self.
+        *If transform function return dict like object,
+        transform XSeries to XDataFrame see XDataFrame constructor*
+
+        :param func: function to apply
+        :param prefix: prefix for columns if needs to return XDataFrame object
+        :return: XSeries of XDataFrame depending on transformation
+        '''
         func = kwargs.get('func')
         if func is None:
             func = args[0]
 
-        # nan_index = self.isnull()
-
         # TODO
-        # Possibly change!!! to handle NaN also
+        # Possibly change to handle NaN
         mapped_series = self.dropna()
         mapped_series = mapped_series.map(func, na_action='ignore')
-        # print(mapped_series.shape)
         mapped_data_type = mapped_series.data_type
 
         custom_prefix = kwargs.get('prefix')
@@ -86,7 +103,7 @@ class MultiSeries(pd.Series):
             custom_prefix = self.name
 
         if mapped_series.__is_data_type_dict_like():
-            custom_df = MultiDataFrame.from_records(mapped_series.values)
+            custom_df = XDataFrame.from_records(mapped_series.values)
 
             if custom_prefix is not None:
                 custom_df.columns = custom_df.columns.map(lambda x: '{}_{}'.format(custom_prefix, x))
@@ -97,19 +114,38 @@ class MultiSeries(pd.Series):
         return mapped_series
 
     def __is_data_type_dict_like(self):
+        '''
+        Check if data encapsulated by self is instance of dict
+        '''
         return isinstance(self.iloc[0], dict)
 
     @property
     def data_type(self):
+        '''
+        Getter for a data_type property
+        data_type is a data type that self encapsulates
+        For example, if self is contains images, that data_type would be Image
+        '''
         first_element_data_type = type(self.iloc[0])
         self._data_type = first_element_data_type
         return self._data_type
 
     @data_type.setter
     def data_type(self, data_type):
+        '''
+        Setter for a data_type property
+        data_type is a data type that self encapsulates
+        For example, if self is contains images, that data_type would be Image
+        '''
+
         self._data_type = data_type
 
     def to_pandas_series(self):
+        '''
+        Convert self to pandas.Series if data_type is a primitive type
+        etc. number of string
+        :return: Pandas Series or raise exception if data_type is not a primitive type
+        '''
         is_primitive = _is_class_a_primitive(self.data_type)
         if is_primitive:
             self.__class__ = pd.Series
@@ -118,11 +154,11 @@ class MultiSeries(pd.Series):
         return self
 
     def __str__(self):
-        s = super(MultiSeries, self).__str__()
+        s = super(XSeries, self).__str__()
         return '{}\ndata_type: {}'.format(s, self.data_type)
 
     def __getitem__(self, key):
-        return super(MultiSeries, self).__getitem__(key)
+        return super(XSeries, self).__getitem__(key)
 
     def __setitem__(self, key, value):
         value_type = type(value)
@@ -131,19 +167,32 @@ class MultiSeries(pd.Series):
                 key, value, value_type, self.data_type
             ))
 
-        return super(MultiSeries, self).__setitem__(key, value)
+        return super(XSeries, self).__setitem__(key, value)
 
 
-class MultiDataFrame(pd.DataFrame):
+class XDataFrame(pd.DataFrame):
+    '''
+    XDataFrame is 2d container that stores XSeries objects
+    XDataFrame is an extension of pandas.DataFrame object
+    '''
     @property
     def _constructor(self):
-        return MultiDataFrame
+        return XDataFrame
 
     @property
     def _constructor_sliced(self):
-        return MultiSeries
+        return XSeries
 
     def __init__(self, *args, **kwargs):
+        '''
+        The same arguments as for pandas.DataFrame
+        https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html
+
+        data argument should be a list of XSeries objects or dict of XSeries objects.
+        In dict is passed, key must be a string and it's indicate appropriate column name.
+        For example, to create XDataFrame data should looks like
+        data = {'col_1': s_1, 'col_2': s_2, ..., 'col_n': s_n} where s_i is a XSeries
+        '''
         data = kwargs.get('data')
         if data is None:
             data = args[0]
@@ -155,15 +204,16 @@ class MultiDataFrame(pd.DataFrame):
             data_to_check = data.values()
 
         for d in data_to_check:
-            if not isinstance(d, MultiSeries):
-                raise ValueError('All data must be MultiSeries instances')
-        super(MultiDataFrame, self).__init__(*args, **kwargs)
+            if not isinstance(d, XSeries):
+                raise ValueError('All data must be XSeries instances')
+        super(XDataFrame, self).__init__(*args, **kwargs)
 
     def get_columns_of_type(self, column_type):
         '''
-        :param column_type: list of types
-        :return: Return columns from MultiDataFrame (list of names)
-                + sub MultiDataFrame
+        Get all columns from XDataFrame with given column_type
+        :param column_type: list of types or a single type
+        :return: tuple. the first element is subMultiDataFrame and second
+                is a list of column of a given column_type
         '''
         if type(column_type) != list:
             column_type = [column_type]
@@ -177,6 +227,10 @@ class MultiDataFrame(pd.DataFrame):
         return self[columns_to_select], columns_to_select
 
     def get_data_types(self):
+        '''
+        Get a list of data_types of each XSeries inside XDataFrame
+        :return: list of data_type
+        '''
         data_types = [
             self[column].data_type
             for column in self
@@ -184,6 +238,11 @@ class MultiDataFrame(pd.DataFrame):
         return data_types
 
     def to_pandas_dataframe(self):
+        '''
+        Convert self to pandas.DataFrame if all columns are primitive types.
+        See more at XSeries.to_pandas_series
+        :return:
+        '''
         data_types = self.get_data_types()
         is_all_columns_are_primitive = all(
             _is_class_a_primitive(dt)
@@ -197,4 +256,11 @@ class MultiDataFrame(pd.DataFrame):
 
     @classmethod
     def concat_dataframes(cls, data_frames):
+        '''
+        Concatenate XDataFrame using pandas.concat method
+        https://pandas.pydata.org/pandas-docs/stable/generated/pandas.concat.html
+        over columns
+        :param data_frames: list of XDataFrame instances
+        :return: XDataFrame — concatenated list of data_frames
+        '''
         return pd.concat(data_frames, axis=1)
