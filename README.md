@@ -2,11 +2,15 @@
 
 ![Logo](/examples/imgs/Logo.png)
 
+**XPandas** (extended [`Pandas`](https://pandas.pydata.org/)) project presents data containers for storing 1d/2d data of any type and apply transformations over them.
 
-**XPandas** (extended [`Pandas`](https://pandas.pydata.org/))
-project presents data containers for storing 1d/2d data of any type
-and apply transformations over them.
+## Examples
 
+Take a look at `examples/Example Usage.ipynb` for understanding basic functionality of `XPandas`.
+
+## Requirements
+
+XPandas' requirements are part of the [Anaconda](https://www.continuum.io/downloads) distribution. To install the requirements manually run `pip install -r requirements.txt`.
 
 ## Description
 
@@ -16,15 +20,14 @@ do map-reduce style complex transformations but not limited to it.
 
 `XSeries` is based on `pandas.Series` that can store objects of any type.
 For example you may want to store `pandas.Series` objects inside `XSeries`.
-`XSeries` can be visualised according to a schema
+`XSeries` can be visualised according to a schema.
 
 ![XSeries](/examples/imgs/XSeries.png)
-
 
 `XDataFrame` is based on `pandas.DataFrame` and can store set of `XSeries`. One can imagine a data set 
 of a patients in hospital. There might be features like numbers (age, height, weight, etc.), categorical (gender,
 hair color, etc.), images (patients x-ray pictures), time series (heat beat over time), and any other.
-Using `XDataFrame` one can store all this information into one in memory 2d container.  
+Using `XDataFrame` one can store all this information into one in memory 2d container.
 
 ![XDataFrame](/examples/imgs/XDataFrame.png)
 
@@ -38,7 +41,6 @@ for `XSeries` and then `DataFrameTransformer` to create transformer for `XDataFr
 an encapsulation for function `f: XSeries -> XSeries or XDataFrame`.
 
 ![Transformer](/examples/imgs/Transformer.png)
-
 
 There are several pre implementer transformers that may be useful for several data types:
 
@@ -70,20 +72,7 @@ chain multiple transformers and `scikit-learn` predictor into a single pipeline.
 `PipeLineChain` is based on `scikit-learn`
 [Pipeline](http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline).
 
-
-
-## Examples
-
-Take a look at `examples/Example Usage.ipynb` for understanding basic
-functionality of `XPandas`.
-
-
 ## Tests
 
-To run tests use command `pytest` from the root folder.
-If anything is broken, exception will be raised else "OK' is written.
-
-## Requirements
-
-You only need `Pandas` and `numpy` packages to be installed.
-Run `pip install -r requirements.txt` or just install [Anaconda](https://www.continuum.io/downloads).
+To run tests run the command ```nosetests tests``` in the root folder.
+If anything is broken an exception will be raised; otherwise "OK" will be printed.
