@@ -11,8 +11,8 @@ class ImageTransformer(CustomTransformer):
         ]
 
         if skimage_function is None:
-            raise Exception('Please specify transform function from scikit-image'
-                            ' http://scikit-image.org/docs/dev/api/skimage.transform.html')
+            raise Exception('Please specify a transform function from scikit-image'
+                            ' (http://scikit-image.org/docs/dev/api/skimage.transform.html)')
 
         def image_transform_function(img):
             return skimage_function(img, **function_params)

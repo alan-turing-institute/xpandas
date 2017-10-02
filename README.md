@@ -1,18 +1,12 @@
-This repository presents new model for storing 2d data of any type in Python.
-Inspired by Pandas.
+This repository presents new model for storing 2D data of any type in Python. Inspired by Pandas.
 
-
-[![Build Status](https://travis-ci.com/kiraly-group/transformers.svg?token=WzNyjqtwC8PwsMtns62p&branch=master)](https://travis-ci.com/kiraly-group/transformers)
-
-
-## Tests
-
-To run tests use command ```nosetests tests``` from the root folder.
-If anything is broken, exception will be raised else "OK' is written.
+[![Build Status](https://api.travis-ci.com/kiraly-group/XPandas.svg?token=bwQYVkNKkUpai7AxgpfV&branch=master)](https://travis-ci.com/kiraly-group/XPandas)
 
 ## Requirements
 
-You only need `Pandas` and `numpy` packages to be installed.
-Run `pip install -r requirements.txt` or just install [Anaconda](https://www.continuum.io/downloads).
+XPandas' requirements are part of the [Anaconda](https://www.continuum.io/downloads) distribution. To install the requirements manually run `pip install -r requirements.txt`.
 
-## Test section
+## Tests
+
+To run tests run the command ```nosetests tests``` in the root folder.
+If anything is broken an exception will be raised; otherwise "OK" will be printed.
