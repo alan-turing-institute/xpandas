@@ -101,6 +101,8 @@ class XSeries(pd.Series):
         custom_prefix = kwargs.get('prefix')
         if custom_prefix is None:
             custom_prefix = self.name
+        else:
+            custom_prefix = '{}_{}'.format(self.name, custom_prefix)
 
         if mapped_series.__is_data_type_dict_like():
             custom_df = XDataFrame.from_records(mapped_series.values)
