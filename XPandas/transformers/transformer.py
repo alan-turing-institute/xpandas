@@ -93,21 +93,36 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
     DataFrameTransformer can transform XDataFrame object to another XDataFrame
     based on set of CustomTransformer transformers.
     '''
+
     def _validate_transformations(self, transformations):
         for k, v in transformations.items():
             if not isinstance(k, str):
                 raise TypeError('Key must be a string {}'.format(k))
-            if not isinstance(v, CustomTransformer):
+
+            if isinstance(v, list):
+                for t in v:
+                    if not isinstance(t, CustomTransformer):
+                        raise TypeError('All objects of {} must be a Transformer object. Issue with {}'.format(v, t))
+            elif not isinstance(v, CustomTransformer):
                 raise TypeError('Value must be a Transformer object {}'.format(v))
+
+    def _wrap_transformers_in_list(self, transformations):
+        new_transformers = {}
+        for k, v in transformations.items():
+            if isinstance(v, list):
+                new_transformers[k] = v
+            else:
+                new_transformers[k] = [v]
+        return new_transformers
 
     def __init__(self, transformations):
         '''
         Init DataFrameTransformer with a dict of transformations.
         Each transformation specify column and transformer object
-        :param transformations: dict {column_name: Transformer object}
+        :param transformations: dict {column_name: Transformer object or [Transformer object]}
         '''
         self._validate_transformations(transformations)
-        self.transformations = transformations
+        self.transformations = self._wrap_transformers_in_list(transformations)
 
     def fit(self, X=None, y=None, **kwargs):
         '''
@@ -116,15 +131,16 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
         if not isinstance(X, XDataFrame):
             raise TypeError('X must be a XDataFrame type. Not {}'.format(type(X)))
 
-        for col_name in self.transformations.keys():
-            self.transformations[col_name].fit(X[col_name])
+        for col_name, transformations in self.transformations.items():
+            for t in transformations:
+                t.fit(X[col_name])
 
         return self
 
     def transform(self, X, columns_mapping=None):
         '''
         Transform X with fitted dictionary self.transformations.
-        :param columns_mapping: {old_col: new_col} mapping between columns in fit dataset and current X
+        :param columns_mapping: {old_col: new_col} mapping between columns in fit data set and current X
         :return:
         '''
         if columns_mapping is None:
@@ -132,17 +148,21 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
 
         transformers_df = X.copy()
 
-        for col_name, transformer in self.transformations.items():
-            new_col_name = columns_mapping.get(col_name, col_name)
-            transformed_column = transformer.transform(X[new_col_name])
+        for col_name, transformations in self.transformations.items():
+            for t in transformations:
+                new_col_name = columns_mapping.get(col_name, col_name)
+                transformed_column = t.transform(X[new_col_name])
 
-            if type(transformed_column) == XSeries:
-                transformers_df[new_col_name] = transformed_column
-            else:
-                transformers_df.drop(new_col_name, inplace=True, axis=1)
+                if type(transformed_column) == XSeries:
+                    transformers_df.rename(columns={
+                        new_col_name: transformed_column.name
+                    }, inplace=True)
+                    transformers_df[transformed_column.name] = transformed_column
+                else:
+                    transformers_df.drop(new_col_name, inplace=True, axis=1)
 
-                transformers_df = XDataFrame.concat_dataframes(
-                    [transformers_df, transformed_column]
-                )
+                    transformers_df = XDataFrame.concat_dataframes(
+                        [transformers_df, transformed_column]
+                    )
 
         return transformers_df

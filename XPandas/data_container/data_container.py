@@ -112,6 +112,8 @@ class XSeries(pd.Series):
             return custom_df
         elif mapped_data_type == pd.DataFrame:
             return pd.concat(mapped_series.values, ignore_index=True)
+        else:
+            mapped_series.name = custom_prefix
 
         return mapped_series
 
