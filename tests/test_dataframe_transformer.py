@@ -5,9 +5,9 @@ here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
 from ..XPandas.data_container import XDataFrame, XSeries
-from ..XPandas.transformers import CustomTransformer, TimeSeriesTransformer, \
+from ..XPandas.transformers import XSeriesTransformer, TimeSeriesTransformer, \
     TimeSeriesWindowTransformer, MeanSeriesTransformer, IdentityTransformer, \
-    DataFrameTransformer, PipeLineChain
+    XDataFrameTransformer, PipeLineChain
 import pandas as pd
 import numpy as np
 
@@ -20,7 +20,7 @@ def test_naming():
         'X': X
     })
 
-    dataframe_transformer = DataFrameTransformer({
+    dataframe_transformer = XDataFrameTransformer({
         'X': [TimeSeriesTransformer()]
     })
 
@@ -39,7 +39,7 @@ def test_multiple_transformers_for_one_column():
         'X': X
     })
 
-    dataframe_transformer = DataFrameTransformer({
+    dataframe_transformer = XDataFrameTransformer({
         'X': [TimeSeriesTransformer(), IdentityTransformer(), MeanSeriesTransformer()]
     })
 

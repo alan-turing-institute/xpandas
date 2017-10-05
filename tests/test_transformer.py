@@ -5,8 +5,8 @@ here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
 from ..XPandas.data_container import XDataFrame, XSeries
-from ..XPandas.transformers import CustomTransformer, TimeSeriesTransformer, \
-    TimeSeriesWindowTransformer, MeanSeriesTransformer, DataFrameTransformer, PipeLineChain
+from ..XPandas.transformers import XSeriesTransformer, TimeSeriesTransformer, \
+    TimeSeriesWindowTransformer, MeanSeriesTransformer, XDataFrameTransformer, PipeLineChain
 import pandas as pd
 import numpy as np
 
@@ -17,7 +17,7 @@ def test_transformer_custom():
         pd.Series([4, 5, 6], index=['d', 'e', 'g'])
     ])
 
-    series_transformer = CustomTransformer(transform_function=lambda series: series.mean())
+    series_transformer = XSeriesTransformer(transform_function=lambda series: series.mean())
     series_transformer = series_transformer.fit()
 
     s_transformed = series_transformer.transform(s)
@@ -32,7 +32,7 @@ def test_transformer_custom_to_data_frame():
         pd.Series([4, 5, 6], index=['d', 'e', 'g'])
     ])
 
-    series_transformer = CustomTransformer(transform_function=lambda series: {'mean': series.mean()})
+    series_transformer = XSeriesTransformer(transform_function=lambda series: {'mean': series.mean()})
     series_transformer = series_transformer.fit()
 
     s_transformed = series_transformer.transform(s)
@@ -46,7 +46,7 @@ def test_transformer_custom_series_to_series():
         pd.Series([4, 5, 6], index=['d', 'e', 'g'])
     ])
 
-    series_transformer = CustomTransformer(transform_function=lambda series: series + 1)
+    series_transformer = XSeriesTransformer(transform_function=lambda series: series + 1)
     series_transformer = series_transformer.fit()
 
     s_transformed = series_transformer.transform(s)
@@ -127,7 +127,7 @@ def test_transformer_data_frame():
     #     df['first_col'].shape
     # )
 
-    data_frame_transformer = DataFrameTransformer(transformations={
+    data_frame_transformer = XDataFrameTransformer(transformations={
         'first_col': TimeSeriesTransformer(),
         'second_col': TimeSeriesTransformer()
     })

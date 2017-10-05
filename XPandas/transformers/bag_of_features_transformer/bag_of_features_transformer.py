@@ -3,10 +3,10 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 
-from ..transformer import CustomTransformer
+from ..transformer import XSeriesTransformer
 
 
-class BagOfWordsTransformer(CustomTransformer):
+class BagOfWordsTransformer(XSeriesTransformer):
     '''
     Performs bag-of-features transformer for strings of any categorical data.
     '''

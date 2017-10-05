@@ -5,7 +5,7 @@ from sklearn.datasets import fetch_20newsgroups
 from sklearn.decomposition import PCA
 
 from ..XPandas.data_container import XSeries, XDataFrame
-from ..XPandas.transformers import CustomTransformer
+from ..XPandas.transformers import XSeriesTransformer
 from ..XPandas.transformers.bag_of_features_transformer import BagOfWordsTransformer
 from ..XPandas.transformers.pipeline_transformer import PipeLineChain
 
@@ -18,7 +18,7 @@ def test_bag_of_words_for_series():
     assert series.data_type == str
 
     translator = str.maketrans('', '', string.punctuation)
-    tokenizer_transformer = CustomTransformer(
+    tokenizer_transformer = XSeriesTransformer(
         transform_function=lambda text: text.lower().translate(translator).strip().split()
     )
 
@@ -42,7 +42,7 @@ def test_bag_of_words_for_series_pipeline():
     assert series.data_type == str
 
     translator = str.maketrans('', '', string.punctuation)
-    tokenizer_transformer = CustomTransformer(
+    tokenizer_transformer = XSeriesTransformer(
         transform_function=lambda text: text.lower().translate(translator).strip().split()
     )
 
@@ -51,7 +51,7 @@ def test_bag_of_words_for_series_pipeline():
     Y = np.random.binomial(1, 0.5, n)
 
     pipeline = PipeLineChain([
-        ('preprocessing', CustomTransformer(
+        ('preprocessing', XSeriesTransformer(
             transform_function=lambda text: text.lower().translate(translator).strip().split()
         )),
         ('extractor', BagOfWordsTransformer()),

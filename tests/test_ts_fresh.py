@@ -4,7 +4,7 @@ import pandas as pd
 from ..XPandas.data_container import XSeries, XDataFrame
 from ..XPandas.transformers.pipeline_transformer import PipeLineChain
 from ..XPandas.transformers.series_transformers import TsFreshSeriesTransformer, TimeSeriesWindowTransformer
-from ..XPandas.transformers.transformer import DataFrameTransformer
+from ..XPandas.transformers.transformer import XDataFrameTransformer
 
 
 def test_ts_fresh_series():
@@ -45,7 +45,7 @@ def test_ts_fresh_df():
         'Y': s2
     })
 
-    data_frame_transformer = DataFrameTransformer(transformations={
+    data_frame_transformer = XDataFrameTransformer(transformations={
         'X': TsFreshSeriesTransformer(),
         'Y': TsFreshSeriesTransformer()
     })

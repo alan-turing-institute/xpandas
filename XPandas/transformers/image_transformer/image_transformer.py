@@ -1,9 +1,9 @@
 import numpy as np
 
-from ..transformer import CustomTransformer
+from ..transformer import XSeriesTransformer
 
 
-class ImageTransformer(CustomTransformer):
+class ImageTransformer(XSeriesTransformer):
     '''
     Performs image transformation based on skimage transformation function
     http://scikit-image.org/docs/dev/api/skimage.transform.html

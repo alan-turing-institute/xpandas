@@ -36,8 +36,8 @@ Ones one has such a complex data set usually to use some ready-to-go machine lea
 from columns of `XDataFrame`. In example with patients data, one may want to extract stats features from 
 each `pandas.Series` or extract features from each images using fancy deep learning model.
 
-That's where `Transformer` class comes to help. Using `CustomTransformer` class one can build it's own transformer
-for `XSeries` and then `DataFrameTransformer` to create transformer for `XDataFrame`. `Transformer` is 
+That's where `Transformer` class comes to help. Using `XSeriesTransformer` class one can build it's own transformer
+for `XSeries` and then `XDataFrameTransformer` to create transformer for `XDataFrame`. `Transformer` is 
 an encapsulation for function `f: XSeries -> XSeries or XDataFrame`.
 
 ![Transformer](/examples/imgs/Transformer.png)

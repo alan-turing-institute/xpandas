@@ -4,10 +4,10 @@ import pandas as pd
 from tsfresh.feature_extraction.extraction import _do_extraction_on_chunk
 from tsfresh.feature_extraction.settings import ComprehensiveFCParameters
 
-from ..transformer import CustomTransformer
+from ..transformer import XSeriesTransformer
 
 
-class TimeSeriesTransformer(CustomTransformer):
+class TimeSeriesTransformer(XSeriesTransformer):
     '''
     Extract common features 'mean', 'std', 'max', 'min',
         'median', 'quantile_25', 'quantile_75',
@@ -53,7 +53,7 @@ class TimeSeriesTransformer(CustomTransformer):
                                                     transform_function=series_transform)
 
 
-class TimeSeriesWindowTransformer(CustomTransformer):
+class TimeSeriesWindowTransformer(XSeriesTransformer):
     '''
     Calculate rolling mean over XSeries of pandas.Series.
     '''
@@ -74,7 +74,7 @@ class TimeSeriesWindowTransformer(CustomTransformer):
                                                           transform_function=series_transform)
 
 
-class MeanSeriesTransformer(CustomTransformer):
+class MeanSeriesTransformer(XSeriesTransformer):
     '''
     Example transformer
     '''
@@ -103,7 +103,7 @@ class MeanSeriesTransformer(CustomTransformer):
         return self
 
 
-class TsFreshSeriesTransformer(CustomTransformer):
+class TsFreshSeriesTransformer(XSeriesTransformer):
     '''
     Performs transformation with tsfresh http://tsfresh.readthedocs.io/en/latest/ package
     over XSeries of pandas.Series.

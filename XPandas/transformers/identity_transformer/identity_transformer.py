@@ -1,9 +1,9 @@
 import numpy as np
 
-from ..transformer import CustomTransformer
+from ..transformer import XSeriesTransformer
 
 
-class IdentityTransformer(CustomTransformer):
+class IdentityTransformer(XSeriesTransformer):
     '''
     Performs identity transformer X -> X
     '''

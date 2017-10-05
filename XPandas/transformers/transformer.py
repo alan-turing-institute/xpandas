@@ -3,12 +3,12 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from ..data_container import XDataFrame, XSeries
 
 
-class CustomTransformer(BaseEstimator, TransformerMixin):
+class XSeriesTransformer(BaseEstimator, TransformerMixin):
     '''
-    CustomTransformer is a base class for all custom transformers.
-    CustomTransformer is a high level abstraction to transform XSeries of
+    XSeriesTransformer is a base class for all custom transformers.
+    XSeriesTransformer is a high level abstraction to transform XSeries of
     specific data_types to an another XSeries or XDataFrame.
-    CustomTransformer encapsulates transformation and based on scikit-learn BaseEstimator
+    XSeriesTransformer encapsulates transformation and based on scikit-learn BaseEstimator
     http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html
     '''
     _TRANSFORM_ARG_FUNCTION_NAME = 'transform_function'
@@ -87,11 +87,11 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         return transform_series
 
 
-class DataFrameTransformer(BaseEstimator, TransformerMixin):
+class XDataFrameTransformer(BaseEstimator, TransformerMixin):
     '''
-    DataFrameTransformer is a set of CustomTransformer instances.
-    DataFrameTransformer can transform XDataFrame object to another XDataFrame
-    based on set of CustomTransformer transformers.
+    XDataFrameTransformer is a set of XSeriesTransformer instances.
+    XDataFrameTransformer can transform XDataFrame object to another XDataFrame
+    based on set of XSeriesTransformer transformers.
     '''
 
     def _validate_transformations(self, transformations):
@@ -101,9 +101,9 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
 
             if isinstance(v, list):
                 for t in v:
-                    if not isinstance(t, CustomTransformer):
+                    if not isinstance(t, XSeriesTransformer):
                         raise TypeError('All objects of {} must be a Transformer object. Issue with {}'.format(v, t))
-            elif not isinstance(v, CustomTransformer):
+            elif not isinstance(v, XSeriesTransformer):
                 raise TypeError('Value must be a Transformer object {}'.format(v))
 
     def _wrap_transformers_in_list(self, transformations):
@@ -117,7 +117,7 @@ class DataFrameTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self, transformations):
         '''
-        Init DataFrameTransformer with a dict of transformations.
+        Init XDataFrameTransformer with a dict of transformations.
         Each transformation specify column and transformer object
         :param transformations: dict {column_name: Transformer object or [Transformer object]}
         '''
