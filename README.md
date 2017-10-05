@@ -74,5 +74,16 @@ chain multiple transformers and `scikit-learn` predictor into a single pipeline.
 
 ## Tests
 
-To run tests run the command ```nosetests tests``` in the root folder.
+To run tests run the command ```pytest``` in the root folder.
 If anything is broken an exception will be raised; otherwise "OK" will be printed.
+
+
+## Acknowledges
+
+- **Bernd Bischl**, who mentioned the idea of a general data container with
+ transformers attached to columns in personal discussion during
+  a London visit in 2016.
+- **Franz Kiraly (@fkiraly)**, having substantially contributed through the API design.
+- **Haoran Xue (@HaoranXue)**, who completed a thesis on the topic earlier.
+- **Vitaly Davydov (@iwitaly)** as the main developer.
+
