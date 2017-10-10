@@ -4,9 +4,9 @@
 
 **XPandas** (extended [`Pandas`](https://pandas.pydata.org/)) project presents data containers for storing 1d/2d data of any type and apply transformations over them.
 
-## Examples
+## Documentation
 
-Take a look at `examples/Example Usage.ipynb` for understanding basic functionality of `XPandas`.
+Please read the user documentation for understanding basic functionality of `XPandas`. To build the docs run ``make html`` from the [docs directory](/docs).
 
 ## Requirements
 
@@ -78,7 +78,7 @@ To run tests run the command ```pytest``` in the root folder.
 If anything is broken an exception will be raised; otherwise "OK" will be printed.
 
 
-## Acknowledges
+## Acknowledgements
 
 - **Bernd Bischl**, who mentioned the idea of a general data container with
  transformers attached to columns in personal discussion during
