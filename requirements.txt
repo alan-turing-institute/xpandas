@@ -5,3 +5,5 @@ scikit-learn
 tsfresh
 pytest
 scikit-image
+Sphinx
+nbsphinx
