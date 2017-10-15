@@ -39,8 +39,8 @@ With `XDataFrame` one can store all this information in a single 2D data contain
 Another advantage of XPandas is the clean interface it provides to ready-to-go machine learning algorithms in 
 [scikit-learn](scikit-learn.org). The transformers interface can be used to easily convert the types in a `XDataFrame`
 to the primitive types with which sklearn can interface, as part of a modelling pipeline. 
-In the example with patients data, one may want to extract stats features from 
-each `pandas.Series` or extract features from each images, say via a generic fancy deep learning model.
+In the example with patients data, one may want to extract summary features from 
+each `pandas.Series`, or extract features from each image, say via a fancy deep learning model.
 
 More technically, the implemented `XSeriesTransformer` class allows implementation of transformation defaults
 for `XSeries`, similarly `XDataFrameTransformer` implements transforation for `XDataFrame` type objects. 
@@ -76,7 +76,7 @@ Performs bag-of-features transformer for strings of any categorical data
 
 XPandas also allows for pipelining, via the `PipeLineChain` transformer, which can
 chain multiple transformers and `scikit-learn` predictor into a single pipeline.
-`PipeLineChain` is based on `scikit-learn`
+`PipeLineChain` is based on the `scikit-learn`
 [Pipeline](http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline).
 
 ## Tests
@@ -87,11 +87,9 @@ If anything is broken an exception will be raised; otherwise "OK" will be printe
 
 ## Acknowledgements
 
-- **Bernd Bischl**, who mentioned the idea of a general data container with
- transformers attached to columns in personal discussion during
-  a London visit in 2016.
+- **Bernd Bischl (@berndbischl)**, who mentioned the idea of a general data container with transformers attached to columns in personal discussion with Franz Kiraly during a London visit in 2016.
 - **Franz Kiraly (@fkiraly)**, who initiated and funded the project up to release, and who substantially contributed to the API design.
-- **Haoran Xue (@HaoranXue)**, who, under the supervision of Franz Kiraly, earlier completed a thesis for a degree at UCL, and who wrote a similar package as part of it. No code was re-used in the creation of the XPandas package.
+- **Haoran Xue (@HaoranXue)**, who, under the supervision of Franz Kiraly, earlier completed a thesis for a degree at UCL on the topic, and who wrote a similar package as part of it. No code was re-used in the creation of the XPandas package.
 
 
 ## Developers and contributors
