@@ -97,7 +97,7 @@ If anything is broken an exception will be raised; otherwise "OK" will be printe
 Current:
 - **Vitaly Davydov (@iwitaly)**: principal developer and curator
 - **Franz Kiraly (@fkiraly)**: project manager and designated point of contact
-- **Frithjof Gressmann (@jof)**: contributor
+- **Frithjof Gressmann (@frthjf)**: contributor
 
 Former/inactive:
 none
