@@ -1,8 +1,9 @@
-[![Build Status](https://travis-ci.com/kiraly-group/XPandas.svg?token=WzNyjqtwC8PwsMtns62p&branch=development)](https://travis-ci.com/kiraly-group/XPandas)
+﻿[![Build Status](https://travis-ci.com/kiraly-group/XPandas.svg?token=WzNyjqtwC8PwsMtns62p&branch=development)](https://travis-ci.com/kiraly-group/XPandas)
 
 ![Logo](/examples/imgs/Logo.png)
 
-**XPandas** (extended [`Pandas`](https://pandas.pydata.org/)) project presents data containers for storing 1d/2d data of any type and apply transformations over them.
+**XPandas** (extended [`Pandas`](https://pandas.pydata.org/)) implements 1D and 2D data containers for storing type-heterogeneous tabular data of any type, 
+and encapsulates feature extraction and transformation modelling in an sklearn-compatible transformer interface.
 
 ## Documentation
 
@@ -14,35 +15,41 @@ XPandas' requirements are part of the [Anaconda](https://www.continuum.io/downlo
 
 ## Description
 
-**XPandas** encapsulated universal 1d (`XSeries`) and 2d (`XDataFrame`) containers and
-presents new transformer classes for transforming these containers. Transformers can 
-do map-reduce style complex transformations but not limited to it.
+**XPandas** provides universal 1D typed list (`XSeries`) and 2D type-heterogeneous data-frame (`XDataFrame`) containers
+and provides an extended sklearn-like transformer classes interfacing said containers. 
+Transformers can be used for automated feature extraction and map-reduce style transformations but are not limited to it.
 
 `XSeries` is based on `pandas.Series` that can store objects of any type.
-For example you may want to store `pandas.Series` objects inside `XSeries`.
+Example would be a series of image containers, or a series of `pandas.Series` objects stored as `XSeries`.
 `XSeries` can be visualised according to a schema.
 
 ![XSeries](/examples/imgs/XSeries.png)
 
-`XDataFrame` is based on `pandas.DataFrame` and can store set of `XSeries`. One can imagine a data set 
-of a patients in hospital. There might be features like numbers (age, height, weight, etc.), categorical (gender,
-hair color, etc.), images (patients x-ray pictures), time series (heat beat over time), and any other.
-Using `XDataFrame` one can store all this information into one in memory 2d container.
+`XDataFrame` extends `pandas.DataFrame` by allowing arbitrary object types per column.
+It provides the same convenient sub-setting interface and extended abstract access methods.
+Each column is internally stored as an `XSeries` container, all of same length. 
+One example could be a medical data set where each row is a different patient, say, in a hospital. 
+The columns would correspond to a type-heterogeneous set of features like numbers (age, height, weight, etc.), 
+categorical (gender, hair color, etc.), images (x-ray pictures), time series (heat beat, lab history), 
+and other parts of a medical record.
+With `XDataFrame` one can store all this information in a single 2D data container instead of a tedious collection of custom nested lists or arrays.
 
 ![XDataFrame](/examples/imgs/XDataFrame.png)
 
-Ones one has such a complex data set usually to use some ready-to-go machine learning algorithm like in 
-[scikit-learn](scikit-learn.org) one needs a quantitative features. Thus, the next task is to extract features
-from columns of `XDataFrame`. In example with patients data, one may want to extract stats features from 
-each `pandas.Series` or extract features from each images using fancy deep learning model.
+Another advantage of XPandas is the clean interface it provides to ready-to-go machine learning algorithms in 
+[scikit-learn](scikit-learn.org). The transformers interface can be used to easily convert the types in a `XDataFrame`
+to the primitive types with which sklearn can interface, as part of a modelling pipeline. 
+In the example with patients data, one may want to extract stats features from 
+each `pandas.Series` or extract features from each images, say via a generic fancy deep learning model.
 
-That's where `Transformer` class comes to help. Using `XSeriesTransformer` class one can build it's own transformer
-for `XSeries` and then `XDataFrameTransformer` to create transformer for `XDataFrame`. `Transformer` is 
-an encapsulation for function `f: XSeries -> XSeries or XDataFrame`.
+More technically, the implemented `XSeriesTransformer` class allows implementation of transformation defaults
+for `XSeries`, similarly `XDataFrameTransformer` implements transforation for `XDataFrame` type objects. 
+More mathematically `XSeriesTransformer` encapsulates abstract functions of type `XSeries -> XSeries or XDataFrame`,
+`XDataFrameTransformer` encaplsulates functions `XDataFrame -> XDataFrame`, both following the familiar fit/transform/parameters API from sklearn.
 
 ![Transformer](/examples/imgs/Transformer.png)
 
-There are several pre implementer transformers that may be useful for several data types:
+XPandas comes with several pre-implemented transformers for the most common non-primitive data types:
 
 ###### Time series
 * `TimeSeriesTransformer(features)` — extract `features` from each series.
@@ -67,7 +74,7 @@ skimage
 Performs bag-of-features transformer for strings of any categorical data
 
 
-There is also a special transformer called `PipeLineChain`. This transformer can
+XPandas also allows for pipelining, via the `PipeLineChain` transformer, which can
 chain multiple transformers and `scikit-learn` predictor into a single pipeline.
 `PipeLineChain` is based on `scikit-learn`
 [Pipeline](http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline).
@@ -83,7 +90,16 @@ If anything is broken an exception will be raised; otherwise "OK" will be printe
 - **Bernd Bischl**, who mentioned the idea of a general data container with
  transformers attached to columns in personal discussion during
   a London visit in 2016.
-- **Franz Kiraly (@fkiraly)**, having substantially contributed through the API design.
-- **Haoran Xue (@HaoranXue)**, who completed a thesis on the topic earlier.
-- **Vitaly Davydov (@iwitaly)** as the main developer.
+- **Franz Kiraly (@fkiraly)**, who initiated and funded the project up to release, and who substantially contributed to the API design.
+- **Haoran Xue (@HaoranXue)**, who, under the supervision of Franz Kiraly, earlier completed a thesis for a degree at UCL, and who wrote a similar package as part of it. No code was re-used in the creation of the XPandas package.
 
+
+## Developers and contributors
+
+Current:
+- **Vitaly Davydov (@iwitaly)**: principal developer and curator
+- **Franz Kiraly (@fkiraly)**: project manager and designated point of contact
+- **Frithjof Gressmann (@jof)**: contributor
+
+Former/inactive:
+none
