@@ -95,9 +95,9 @@ If anything is broken an exception will be raised; otherwise "OK" will be printe
 ## Developers and contributors
 
 Current:
-- **Vitaly Davydov (@iwitaly)**: principal developer and curator
-- **Franz Kiraly (@fkiraly)**: project manager and designated point of contact
-- **Frithjof Gressmann (@frthjf)**: contributor
+- **Vitaly Davydov [iwitaly](https://github.com/iwitaly)**: principal developer and curator
+- **Franz Kiraly [fkiraly](https://github.com/fkiraly)**: project manager and designated point of contact
+- **Frithjof Gressmann [frthjf](https://github.com/frthjf)**: contributor
 
 Former/inactive:
 none
