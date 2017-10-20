@@ -6,9 +6,9 @@ install:
   - pip install -r requirements.txt
 
 script:
+  - pip install -r requirements-docs.txt
   - set -e
   - cd docs
-  - pip install -r requirements-docs.txt
   - make buildapi
   - make html
   - pip install doctr
