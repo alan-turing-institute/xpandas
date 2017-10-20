@@ -1,3 +1,2 @@
 ipython
 nbsphinx
-Pandoc
