@@ -5,7 +5,7 @@ The installation of the latest stable version is easy using the python package m
 
     pip install xpandas
 
-That's it. You are now ready to go. We recommend reading the :doc:`/user_guide` to get started.
+That's it. You are now ready to go. We recommend reading the :doc:`/ExampleUsage.rst` to get started.
 
 Bleeding edge
 ^^^^^^^^^^^^^

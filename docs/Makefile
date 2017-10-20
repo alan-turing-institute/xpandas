@@ -50,6 +50,8 @@ clean:
 	rm -rf $(BUILDDIR)/*
 
 html:
+	ipython nbconvert ../examples/ExampleUsage.ipynb --to rst
+	mv ../examples/ExampleUsage.rst .
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."

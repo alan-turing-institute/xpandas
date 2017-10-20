@@ -1,10 +1,10 @@
-XPandas.data\_container
+xpandas.data\_container
 =======================
 
-XPandas\.data\_container module
+xpandas\.data\_container module
 -------------------------------
 
-.. automodule:: XPandas.data_container.data_container
+.. automodule:: xpandas.data_container.data_container
     :members:
     :undoc-members:
     :show-inheritance:

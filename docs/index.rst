@@ -12,7 +12,7 @@ Contents
 
    Introduction <introduction>
    Installation <installation>
-   User Guide <user_guide.ipynb>
+   User Guide <ExampleUsage>
    API Reference <api/modules>
    Changelog <changes>
    Authors <authors>
@@ -21,9 +21,9 @@ Contents
 
 
 
-Indices and tables
-==================
+.. Indices and tables
+.. ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
