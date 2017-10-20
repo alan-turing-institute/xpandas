@@ -5,3 +5,16 @@ python:
 install:
   - pip install -r requirements.txt
   - pip install -r requirements-docs.txt
+
+script:
+  - set -e
+  - cd docs
+  - make buildapi
+  - make html
+  - pip install doctr
+  - cd ..
+  - doctr deploy--built-docs docs/_build/html/
+
+env:
+  global:
+    - secure: "VbInh8C4nFX7sDvyLPIs4YQnOOSORzPP85PsWqWQet5gx2AqWPmdkuYbSthXTKIl/V0HPWrwOMFyki9FpeC+DJrzyiftAyNoLmBO1Yha3y5NcwYovZ4u4kVsfORpQAm5pSCKKQxt17w6PgBRyZ4T2LnTF5k9Ig9AkxDllR01PItw4mLN2u8M8/hx4eKhyD4dTy596Dtd2AiQuoK7LhkLaMNUBx5Q26yLhw9muyLDBS55kHp4xXlB2ggZnr7S4FJp0WV+pzKPFVEs6l1kK1U+1OyB1CszjC/mLjYPzn/QoNtKXnSnRM1GxZp+/z7guldoEG81YSx2/F3xTHGJ28g3larhoL+YjbVq+FAce9g/0i7Ee6I2Gaa4Jwj2IcK02KguIPJp+Aj6wj6hgmvPaKYyaF7EPRiZMOKyKA3kpyXdOfJj2oUaPevHonPsxdkNXnB8UuUU4ulKPCjeo8L/+9O5gM9zDngFNFXbnJ2cVZtta0L7Uug00IwKS1FGunl7bGh9V3jP4OLrzKyykDYf/lRMB5YXPExlGi9+TWQ+MmXVbqVjR02YRkWAvPnD096z62eEidn8DFGXRFFndRJcBD3Z56S0RPkd7oIF0+sKujLMqXYzRV6NttuOuvnICd1nTsjQV3h9GcAL2cOfNGEE9MEaDnyvBVoEP3a0CDDcVChETIk="
