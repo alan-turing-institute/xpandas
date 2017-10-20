@@ -1,9 +1,8 @@
-import os
 import numpy as np
-
-from ..transformers.data_container import MultiSeries, MultiDataFrame
-from ..transformers.transformers.image_transformer import ImageTransformer
 import skimage.transform as skimage_transform
+
+from ..XPandas.data_container import XSeries
+from ..XPandas.transformers.image_transformer import ImageTransformer
 
 n = 20
 m = 20
@@ -17,7 +16,7 @@ def generate_image(is_3d=True):
 
 
 def test_image_transformation():
-    s = MultiSeries([generate_image(False) for _ in range(100)])
+    s = XSeries([generate_image(False) for _ in range(100)])
 
     try:
         image_transformer = ImageTransformer().fit()

@@ -3,5 +3,7 @@ scipy
 pandas
 scikit-learn
 tsfresh
-nose
+pytest
 scikit-image
+Sphinx
+nbsphinx
