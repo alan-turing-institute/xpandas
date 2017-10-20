@@ -4,10 +4,10 @@ import numpy as np
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.decomposition import PCA
 
-from ..XPandas.data_container import XSeries, XDataFrame
-from ..XPandas.transformers import XSeriesTransformer
-from ..XPandas.transformers.bag_of_features_transformer import BagOfWordsTransformer
-from ..XPandas.transformers.pipeline_transformer import PipeLineChain
+from ..xpandas.data_container import XSeries, XDataFrame
+from ..xpandas.transformers import XSeriesTransformer
+from ..xpandas.transformers.bag_of_features_transformer import BagOfWordsTransformer
+from ..xpandas.transformers.pipeline_transformer import PipeLineChain
 
 
 def test_bag_of_words_for_series():

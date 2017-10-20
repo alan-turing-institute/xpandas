@@ -4,8 +4,8 @@ import sys
 here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
-from ..XPandas.data_container import XDataFrame, XSeries
-from ..XPandas.transformers import XSeriesTransformer, TimeSeriesTransformer, \
+from ..xpandas.data_container import XDataFrame, XSeries
+from ..xpandas.transformers import XSeriesTransformer, TimeSeriesTransformer, \
     TimeSeriesWindowTransformer, MeanSeriesTransformer, XDataFrameTransformer, PipeLineChain
 import pandas as pd
 import numpy as np

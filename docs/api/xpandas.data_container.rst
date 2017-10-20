@@ -1,10 +1,15 @@
-XPandas.data\_container
-=======================
+xpandas\.data\_container package
+================================
 
-XPandas\.data\_container module
--------------------------------
-
-.. automodule:: XPandas.data_container.data_container
+.. automodule:: xpandas.data_container
     :members:
     :undoc-members:
     :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   xpandas.data_container.data_container
+

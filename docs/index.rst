@@ -2,7 +2,11 @@
 XPandas
 =======
 
-This is the documentation of **XPandas** -- data containers and transformations for storing 1D/2D data of any type
+This is the documentation of **XPandas** -- data containers and transformations for storing 1D/2D data of any type.
+
+**tl;dr**
+
+:code:`pip install xpandas` and then go to :ref:`Example`.
 
 Contents
 ========
@@ -10,20 +14,21 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   Introduction <introduction>
-   Installation <installation>
-   User Guide <user_guide.ipynb>
-   API Reference <api/modules>
-   Changelog <changes>
-   Authors <authors>
-   License <license>
+   introduction
+   installation
+   example
+   docsapi
+   contributions
+   changes
+   authors
+   license
 
 
 
 
-Indices and tables
-==================
+.. Indices and tables
+.. ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`

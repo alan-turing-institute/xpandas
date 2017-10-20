@@ -179,6 +179,7 @@ class XDataFrame(pd.DataFrame):
     XDataFrame is 2d container that stores XSeries objects
     XDataFrame is an extension of pandas.DataFrame object
     '''
+
     @property
     def _constructor(self):
         return XDataFrame
@@ -216,8 +217,7 @@ class XDataFrame(pd.DataFrame):
         '''
         Get all columns from XDataFrame with given column_type
         :param column_type: list of types or a single type
-        :return: tuple. the first element is subMultiDataFrame and second
-                is a list of column of a given column_type
+        :return: tuple. the first element is subMultiDataFrame and second is a list of column of a given column_type
         '''
         if type(column_type) != list:
             column_type = [column_type]

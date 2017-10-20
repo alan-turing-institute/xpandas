@@ -1,17 +1,16 @@
-XPandas package
+xpandas package
 ===============
 
-Submodules
-----------
-
-`XPandas\.data\_container module <xpandas.data_container.html>`_
-
-TODO: Add other modules
-
-Module contents
----------------
-
-.. automodule:: XPandas
+.. automodule:: xpandas
     :members:
     :undoc-members:
     :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    xpandas.data_container
+    xpandas.transformers
+

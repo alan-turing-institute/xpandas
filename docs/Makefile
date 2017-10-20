@@ -50,6 +50,8 @@ clean:
 	rm -rf $(BUILDDIR)/*
 
 html:
+	ipython nbconvert ../examples/ExampleUsage.ipynb --to rst
+	mv ../examples/ExampleUsage.rst .
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
@@ -178,3 +180,8 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
+
+buildapi:
+	sphinx-apidoc -fMeT ../xpandas -o api
+	@echo "Auto-generation of API documentation finished. " \
+          "The generated files are in 'api/'"

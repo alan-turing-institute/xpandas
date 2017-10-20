@@ -1,8 +1,8 @@
 import numpy as np
 import skimage.transform as skimage_transform
 
-from ..XPandas.data_container import XSeries
-from ..XPandas.transformers.image_transformer import ImageTransformer
+from ..xpandas.data_container import XSeries
+from ..xpandas.transformers.image_transformer import ImageTransformer
 
 n = 20
 m = 20
