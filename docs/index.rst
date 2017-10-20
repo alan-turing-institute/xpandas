@@ -18,6 +18,7 @@ Contents
    installation
    example
    docsapi
+   contributions
    changes
    authors
    license
