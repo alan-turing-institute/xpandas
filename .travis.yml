@@ -19,7 +19,7 @@ script:
   - make html
   - pip install doctr
   - cd ..
-  - doctr deploy--built-docs docs/_build/html/
+  - doctr deploy . --built-docs docs/_build/html/
 
 env:
   global:
