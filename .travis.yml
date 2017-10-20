@@ -3,7 +3,8 @@ python:
     - 3.6
 
 addons:
-  apt_packages:
+  apt:
+    packages:
     - pandoc
 
 install:
