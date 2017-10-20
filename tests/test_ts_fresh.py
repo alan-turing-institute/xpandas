@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 
-from ..XPandas.data_container import XSeries, XDataFrame
-from ..XPandas.transformers.pipeline_transformer import PipeLineChain
-from ..XPandas.transformers.series_transformers import TsFreshSeriesTransformer, TimeSeriesWindowTransformer
-from ..XPandas.transformers.transformer import XDataFrameTransformer
+from ..xpandas.data_container import XSeries, XDataFrame
+from ..xpandas.transformers.pipeline_transformer import PipeLineChain
+from ..xpandas.transformers.series_transformers import TsFreshSeriesTransformer, TimeSeriesWindowTransformer
+from ..xpandas.transformers.transformer import XDataFrameTransformer
 
 
 def test_ts_fresh_series():

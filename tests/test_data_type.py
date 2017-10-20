@@ -4,7 +4,7 @@ import sys
 here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(here, ".."))
 
-from ..XPandas.data_container import XSeries, XDataFrame
+from ..xpandas.data_container import XSeries, XDataFrame
 import pandas as pd
 import numpy as np
 

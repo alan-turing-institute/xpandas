@@ -128,7 +128,7 @@ html_theme_path = []#sphinx_rtd_theme.get_html_theme_path()]
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 try:
-    from XPandas import __version__ as version
+    from xpandas import __version__ as version
 except ImportError:
     pass
 else:
