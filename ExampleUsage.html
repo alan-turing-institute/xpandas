@@ -1,0 +1,921 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Example dataset &#8212; XPandas  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Documentation" href="docsapi.html" />
+    <link rel="prev" title="Example" href="example.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>This notebook presents basic usage examples of the XPandas package.</p>
+<div class="section" id="example-dataset">
+<h1>Example dataset<a class="headerlink" href="#example-dataset" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">xpandas.data_container</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">xpandas.transformers</span> <span class="kn">import</span> <span class="n">TimeSeriesTransformer</span><span class="p">,</span> <span class="n">TimeSeriesWindowTransformer</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">iwitaly</span><span class="o">/</span><span class="n">anaconda</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">6</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">compat</span><span class="o">/</span><span class="n">pandas</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span> <span class="ne">FutureWarning</span><span class="p">:</span> <span class="n">The</span> <span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">datetools</span> <span class="n">module</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="ow">and</span> <span class="n">will</span> <span class="n">be</span> <span class="n">removed</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">future</span> <span class="n">version</span><span class="o">.</span> <span class="n">Please</span> <span class="n">use</span> <span class="n">the</span> <span class="n">pandas</span><span class="o">.</span><span class="n">tseries</span> <span class="n">module</span> <span class="n">instead</span><span class="o">.</span>
+  <span class="kn">from</span> <span class="nn">pandas.core</span> <span class="k">import</span> <span class="n">datetools</span>
+</pre></div>
+</div>
+<p>The usage example shown is based on open source time series <a class="reference external" href="http://timeseriesclassification.com/Downloads/FordA.zip">data
+set</a>.</p>
+<p>The first thing we need to do is to read data. Here, we use the
+<code class="docutils literal"><span class="pre">urlopen</span></code> function from Python’s built-in urllib to download data set
+and limit the length of each data series.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://timeseriesclassification.com/Downloads/FordA.zip&quot;</span>
+<span class="n">series_offset</span> <span class="o">=</span> <span class="mi">505</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">zipfile</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">read</span><span class="p">()))</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;FordA/FordA.csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">series_offset</span><span class="p">:]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">lines</span></code> is now a list of strings representing timeseries in a comma
+separated format that we can convert into floats</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">1.1871</span><span class="p">,</span>
+ <span class="mf">0.4096</span><span class="p">,</span>
+ <span class="o">-</span><span class="mf">0.43154</span><span class="p">,</span>
+ <span class="o">-</span><span class="mf">1.231</span><span class="p">,</span>
+ <span class="o">-</span><span class="mf">1.9055</span><span class="p">,</span>
+ <span class="o">-</span><span class="mf">2.3824</span><span class="p">,</span>
+ <span class="o">-</span><span class="mf">2.588</span><span class="p">,</span>
+ <span class="o">-</span><span class="mf">2.5018</span><span class="p">,</span>
+ <span class="o">-</span><span class="mf">2.1353</span><span class="p">,</span>
+ <span class="o">-</span><span class="mf">1.574</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Let’s convert each embedded list into more convenient <code class="docutils literal"><span class="pre">pandas.Series</span></code>
+object.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">0</span>    <span class="mf">1.18710</span>
+<span class="mi">1</span>    <span class="mf">0.40960</span>
+<span class="mi">2</span>   <span class="o">-</span><span class="mf">0.43154</span>
+<span class="mi">3</span>   <span class="o">-</span><span class="mf">1.23100</span>
+<span class="mi">4</span>   <span class="o">-</span><span class="mf">1.90550</span>
+<span class="mi">5</span>   <span class="o">-</span><span class="mf">2.38240</span>
+<span class="mi">6</span>   <span class="o">-</span><span class="mf">2.58800</span>
+<span class="mi">7</span>   <span class="o">-</span><span class="mf">2.50180</span>
+<span class="mi">8</span>   <span class="o">-</span><span class="mf">2.13530</span>
+<span class="mi">9</span>   <span class="o">-</span><span class="mf">1.57400</span>
+<span class="n">dtype</span><span class="p">:</span> <span class="n">float64</span>
+</pre></div>
+</div>
+<div class="section" id="xpandas-data-structures">
+<h2>XPandas: Data structures<a class="headerlink" href="#xpandas-data-structures" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="xseries">
+<h1>XSeries<a class="headerlink" href="#xseries" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal"><span class="pre">XSeries</span></code> is a 1d data container that can store any objects inside.</p>
+<p>Using the <code class="docutils literal"><span class="pre">pandas.Series</span></code> objects we can encapsulate the list
+<code class="docutils literal"><span class="pre">lines</span></code> into <code class="docutils literal"><span class="pre">XSeries</span></code> object. The object has a global index of
+series and an sub-index for each <code class="docutils literal"><span class="pre">pandas.Series</span></code>.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">XSeries</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>0    0      1.187100
+1      0.409600
+2     -0.43154...
+1    0      0.094261
+1      0.310310
+2      0.53060...
+2    0     -1.157000
+1     -1.592600
+2     -1.50960...
+3    0      0.356960
+1      0.300850
+2      0.24314...
+4    0      0.307980
+1      0.370350
+2      0.26015...
+dtype: object
+data_type: &lt;class &#39;pandas.core.series.Series&#39;&gt;
+</pre></div>
+</div>
+<p>The output reveals the <code class="docutils literal"><span class="pre">data_type</span></code> property of the <code class="docutils literal"><span class="pre">XSeries</span></code> object
+which contains the type of the contained objects, in this case,
+<code class="docutils literal"><span class="pre">pandas.Series</span></code>. The <code class="docutils literal"><span class="pre">XSeries</span></code> is thus build up of
+<code class="docutils literal"><span class="pre">pandas.Series</span></code>. Specifically, <code class="docutils literal"><span class="pre">X</span></code> supports all methods of its
+containing object <code class="docutils literal"><span class="pre">pandas.Series</span></code>.</p>
+</div>
+<div class="section" id="xdataframe">
+<h1>XDataFrame<a class="headerlink" href="#xdataframe" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal"><span class="pre">XDataFrame</span></code> is an abstract 2d container that is based on
+<code class="docutils literal"><span class="pre">pandas.DataFrame</span></code> and stores <code class="docutils literal"><span class="pre">XSeries</span></code> objects.</p>
+<p>The main feature of the <code class="docutils literal"><span class="pre">XDataFrame</span></code> are columns of <code class="docutils literal"><span class="pre">XSeries</span></code> that
+can contain and manage any <strong>data_type</strong>. For example, one may have a
+data set consisting of series, images, texts, plain numbers, or even
+custom objects. Ideally, we would want to handle such different data
+types in a unified 2d data container, e.g. a chain of transformers to
+create a simple 2d matrix of training data.</p>
+<p>The following examples illustrates such a <code class="docutils literal"><span class="pre">XDataFrame</span></code> workflow.</p>
+<p>Let <code class="docutils literal"><span class="pre">Y</span></code> be a vector of labels for each row.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">XSeries</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">XDataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span>
+    <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="n">Y</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>X</th>
+      <th>Y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0      1.187100
+1      0.409600
+2     -0.43154...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0      0.094261
+1      0.310310
+2      0.53060...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0     -1.157000
+1     -1.592600
+2     -1.50960...</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0      0.356960
+1      0.300850
+2      0.24314...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0      0.307980
+1      0.370350
+2      0.26015...</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div><p>Add new column to XDataFrame:</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;X_1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">XSeries</span><span class="p">([</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+<div class="section" id="xpandas-transformers">
+<h2>XPandas: Transformers<a class="headerlink" href="#xpandas-transformers" title="Permalink to this headline">¶</a></h2>
+<p>A major motivation for this project is the common data science task of
+extracting features from some complex objects (for example series)
+before proceeding with the machine learning.</p>
+<p>Given a <code class="docutils literal"><span class="pre">XSeries</span></code> of <code class="docutils literal"><span class="pre">pandas.Series</span></code> one would, for instance, like
+to extract features from each series. That’s where <em>Transformers</em> play a
+vital role.</p>
+<p>Each <code class="docutils literal"><span class="pre">Transformer</span></code> object support <code class="docutils literal"><span class="pre">fit,</span> <span class="pre">transform</span></code> methods just like
+<a class="reference external" href="http://scikit-learn.org/stable/data_transforms.html">scikit-learn
+transformers</a>.</p>
+<p>Let’s explore some examples.</p>
+</div>
+</div>
+<div class="section" id="timeserieswindowtransformer">
+<h1>TimeSeriesWindowTransformer<a class="headerlink" href="#timeserieswindowtransformer" title="Permalink to this headline">¶</a></h1>
+<p>This transformer calculates moving average with given window size.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">tr</span> <span class="o">=</span> <span class="n">TimeSeriesWindowTransformer</span><span class="p">(</span><span class="n">windows_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">tr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">transformed_series</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">transformed_series</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>0    4     -0.394268
+5     -1.108168
+6     -1.70768...
+1    4      0.509686
+5      0.680500
+6      0.80574...
+2    4     -1.098344
+5     -0.755320
+6     -0.21608...
+3    4      0.234223
+5      0.165730
+6      0.09269...
+4    4      0.202701
+5      0.154336
+6      0.14082...
+dtype: object
+data_type: &lt;class &#39;pandas.core.series.Series&#39;&gt;
+</pre></div>
+</div>
+<p>Of course, with a windows_size = 5 first 4 elements are NaN.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">transformed_series</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">4</span>    <span class="o">-</span><span class="mf">0.394268</span>
+<span class="mi">5</span>    <span class="o">-</span><span class="mf">1.108168</span>
+<span class="mi">6</span>    <span class="o">-</span><span class="mf">1.707688</span>
+<span class="mi">7</span>    <span class="o">-</span><span class="mf">2.121740</span>
+<span class="mi">8</span>    <span class="o">-</span><span class="mf">2.302600</span>
+<span class="mi">9</span>    <span class="o">-</span><span class="mf">2.236300</span>
+<span class="mi">10</span>   <span class="o">-</span><span class="mf">1.942152</span>
+<span class="mi">11</span>   <span class="o">-</span><span class="mf">1.469980</span>
+<span class="mi">12</span>   <span class="o">-</span><span class="mf">0.891442</span>
+<span class="mi">13</span>   <span class="o">-</span><span class="mf">0.287676</span>
+<span class="n">dtype</span><span class="p">:</span> <span class="n">float64</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="timeseriestransformer">
+<h1>TimeSeriesTransformer<a class="headerlink" href="#timeseriestransformer" title="Permalink to this headline">¶</a></h1>
+<p>Let’s try another transformer, probably the most common one. It extract
+several quantitative features from each pandas.Series like mean, std,
+quantiles. You can also pass you own list of features. As a result we
+retrieve a <code class="docutils literal"><span class="pre">XDataFrame</span></code> object.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">tr</span> <span class="o">=</span> <span class="n">TimeSeriesTransformer</span><span class="p">()</span>
+<span class="n">tr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">transformed_series</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">transformed_series</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xpandas</span><span class="o">.</span><span class="n">data_container</span><span class="o">.</span><span class="n">data_container</span><span class="o">.</span><span class="n">XDataFrame</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">transformed_series</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>None_TimeSeriesTransformer_max</th>
+      <th>None_TimeSeriesTransformer_mean</th>
+      <th>None_TimeSeriesTransformer_median</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2.5263</td>
+      <td>0.001995</td>
+      <td>0.011186</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2.6291</td>
+      <td>0.001997</td>
+      <td>-0.024726</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2.6072</td>
+      <td>-0.001996</td>
+      <td>0.060685</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2.6431</td>
+      <td>-0.001997</td>
+      <td>-0.022668</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3.2398</td>
+      <td>-0.001995</td>
+      <td>-0.048518</td>
+    </tr>
+  </tbody>
+</table>
+</div><p>We can also make use of the TSFresh transformer</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">xpandas.transformers</span> <span class="kn">import</span> <span class="n">TsFreshSeriesTransformer</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">tr</span> <span class="o">=</span> <span class="n">TsFreshSeriesTransformer</span><span class="p">()</span>
+<span class="n">tr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="n">transformed_series</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">transformed_series</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>None__abs_energy</th>
+      <th>None__absolute_sum_of_changes</th>
+      <th>None__agg_autocorrelation__f_agg_"mean"</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>500.000126</td>
+      <td>134.513280</td>
+      <td>-0.012049</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>499.999290</td>
+      <td>114.289925</td>
+      <td>0.003075</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>500.001514</td>
+      <td>164.089622</td>
+      <td>-0.013172</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>499.999445</td>
+      <td>103.510040</td>
+      <td>-0.005639</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>500.003011</td>
+      <td>154.299542</td>
+      <td>0.001552</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+<div class="section" id="custom-inline-transformer">
+<h1>Custom inline Transformer<a class="headerlink" href="#custom-inline-transformer" title="Permalink to this headline">¶</a></h1>
+<p>One can also create inline <code class="docutils literal"><span class="pre">CustomTransfomer</span></code> like this</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">xpandas.transformers</span> <span class="kn">import</span> <span class="n">XSeriesTransformer</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">my_awesome_transfomer</span> <span class="o">=</span> <span class="n">XSeriesTransformer</span><span class="p">(</span><span class="n">transform_function</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">my_awesome_transfomer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">XSeriesTransformer</span><span class="p">(</span><span class="n">data_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;XSeriesTransformer&#39;</span><span class="p">,</span>
+          <span class="n">transform_function</span><span class="o">=&lt;</span><span class="n">function</span> <span class="o">&lt;</span><span class="k">lambda</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0x11929ad90</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">my_awesome_transfomer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>0    0.999998
+1    0.999997
+2    1.000000
+3    0.999997
+4    1.000001
+dtype: float64
+data_type: &lt;class &#39;numpy.float64&#39;&gt;
+</pre></div>
+</div>
+<p>If you want to create your custom transformer with any complex logic,
+please take a look at internal implementation of transformers.</p>
+<p>To transform a <strong>XDataFrame</strong> one has to specify the transformation
+logic for the columns that should be transformed using a
+<strong>XDataFrameTransformer</strong>.</p>
+<p>The constructor of <strong>XDataFrameTransformer</strong> input mapping dictionary of
+{col_name: XSeries transformer}.</p>
+<p>For example, let’s apply <strong>TimeSeriesWindowTransformer</strong> to the
+<span class="math">X</span> column and <strong>TimeSeriesTransformer</strong> to the <span class="math">X_1</span>
+column.</p>
+<p>When apply transformation to the column, <em>it’s replaced with
+transformed</em>.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">xpandas.transformers</span> <span class="kn">import</span> <span class="n">XDataFrameTransformer</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">df_transformer</span> <span class="o">=</span> <span class="n">XDataFrameTransformer</span><span class="p">({</span>
+    <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="n">TimeSeriesWindowTransformer</span><span class="p">(</span><span class="n">windows_size</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+    <span class="s1">&#39;X_1&#39;</span><span class="p">:</span> <span class="n">TimeSeriesTransformer</span><span class="p">()</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">df_transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">XDataFrameTransformer</span><span class="p">(</span><span class="n">transformations</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">TimeSeriesWindowTransformer</span><span class="p">(</span><span class="n">windows_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)],</span> <span class="s1">&#39;X_1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">TimeSeriesTransformer</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="kc">None</span><span class="p">)]})</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">transformed_df</span> <span class="o">=</span> <span class="n">df_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">transformed_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>X_TimeSeriesWindowTransformer</th>
+      <th>Y</th>
+      <th>X_1_TimeSeriesTransformer_max</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3     -0.016460
+4     -0.789610
+5     -1.48761...</td>
+      <td>1</td>
+      <td>2.383478</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3      0.416408
+4      0.613542
+5      0.77304...</td>
+      <td>1</td>
+      <td>2.451725</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3     -1.315175
+4     -1.083680
+5     -0.54600...</td>
+      <td>0</td>
+      <td>2.164009</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3      0.268788
+4      0.203539
+5      0.13194...</td>
+      <td>1</td>
+      <td>2.951486</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3      0.255629
+4      0.176381
+5      0.10033...</td>
+      <td>1</td>
+      <td>2.453836</td>
+    </tr>
+  </tbody>
+</table>
+</div><p>Well, that’s a nice transformer, but can I create
+<a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">pipelines</a>
+as in scikit-learn?</p>
+<p>Sure! Let’s see on example where we combine <code class="docutils literal"><span class="pre">TimeSeriesTransformer</span></code>
+and <code class="docutils literal"><span class="pre">TimeSeriesWindowTransformer</span></code> into a combined pipeline using a
+<code class="docutils literal"><span class="pre">PipeLineChain</span></code>.</p>
+<p>First let’s see example of <code class="docutils literal"><span class="pre">PipeLineChain</span></code> with <code class="docutils literal"><span class="pre">XSeries</span></code> and then
+with <code class="docutils literal"><span class="pre">XDataFrame</span></code>.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">xpandas.transformers</span> <span class="kn">import</span> <span class="n">PipeLineChain</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">chain</span> <span class="o">=</span> <span class="n">PipeLineChain</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;moving average trans&#39;</span><span class="p">,</span> <span class="n">TimeSeriesWindowTransformer</span><span class="p">(</span><span class="n">windows_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;extract features&#39;</span><span class="p">,</span> <span class="n">TimeSeriesTransformer</span><span class="p">())</span>
+<span class="p">])</span>
+<span class="n">chain</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PipeLineChain</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;moving average trans&#39;</span><span class="p">,</span> <span class="n">TimeSeriesWindowTransformer</span><span class="p">(</span><span class="n">windows_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;extract features&#39;</span><span class="p">,</span> <span class="n">TimeSeriesTransformer</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="kc">None</span><span class="p">))])</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">chain</span><span class="o">.</span><span class="n">get_params</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">bound</span> <span class="n">method</span> <span class="n">Pipeline</span><span class="o">.</span><span class="n">get_params</span> <span class="n">of</span> <span class="n">PipeLineChain</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;moving average trans&#39;</span><span class="p">,</span> <span class="n">TimeSeriesWindowTransformer</span><span class="p">(</span><span class="n">windows_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;extract features&#39;</span><span class="p">,</span> <span class="n">TimeSeriesTransformer</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="kc">None</span><span class="p">))])</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">transformed_X</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">transformed_X</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>None_TimeSeriesWindowTransformer_TimeSeriesTransformer_max</th>
+      <th>None_TimeSeriesWindowTransformer_TimeSeriesTransformer_mean</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2.16144</td>
+      <td>0.002078</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2.39636</td>
+      <td>-0.002229</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2.32512</td>
+      <td>0.005656</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2.44430</td>
+      <td>0.000632</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2.64094</td>
+      <td>-0.001295</td>
+    </tr>
+  </tbody>
+</table>
+</div><p>All right! Let’s try to add scikit-learn transformer to the
+PipeLineChain. For example, let’s do PCA on transformed_X.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">chain</span> <span class="o">=</span> <span class="n">PipeLineChain</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;moving average trans&#39;</span><span class="p">,</span> <span class="n">TimeSeriesWindowTransformer</span><span class="p">(</span><span class="n">windows_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;extract features&#39;</span><span class="p">,</span> <span class="n">TimeSeriesTransformer</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
+<span class="p">])</span>
+<span class="n">chain</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PipeLineChain</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;moving average trans&#39;</span><span class="p">,</span> <span class="n">TimeSeriesWindowTransformer</span><span class="p">(</span><span class="n">windows_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;extract features&#39;</span><span class="p">,</span> <span class="n">TimeSeriesTransformer</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="kc">None</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">iterated_power</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+  <span class="n">svd_solver</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">whiten</span><span class="o">=</span><span class="kc">False</span><span class="p">))])</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">transformed_X</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">transformed_X</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-0.133152</td>
+      <td>-0.242552</td>
+      <td>0.097523</td>
+      <td>-0.004435</td>
+      <td>-0.009747</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.125413</td>
+      <td>0.076021</td>
+      <td>-0.089267</td>
+      <td>0.010531</td>
+      <td>0.017437</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.028607</td>
+      <td>-0.088828</td>
+      <td>0.205043</td>
+      <td>0.098009</td>
+      <td>0.032338</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.071478</td>
+      <td>-0.058813</td>
+      <td>-0.247669</td>
+      <td>-0.023550</td>
+      <td>-0.052968</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.200611</td>
+      <td>0.110884</td>
+      <td>0.064200</td>
+      <td>0.012187</td>
+      <td>-0.038497</td>
+    </tr>
+  </tbody>
+</table>
+</div><p>Let’s do even more interesting things! Adding a scikit-learn estimator
+at the end of PipeLineChain!</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Be sure that types of X_train and X_test are XSeries.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&lt;class &#39;xpandas.data_container.data_container.XSeries&#39;&gt;
+&lt;class &#39;xpandas.data_container.data_container.XSeries&#39;&gt;
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">chain</span> <span class="o">=</span> <span class="n">PipeLineChain</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;moving average trans&#39;</span><span class="p">,</span> <span class="n">TimeSeriesWindowTransformer</span><span class="p">(</span><span class="n">windows_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;extract features&#39;</span><span class="p">,</span> <span class="n">TimeSeriesTransformer</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;logit_regression&#39;</span><span class="p">,</span> <span class="n">LogisticRegression</span><span class="p">())</span>
+
+<span class="p">])</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">prediction</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prediction</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">0.5004061738424046</span>
+</pre></div>
+</div>
+<p>Let’s now try <code class="docutils literal"><span class="pre">PipeLineChain</span></code> with <code class="docutils literal"><span class="pre">XDataFrameTransformer</span></code>.</p>
+<p>Imagine data set of feature columns gender (0 or 1), age (int), series(
+pandas.Series), target (0 or 1). Let’s try to create <code class="docutils literal"><span class="pre">PipeLineChain</span></code>
+that extracts features from series and performs <code class="docutils literal"><span class="pre">PCA</span></code> over all feature
+set and then performs LogitRegression classification.</p>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">df_features</span> <span class="o">=</span> <span class="n">XDataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="n">XSeries</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="n">XSeries</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="n">n</span><span class="p">)),</span>
+    <span class="s1">&#39;series&#39;</span><span class="p">:</span> <span class="n">XSeries</span><span class="p">([</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">500</span><span class="p">))</span>
+    <span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="n">target</span> <span class="o">=</span> <span class="n">XSeries</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">features_transformer</span> <span class="o">=</span> <span class="n">XDataFrameTransformer</span><span class="p">({</span>
+    <span class="s1">&#39;series&#39;</span><span class="p">:</span> <span class="n">TimeSeriesTransformer</span><span class="p">()</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">pipe_line</span> <span class="o">=</span> <span class="n">PipeLineChain</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;extract_from_series&#39;</span><span class="p">,</span> <span class="n">features_transformer</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;logit_regression&#39;</span><span class="p">,</span> <span class="n">LogisticRegression</span><span class="p">())</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">df_features_train</span><span class="p">,</span> <span class="n">df_features_test</span><span class="p">,</span> \
+        <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">df_features</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">pipe_line</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_features_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PipeLineChain</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;extract_from_series&#39;</span><span class="p">,</span> <span class="n">XDataFrameTransformer</span><span class="p">(</span><span class="n">transformations</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;series&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">TimeSeriesTransformer</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="kc">None</span><span class="p">)]})),</span> <span class="p">(</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">iterated_power</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+  <span class="n">svd_solver</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">whiten</span><span class="o">=</span><span class="kc">False</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;logit_regression&#39;</span><span class="p">,</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">cla</span><span class="o">...</span><span class="n">ty</span><span class="o">=</span><span class="s1">&#39;l2&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;liblinear&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+          <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="kc">False</span><span class="p">))])</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">pipe_line</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">df_features_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+       <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Example dataset</a><ul>
+<li><a class="reference internal" href="#xpandas-data-structures">XPandas: Data structures</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#xseries">XSeries</a></li>
+<li><a class="reference internal" href="#xdataframe">XDataFrame</a><ul>
+<li><a class="reference internal" href="#xpandas-transformers">XPandas: Transformers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#timeserieswindowtransformer">TimeSeriesWindowTransformer</a></li>
+<li><a class="reference internal" href="#timeseriestransformer">TimeSeriesTransformer</a></li>
+<li><a class="reference internal" href="#custom-inline-transformer">Custom inline Transformer</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="example.html">Example</a><ul>
+      <li>Previous: <a href="example.html" title="previous chapter">Example</a></li>
+      <li>Next: <a href="docsapi.html" title="next chapter">API Documentation</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ExampleUsage.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, UCL.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/ExampleUsage.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

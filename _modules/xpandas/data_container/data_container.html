@@ -1,0 +1,354 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>xpandas.data_container.data_container &#8212; XPandas  documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for xpandas.data_container.data_container</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="k">def</span> <span class="nf">_check_all_elements_have_the_same_property</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Helper function that checks if all elements have the same func(element) value.</span>
+<span class="sd">    :param array: input values</span>
+<span class="sd">    :param func: any callable object</span>
+<span class="sd">    :return: tuple. the first element indicates is all elements are have the same func(element) value,</span>
+<span class="sd">             second element is a value of func(element)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">first_element_type</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="n">do_all_have_property</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="n">first_element_type</span>
+                               <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">array</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">do_all_have_property</span><span class="p">,</span> <span class="n">first_element_type</span>
+
+
+<span class="k">def</span> <span class="nf">_is_class_a_primitive</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Check if class is a number or string including numpy numbers</span>
+<span class="sd">    :param cls: any class</span>
+<span class="sd">    :return: True if class is a primitive class, else False</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float128</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
+        <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">,</span>
+        <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">primitives</span>
+
+
+<div class="viewcode-block" id="XSeries"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XSeries">[docs]</a><span class="k">class</span> <span class="nc">XSeries</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    XSeries is an homogeneous abstract 1d container that encapsulates any data type inside.</span>
+<span class="sd">    It is an extension of pandas.Series class.</span>
+<span class="sd">    XSeries has a property data_type that is a type ot objects that are inside XSeries.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">_metadata</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;data_type&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">XSeries</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_constructor_expanddim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">XDataFrame</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        The same arguments as for pandas.Series</span>
+<span class="sd">        https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html</span>
+
+<span class="sd">        In order to create XSeries of any data_type, data argument must be a pythons list.</span>
+<span class="sd">        For example, to create XSeries of pandas.Series, pass data should be</span>
+<span class="sd">        data = [s_1, s2, ..., s3] where s_i is a instance of pandas.Series.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">XSeries</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">check_result</span><span class="p">,</span> <span class="n">data_type</span> <span class="o">=</span> <span class="n">_check_all_elements_have_the_same_property</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">check_result</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Not all elements the same type&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">data_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">=</span> <span class="n">data_type</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<div class="viewcode-block" id="XSeries.apply"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XSeries.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Overwrite standart pandas.Series method.</span>
+<span class="sd">        Apply transform function to all elements in self.</span>
+<span class="sd">        *If transform function return dict like object,</span>
+<span class="sd">        transform XSeries to XDataFrame see XDataFrame constructor*</span>
+
+<span class="sd">        :param func: function to apply</span>
+<span class="sd">        :param prefix: prefix for columns if needs to return XDataFrame object</span>
+<span class="sd">        :return: XSeries of XDataFrame depending on transformation</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;func&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># TODO</span>
+        <span class="c1"># Possibly change to handle NaN</span>
+        <span class="n">mapped_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="n">mapped_series</span> <span class="o">=</span> <span class="n">mapped_series</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">na_action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="n">mapped_data_type</span> <span class="o">=</span> <span class="n">mapped_series</span><span class="o">.</span><span class="n">data_type</span>
+
+        <span class="n">custom_prefix</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">custom_prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">custom_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">custom_prefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">custom_prefix</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mapped_series</span><span class="o">.</span><span class="n">__is_data_type_dict_like</span><span class="p">():</span>
+            <span class="n">custom_df</span> <span class="o">=</span> <span class="n">XDataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">mapped_series</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">custom_prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">custom_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">custom_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">custom_prefix</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">custom_df</span>
+        <span class="k">elif</span> <span class="n">mapped_data_type</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">mapped_series</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mapped_series</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">custom_prefix</span>
+
+        <span class="k">return</span> <span class="n">mapped_series</span></div>
+
+    <span class="k">def</span> <span class="nf">__is_data_type_dict_like</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Check if data encapsulated by self is instance of dict</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Getter for a data_type property</span>
+<span class="sd">        data_type is a data type that self encapsulates</span>
+<span class="sd">        For example, if self is contains images, that data_type would be Image</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">first_element_data_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">=</span> <span class="n">first_element_data_type</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span>
+
+    <span class="nd">@data_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">data_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Setter for a data_type property</span>
+<span class="sd">        data_type is a data type that self encapsulates</span>
+<span class="sd">        For example, if self is contains images, that data_type would be Image</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">=</span> <span class="n">data_type</span>
+
+<div class="viewcode-block" id="XSeries.to_pandas_series"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XSeries.to_pandas_series">[docs]</a>    <span class="k">def</span> <span class="nf">to_pandas_series</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Convert self to pandas.Series if data_type is a primitive type</span>
+<span class="sd">        etc. number of string</span>
+<span class="sd">        :return: Pandas Series or raise exception if data_type is not a primitive type</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">is_primitive</span> <span class="o">=</span> <span class="n">_is_class_a_primitive</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_primitive</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unable to cast to pd.Series. </span><span class="si">{}</span><span class="s1"> is not a primitive type.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">XSeries</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">data_type: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">XSeries</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">value_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value_type</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Can not assign key </span><span class="si">{}</span><span class="s1"> with </span><span class="si">{}</span><span class="s1"> wrong data_type </span><span class="si">{}</span><span class="s1"> correct is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_type</span>
+            <span class="p">))</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">XSeries</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="XDataFrame"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XDataFrame">[docs]</a><span class="k">class</span> <span class="nc">XDataFrame</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    XDataFrame is 2d container that stores XSeries objects</span>
+<span class="sd">    XDataFrame is an extension of pandas.DataFrame object</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">XDataFrame</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_constructor_sliced</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">XSeries</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        The same arguments as for pandas.DataFrame</span>
+<span class="sd">        https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html</span>
+
+<span class="sd">        data argument should be a list of XSeries objects or dict of XSeries objects.</span>
+<span class="sd">        In dict is passed, key must be a string and it&#39;s indicate appropriate column name.</span>
+<span class="sd">        For example, to create XDataFrame data should looks like</span>
+<span class="sd">        data = {&#39;col_1&#39;: s_1, &#39;col_2&#39;: s_2, ..., &#39;col_n&#39;: s_n} where s_i is a XSeries</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">data_to_check</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">data_to_check</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">data_to_check</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data_to_check</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">XSeries</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;All data must be XSeries instances&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">XDataFrame</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="XDataFrame.get_columns_of_type"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XDataFrame.get_columns_of_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_columns_of_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_type</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get all columns from XDataFrame with given column_type</span>
+<span class="sd">        :param column_type: list of types or a single type</span>
+<span class="sd">        :return: tuple. the first element is subMultiDataFrame and second is a list of column of a given column_type</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">column_type</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">column_type</span> <span class="o">=</span> <span class="p">[</span><span class="n">column_type</span><span class="p">]</span>
+
+        <span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">col_name</span>
+            <span class="k">for</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="bp">self</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span><span class="o">.</span><span class="n">data_type</span> <span class="ow">in</span> <span class="n">column_type</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">columns_to_select</span><span class="p">],</span> <span class="n">columns_to_select</span></div>
+
+<div class="viewcode-block" id="XDataFrame.get_data_types"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XDataFrame.get_data_types">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get a list of data_types of each XSeries inside XDataFrame</span>
+<span class="sd">        :return: list of data_type</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">data_types</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">data_type</span>
+            <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="bp">self</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">data_types</span></div>
+
+<div class="viewcode-block" id="XDataFrame.to_pandas_dataframe"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XDataFrame.to_pandas_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">to_pandas_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Convert self to pandas.DataFrame if all columns are primitive types.</span>
+<span class="sd">        See more at XSeries.to_pandas_series</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">data_types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_types</span><span class="p">()</span>
+        <span class="n">is_all_columns_are_primitive</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="n">_is_class_a_primitive</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="n">data_types</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_all_columns_are_primitive</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unable to cast to pd.DataFrame. </span><span class="si">{}</span><span class="s1"> is not all primitives.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_types</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="XDataFrame.concat_dataframes"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XDataFrame.concat_dataframes">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">concat_dataframes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data_frames</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Concatenate XDataFrame using pandas.concat method</span>
+<span class="sd">        https://pandas.pydata.org/pandas-docs/stable/generated/pandas.concat.html</span>
+<span class="sd">        over columns</span>
+<span class="sd">        :param data_frames: list of XDataFrame instances</span>
+<span class="sd">        :return: XDataFrame — concatenated list of data_frames</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, UCL.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

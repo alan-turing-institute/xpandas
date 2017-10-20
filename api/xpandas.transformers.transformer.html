@@ -1,0 +1,160 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>xpandas.transformers.transformer module &#8212; XPandas  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Contributions" href="../contributions.html" />
+    <link rel="prev" title="xpandas.transformers.text_transformer.text_transformer module" href="xpandas.transformers.text_transformer.text_transformer.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-xpandas.transformers.transformer">
+<span id="xpandas-transformers-transformer-module"></span><h1>xpandas.transformers.transformer module<a class="headerlink" href="#module-xpandas.transformers.transformer" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="xpandas.transformers.transformer.XDataFrameTransformer">
+<em class="property">class </em><code class="descclassname">xpandas.transformers.transformer.</code><code class="descname">XDataFrameTransformer</code><span class="sig-paren">(</span><em>transformations</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xpandas/transformers/transformer.html#XDataFrameTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xpandas.transformers.transformer.XDataFrameTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v0.19.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v0.19.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
+<p>XDataFrameTransformer is a set of XSeriesTransformer instances.
+XDataFrameTransformer can transform XDataFrame object to another XDataFrame
+based on set of XSeriesTransformer transformers.</p>
+<dl class="method">
+<dt id="xpandas.transformers.transformer.XDataFrameTransformer.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X=None</em>, <em>y=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xpandas/transformers/transformer.html#XDataFrameTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xpandas.transformers.transformer.XDataFrameTransformer.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit each transformer at self.transformations dictionary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="xpandas.transformers.transformer.XDataFrameTransformer.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em>, <em>columns_mapping=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xpandas/transformers/transformer.html#XDataFrameTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xpandas.transformers.transformer.XDataFrameTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform X with fitted dictionary self.transformations.
+:param columns_mapping: {old_col: new_col} mapping between columns in fit data set and current X
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="xpandas.transformers.transformer.XSeriesTransformer">
+<em class="property">class </em><code class="descclassname">xpandas.transformers.transformer.</code><code class="descname">XSeriesTransformer</code><span class="sig-paren">(</span><em>transform_function=None</em>, <em>data_types=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xpandas/transformers/transformer.html#XSeriesTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xpandas.transformers.transformer.XSeriesTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v0.19.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v0.19.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
+<p>XSeriesTransformer is a base class for all custom transformers.
+XSeriesTransformer is a high level abstraction to transform XSeries of
+specific data_types to an another XSeries or XDataFrame.
+XSeriesTransformer encapsulates transformation and based on scikit-learn BaseEstimator
+<a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html">http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html</a></p>
+<dl class="method">
+<dt id="xpandas.transformers.transformer.XSeriesTransformer.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X=None</em>, <em>y=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xpandas/transformers/transformer.html#XSeriesTransformer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xpandas.transformers.transformer.XSeriesTransformer.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit transformer for giver data.
+Must be overwritten in child classes
+:param X: XSeries to fit transformer on
+:param y: Labels column for X
+:param kwargs: additional arguments for transformer
+:return: fitted self object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="xpandas.transformers.transformer.XSeriesTransformer.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xpandas/transformers/transformer.html#XSeriesTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xpandas.transformers.transformer.XSeriesTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply transformation to X with current transformer
+:param X: input XSeries
+:param columns: deprecated
+:return: transformed XSeries.</p>
+<blockquote>
+<div>it could be XSeries or XDataFrame object</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../docsapi.html">API Documentation</a><ul>
+  <li><a href="xpandas.html">xpandas package</a><ul>
+  <li><a href="xpandas.transformers.html">xpandas.transformers package</a><ul>
+      <li>Previous: <a href="xpandas.transformers.text_transformer.text_transformer.html" title="previous chapter">xpandas.transformers.text_transformer.text_transformer module</a></li>
+      <li>Next: <a href="../contributions.html" title="next chapter">Contributions</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/xpandas.transformers.transformer.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, UCL.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/api/xpandas.transformers.transformer.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

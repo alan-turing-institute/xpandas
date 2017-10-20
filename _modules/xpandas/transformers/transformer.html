@@ -1,0 +1,252 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>xpandas.transformers.transformer &#8212; XPandas  documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for xpandas.transformers.transformer</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="k">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span>
+
+<span class="kn">from</span> <span class="nn">..data_container</span> <span class="k">import</span> <span class="n">XDataFrame</span><span class="p">,</span> <span class="n">XSeries</span>
+
+
+<div class="viewcode-block" id="XSeriesTransformer"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XSeriesTransformer">[docs]</a><span class="k">class</span> <span class="nc">XSeriesTransformer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    XSeriesTransformer is a base class for all custom transformers.</span>
+<span class="sd">    XSeriesTransformer is a high level abstraction to transform XSeries of</span>
+<span class="sd">    specific data_types to an another XSeries or XDataFrame.</span>
+<span class="sd">    XSeriesTransformer encapsulates transformation and based on scikit-learn BaseEstimator</span>
+<span class="sd">    http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">_TRANSFORM_ARG_FUNCTION_NAME</span> <span class="o">=</span> <span class="s1">&#39;transform_function&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        :param transform_function: Callable that performs actual transform</span>
+<span class="sd">        :param data_types: list of data_type that this transformer can work with. if None,</span>
+<span class="sd">                            error might be raised at run time</span>
+<span class="sd">        :param name: name for transformer. if none, class name is default</span>
+<span class="sd">        :param kwargs: additional arguments</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">transform_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">transform_function</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;transform_function must be callable&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_function</span> <span class="o">=</span> <span class="n">transform_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_types</span> <span class="o">=</span> <span class="n">data_types</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">_check_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Check that input valid: input_data is XSeries and transformer</span>
+<span class="sd">        &quot;knows&quot; how to work with input_data.data_type.</span>
+<span class="sd">        In error raise exception.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span> <span class="o">!=</span> <span class="n">XSeries</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;X must be XSeries type&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span> <span class="o">==</span> <span class="n">XSeries</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_types</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+                <span class="ow">and</span> <span class="n">input_data</span><span class="o">.</span><span class="n">data_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_types</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Estimator does not support </span><span class="si">{}</span><span class="s1"> type&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">data_type</span><span class="p">))</span>
+
+<div class="viewcode-block" id="XSeriesTransformer.fit"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XSeriesTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Fit transformer for giver data.</span>
+<span class="sd">        Must be overwritten in child classes</span>
+<span class="sd">        :param X: XSeries to fit transformer on</span>
+<span class="sd">        :param y: Labels column for X</span>
+<span class="sd">        :param kwargs: additional arguments for transformer</span>
+<span class="sd">        :return: fitted self object</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">X</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_input</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_transform_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_series</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Helper method to transform XSeries</span>
+<span class="sd">        :param custom_series: XSeries object</span>
+<span class="sd">        :return: transformed XSeries.</span>
+<span class="sd">                 it could be XSeries or XDataFrame object</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">custom_series</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_function</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="XSeriesTransformer.transform"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XSeriesTransformer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Apply transformation to X with current transformer</span>
+<span class="sd">        :param X: input XSeries</span>
+<span class="sd">        :param columns: deprecated</span>
+<span class="sd">        :return: transformed XSeries.</span>
+<span class="sd">                 it could be XSeries or XDataFrame object</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TRANSFORM_ARG_FUNCTION_NAME</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You mast pass transform_function argument with a function&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_input</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="n">transform_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_series</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">transform_series</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">index</span>
+
+        <span class="k">return</span> <span class="n">transform_series</span></div></div>
+
+
+<div class="viewcode-block" id="XDataFrameTransformer"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XDataFrameTransformer">[docs]</a><span class="k">class</span> <span class="nc">XDataFrameTransformer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    XDataFrameTransformer is a set of XSeriesTransformer instances.</span>
+<span class="sd">    XDataFrameTransformer can transform XDataFrame object to another XDataFrame</span>
+<span class="sd">    based on set of XSeriesTransformer transformers.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_validate_transformations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformations</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">transformations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Key must be a string </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">XSeriesTransformer</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;All objects of </span><span class="si">{}</span><span class="s1"> must be a Transformer object. Issue with </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">XSeriesTransformer</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Value must be a Transformer object </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_wrap_transformers_in_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformations</span><span class="p">):</span>
+        <span class="n">new_transformers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">transformations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">new_transformers</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_transformers</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">new_transformers</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformations</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Init XDataFrameTransformer with a dict of transformations.</span>
+<span class="sd">        Each transformation specify column and transformer object</span>
+<span class="sd">        :param transformations: dict {column_name: Transformer object or [Transformer object]}</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_transformations</span><span class="p">(</span><span class="n">transformations</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrap_transformers_in_list</span><span class="p">(</span><span class="n">transformations</span><span class="p">)</span>
+
+<div class="viewcode-block" id="XDataFrameTransformer.fit"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XDataFrameTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Fit each transformer at self.transformations dictionary</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">XDataFrame</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;X must be a XDataFrame type. Not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">col_name</span><span class="p">,</span> <span class="n">transformations</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">transformations</span><span class="p">:</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">col_name</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="XDataFrameTransformer.transform"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XDataFrameTransformer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">columns_mapping</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Transform X with fitted dictionary self.transformations.</span>
+<span class="sd">        :param columns_mapping: {old_col: new_col} mapping between columns in fit data set and current X</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">columns_mapping</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">columns_mapping</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">transformers_df</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">col_name</span><span class="p">,</span> <span class="n">transformations</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">transformations</span><span class="p">:</span>
+                <span class="n">new_col_name</span> <span class="o">=</span> <span class="n">columns_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">col_name</span><span class="p">,</span> <span class="n">col_name</span><span class="p">)</span>
+                <span class="n">transformed_column</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">new_col_name</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">transformed_column</span><span class="p">)</span> <span class="o">==</span> <span class="n">XSeries</span><span class="p">:</span>
+                    <span class="n">transformers_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+                        <span class="n">new_col_name</span><span class="p">:</span> <span class="n">transformed_column</span><span class="o">.</span><span class="n">name</span>
+                    <span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">transformers_df</span><span class="p">[</span><span class="n">transformed_column</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">transformed_column</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">transformers_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">new_col_name</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                    <span class="n">transformers_df</span> <span class="o">=</span> <span class="n">XDataFrame</span><span class="o">.</span><span class="n">concat_dataframes</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">transformers_df</span><span class="p">,</span> <span class="n">transformed_column</span><span class="p">]</span>
+                    <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transformers_df</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, UCL.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

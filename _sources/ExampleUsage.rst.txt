@@ -1,0 +1,1051 @@
+
+This notebook presents basic usage examples of the XPandas package.
+
+Example dataset
+~~~~~~~~~~~~~~~
+
+.. code:: ipython3
+
+    from io import BytesIO
+    from zipfile import ZipFile
+    from urllib.request import urlopen
+    
+    import numpy as np
+    import pandas as pd
+    import os, sys
+    import requests
+    
+    sys.path.insert(0, '..')
+    
+    from xpandas.data_container import *
+    from xpandas.transformers import TimeSeriesTransformer, TimeSeriesWindowTransformer
+
+
+.. parsed-literal::
+
+    /Users/iwitaly/anaconda/lib/python3.6/site-packages/statsmodels/compat/pandas.py:56: FutureWarning: The pandas.core.datetools module is deprecated and will be removed in a future version. Please use the pandas.tseries module instead.
+      from pandas.core import datetools
+
+
+The usage example shown is based on open source time series `data
+set <http://timeseriesclassification.com/Downloads/FordA.zip>`__.
+
+The first thing we need to do is to read data. Here, we use the
+``urlopen`` function from Python's built-in urllib to download data set
+and limit the length of each data series.
+
+.. code:: ipython3
+
+    url = "http://timeseriesclassification.com/Downloads/FordA.zip"
+    series_offset = 505
+
+.. code:: ipython3
+
+    url = urlopen(url)
+    zipfile = ZipFile(BytesIO(url.read()))
+    lines = zipfile.open('FordA/FordA.csv').readlines()
+    lines = [l.decode('utf-8') for l in lines]
+    lines = lines[series_offset:]
+
+``lines`` is now a list of strings representing timeseries in a comma
+separated format that we can convert into floats
+
+.. code:: ipython3
+
+    lines = [list(map(float, l.split(','))) for l in lines]
+
+.. code:: ipython3
+
+    lines[0][:10]
+
+
+
+
+.. parsed-literal::
+
+    [1.1871,
+     0.4096,
+     -0.43154,
+     -1.231,
+     -1.9055,
+     -2.3824,
+     -2.588,
+     -2.5018,
+     -2.1353,
+     -1.574]
+
+
+
+Let's convert each embedded list into more convenient ``pandas.Series``
+object.
+
+.. code:: ipython3
+
+    lines = [pd.Series(l) for l in lines]
+
+.. code:: ipython3
+
+    lines[0][:10]
+
+
+
+
+.. parsed-literal::
+
+    0    1.18710
+    1    0.40960
+    2   -0.43154
+    3   -1.23100
+    4   -1.90550
+    5   -2.38240
+    6   -2.58800
+    7   -2.50180
+    8   -2.13530
+    9   -1.57400
+    dtype: float64
+
+
+
+XPandas: Data structures
+========================
+
+XSeries
+~~~~~~~
+
+``XSeries`` is a 1d data container that can store any objects inside.
+
+Using the ``pandas.Series`` objects we can encapsulate the list
+``lines`` into ``XSeries`` object. The object has a global index of
+series and an sub-index for each ``pandas.Series``.
+
+.. code:: ipython3
+
+    X = XSeries(lines)
+
+.. code:: ipython3
+
+    X.head()
+
+
+
+
+.. parsed-literal::
+
+    0    0      1.187100
+    1      0.409600
+    2     -0.43154...
+    1    0      0.094261
+    1      0.310310
+    2      0.53060...
+    2    0     -1.157000
+    1     -1.592600
+    2     -1.50960...
+    3    0      0.356960
+    1      0.300850
+    2      0.24314...
+    4    0      0.307980
+    1      0.370350
+    2      0.26015...
+    dtype: object
+    data_type: <class 'pandas.core.series.Series'>
+
+
+
+The output reveals the ``data_type`` property of the ``XSeries`` object
+which contains the type of the contained objects, in this case,
+``pandas.Series``. The ``XSeries`` is thus build up of
+``pandas.Series``. Specifically, ``X`` supports all methods of its
+containing object ``pandas.Series``.
+
+XDataFrame
+~~~~~~~~~~
+
+``XDataFrame`` is an abstract 2d container that is based on
+``pandas.DataFrame`` and stores ``XSeries`` objects.
+
+The main feature of the ``XDataFrame`` are columns of ``XSeries`` that
+can contain and manage any **data\_type**. For example, one may have a
+data set consisting of series, images, texts, plain numbers, or even
+custom objects. Ideally, we would want to handle such different data
+types in a unified 2d data container, e.g. a chain of transformers to
+create a simple 2d matrix of training data.
+
+The following examples illustrates such a ``XDataFrame`` workflow.
+
+Let ``Y`` be a vector of labels for each row.
+
+.. code:: ipython3
+
+    Y = np.random.binomial(1, 0.5, X.shape[0])
+    Y = XSeries(Y)
+
+.. code:: ipython3
+
+    df = XDataFrame({
+        'X': X,
+        'Y': Y
+    })
+
+.. code:: ipython3
+
+    df.head()
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style>
+        .dataframe thead tr:only-child th {
+            text-align: right;
+        }
+    
+        .dataframe thead th {
+            text-align: left;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>X</th>
+          <th>Y</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>0      1.187100
+    1      0.409600
+    2     -0.43154...</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>0      0.094261
+    1      0.310310
+    2      0.53060...</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>0     -1.157000
+    1     -1.592600
+    2     -1.50960...</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>0      0.356960
+    1      0.300850
+    2      0.24314...</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>0      0.307980
+    1      0.370350
+    2      0.26015...</td>
+          <td>1</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+Add new column to XDataFrame:
+
+.. code:: ipython3
+
+    df['X_1'] = XSeries([
+        pd.Series(np.random.normal(size=100))
+        for _ in range(X.shape[0])
+    ])
+
+XPandas: Transformers
+=====================
+
+A major motivation for this project is the common data science task of
+extracting features from some complex objects (for example series)
+before proceeding with the machine learning.
+
+Given a ``XSeries`` of ``pandas.Series`` one would, for instance, like
+to extract features from each series. That's where *Transformers* play a
+vital role.
+
+Each ``Transformer`` object support ``fit, transform`` methods just like
+`scikit-learn
+transformers <http://scikit-learn.org/stable/data_transforms.html>`__.
+
+Let's explore some examples.
+
+TimeSeriesWindowTransformer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This transformer calculates moving average with given window size.
+
+.. code:: ipython3
+
+    tr = TimeSeriesWindowTransformer(windows_size=5)
+    tr.fit(X)
+    transformed_series = tr.transform(X)
+
+.. code:: ipython3
+
+    transformed_series.head()
+
+
+
+
+.. parsed-literal::
+
+    0    4     -0.394268
+    5     -1.108168
+    6     -1.70768...
+    1    4      0.509686
+    5      0.680500
+    6      0.80574...
+    2    4     -1.098344
+    5     -0.755320
+    6     -0.21608...
+    3    4      0.234223
+    5      0.165730
+    6      0.09269...
+    4    4      0.202701
+    5      0.154336
+    6      0.14082...
+    dtype: object
+    data_type: <class 'pandas.core.series.Series'>
+
+
+
+Of course, with a windows\_size = 5 first 4 elements are NaN.
+
+.. code:: ipython3
+
+    transformed_series[0].head(10)
+
+
+
+
+.. parsed-literal::
+
+    4    -0.394268
+    5    -1.108168
+    6    -1.707688
+    7    -2.121740
+    8    -2.302600
+    9    -2.236300
+    10   -1.942152
+    11   -1.469980
+    12   -0.891442
+    13   -0.287676
+    dtype: float64
+
+
+
+TimeSeriesTransformer
+~~~~~~~~~~~~~~~~~~~~~
+
+Let's try another transformer, probably the most common one. It extract
+several quantitative features from each pandas.Series like mean, std,
+quantiles. You can also pass you own list of features. As a result we
+retrieve a ``XDataFrame`` object.
+
+.. code:: ipython3
+
+    tr = TimeSeriesTransformer()
+    tr.fit(X)
+    transformed_series = tr.transform(X)
+
+.. code:: ipython3
+
+    type(transformed_series)
+
+
+
+
+.. parsed-literal::
+
+    xpandas.data_container.data_container.XDataFrame
+
+
+
+.. code:: ipython3
+
+    transformed_series.head().iloc[:, :3]
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style>
+        .dataframe thead tr:only-child th {
+            text-align: right;
+        }
+    
+        .dataframe thead th {
+            text-align: left;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>None_TimeSeriesTransformer_max</th>
+          <th>None_TimeSeriesTransformer_mean</th>
+          <th>None_TimeSeriesTransformer_median</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>2.5263</td>
+          <td>0.001995</td>
+          <td>0.011186</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>2.6291</td>
+          <td>0.001997</td>
+          <td>-0.024726</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>2.6072</td>
+          <td>-0.001996</td>
+          <td>0.060685</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>2.6431</td>
+          <td>-0.001997</td>
+          <td>-0.022668</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>3.2398</td>
+          <td>-0.001995</td>
+          <td>-0.048518</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+We can also make use of the TSFresh transformer
+
+.. code:: ipython3
+
+    from xpandas.transformers import TsFreshSeriesTransformer
+
+.. code:: ipython3
+
+    tr = TsFreshSeriesTransformer()
+    tr.fit(X.head())
+    transformed_series = tr.transform(X.head())
+
+.. code:: ipython3
+
+    transformed_series.head().iloc[:, :3]
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style>
+        .dataframe thead tr:only-child th {
+            text-align: right;
+        }
+    
+        .dataframe thead th {
+            text-align: left;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>None__abs_energy</th>
+          <th>None__absolute_sum_of_changes</th>
+          <th>None__agg_autocorrelation__f_agg_"mean"</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>500.000126</td>
+          <td>134.513280</td>
+          <td>-0.012049</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>499.999290</td>
+          <td>114.289925</td>
+          <td>0.003075</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>500.001514</td>
+          <td>164.089622</td>
+          <td>-0.013172</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>499.999445</td>
+          <td>103.510040</td>
+          <td>-0.005639</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>500.003011</td>
+          <td>154.299542</td>
+          <td>0.001552</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+Custom inline Transformer
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One can also create inline ``CustomTransfomer`` like this
+
+.. code:: ipython3
+
+    from xpandas.transformers import XSeriesTransformer
+
+.. code:: ipython3
+
+    my_awesome_transfomer = XSeriesTransformer(transform_function=lambda x: x.std())
+
+.. code:: ipython3
+
+    my_awesome_transfomer.fit(X)
+
+
+
+
+.. parsed-literal::
+
+    XSeriesTransformer(data_types=None, name='XSeriesTransformer',
+              transform_function=<function <lambda> at 0x11929ad90>)
+
+
+
+.. code:: ipython3
+
+    my_awesome_transfomer.transform(X).head()
+
+
+
+
+.. parsed-literal::
+
+    0    0.999998
+    1    0.999997
+    2    1.000000
+    3    0.999997
+    4    1.000001
+    dtype: float64
+    data_type: <class 'numpy.float64'>
+
+
+
+If you want to create your custom transformer with any complex logic,
+please take a look at internal implementation of transformers.
+
+XDataFrame transformer
+----------------------
+
+To transform a **XDataFrame** one has to specify the transformation
+logic for the columns that should be transformed using a
+**XDataFrameTransformer**.
+
+The constructor of **XDataFrameTransformer** input mapping dictionary of
+{col\_name: XSeries transformer}.
+
+For example, let's apply **TimeSeriesWindowTransformer** to the
+:math:`X` column and **TimeSeriesTransformer** to the :math:`X_1`
+column.
+
+When apply transformation to the column, *it's replaced with
+transformed*.
+
+.. code:: ipython3
+
+    from xpandas.transformers import XDataFrameTransformer
+
+.. code:: ipython3
+
+    df_transformer = XDataFrameTransformer({
+        'X': TimeSeriesWindowTransformer(windows_size=4),
+        'X_1': TimeSeriesTransformer()
+    })
+
+.. code:: ipython3
+
+    df_transformer.fit(df)
+
+
+
+
+.. parsed-literal::
+
+    XDataFrameTransformer(transformations={'X': [TimeSeriesWindowTransformer(windows_size=4)], 'X_1': [TimeSeriesTransformer(features=None)]})
+
+
+
+.. code:: ipython3
+
+    transformed_df = df_transformer.transform(df)
+
+.. code:: ipython3
+
+    transformed_df.head().iloc[:, :3]
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style>
+        .dataframe thead tr:only-child th {
+            text-align: right;
+        }
+    
+        .dataframe thead th {
+            text-align: left;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>X_TimeSeriesWindowTransformer</th>
+          <th>Y</th>
+          <th>X_1_TimeSeriesTransformer_max</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>3     -0.016460
+    4     -0.789610
+    5     -1.48761...</td>
+          <td>1</td>
+          <td>2.383478</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>3      0.416408
+    4      0.613542
+    5      0.77304...</td>
+          <td>1</td>
+          <td>2.451725</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>3     -1.315175
+    4     -1.083680
+    5     -0.54600...</td>
+          <td>0</td>
+          <td>2.164009</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>3      0.268788
+    4      0.203539
+    5      0.13194...</td>
+          <td>1</td>
+          <td>2.951486</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>3      0.255629
+    4      0.176381
+    5      0.10033...</td>
+          <td>1</td>
+          <td>2.453836</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+Pipeline transformer
+--------------------
+
+Well, that's a nice transformer, but can I create
+`pipelines <http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html>`__
+as in scikit-learn?
+
+Sure! Let's see on example where we combine ``TimeSeriesTransformer``
+and ``TimeSeriesWindowTransformer`` into a combined pipeline using a
+``PipeLineChain``.
+
+First let's see example of ``PipeLineChain`` with ``XSeries`` and then
+with ``XDataFrame``.
+
+.. code:: ipython3
+
+    from xpandas.transformers import PipeLineChain
+
+.. code:: ipython3
+
+    chain = PipeLineChain([
+        ('moving average trans', TimeSeriesWindowTransformer(windows_size=5)),
+        ('extract features', TimeSeriesTransformer())
+    ])
+    chain.fit(X)
+
+
+
+
+.. parsed-literal::
+
+    PipeLineChain(steps=[('moving average trans', TimeSeriesWindowTransformer(windows_size=5)), ('extract features', TimeSeriesTransformer(features=None))])
+
+
+
+.. code:: ipython3
+
+    chain.get_params
+
+
+
+
+.. parsed-literal::
+
+    <bound method Pipeline.get_params of PipeLineChain(steps=[('moving average trans', TimeSeriesWindowTransformer(windows_size=5)), ('extract features', TimeSeriesTransformer(features=None))])>
+
+
+
+.. code:: ipython3
+
+    transformed_X = chain.transform(X)
+
+.. code:: ipython3
+
+    transformed_X.head().iloc[:, :2]
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style>
+        .dataframe thead tr:only-child th {
+            text-align: right;
+        }
+    
+        .dataframe thead th {
+            text-align: left;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>None_TimeSeriesWindowTransformer_TimeSeriesTransformer_max</th>
+          <th>None_TimeSeriesWindowTransformer_TimeSeriesTransformer_mean</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>2.16144</td>
+          <td>0.002078</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>2.39636</td>
+          <td>-0.002229</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>2.32512</td>
+          <td>0.005656</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>2.44430</td>
+          <td>0.000632</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>2.64094</td>
+          <td>-0.001295</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+All right! Let's try to add scikit-learn transformer to the
+PipeLineChain. For example, let's do PCA on transformed\_X.
+
+.. code:: ipython3
+
+    from sklearn.decomposition import PCA
+
+.. code:: ipython3
+
+    chain = PipeLineChain([
+        ('moving average trans', TimeSeriesWindowTransformer(windows_size=5)),
+        ('extract features', TimeSeriesTransformer()),
+        ('pca', PCA(n_components=5))
+    ])
+    chain.fit(X)
+
+
+
+
+.. parsed-literal::
+
+    PipeLineChain(steps=[('moving average trans', TimeSeriesWindowTransformer(windows_size=5)), ('extract features', TimeSeriesTransformer(features=None)), ('pca', PCA(copy=True, iterated_power='auto', n_components=5, random_state=None,
+      svd_solver='auto', tol=0.0, whiten=False))])
+
+
+
+.. code:: ipython3
+
+    transformed_X = chain.transform(X)
+
+.. code:: ipython3
+
+    transformed_X.head()
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style>
+        .dataframe thead tr:only-child th {
+            text-align: right;
+        }
+    
+        .dataframe thead th {
+            text-align: left;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>0</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>-0.133152</td>
+          <td>-0.242552</td>
+          <td>0.097523</td>
+          <td>-0.004435</td>
+          <td>-0.009747</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>-0.125413</td>
+          <td>0.076021</td>
+          <td>-0.089267</td>
+          <td>0.010531</td>
+          <td>0.017437</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>-0.028607</td>
+          <td>-0.088828</td>
+          <td>0.205043</td>
+          <td>0.098009</td>
+          <td>0.032338</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>0.071478</td>
+          <td>-0.058813</td>
+          <td>-0.247669</td>
+          <td>-0.023550</td>
+          <td>-0.052968</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>0.200611</td>
+          <td>0.110884</td>
+          <td>0.064200</td>
+          <td>0.012187</td>
+          <td>-0.038497</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+Let's do even more interesting things! Adding a scikit-learn estimator
+at the end of PipeLineChain!
+
+.. code:: ipython3
+
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import accuracy_score
+
+.. code:: ipython3
+
+    X_train, X_test, y_train, y_test = train_test_split(X, Y)
+
+Be sure that types of X\_train and X\_test are XSeries.
+
+.. code:: ipython3
+
+    print(type(X_train))
+    print(type(X_test))
+
+
+.. parsed-literal::
+
+    <class 'xpandas.data_container.data_container.XSeries'>
+    <class 'xpandas.data_container.data_container.XSeries'>
+
+
+.. code:: ipython3
+
+    chain = PipeLineChain([
+        ('moving average trans', TimeSeriesWindowTransformer(windows_size=5)),
+        ('extract features', TimeSeriesTransformer()),
+        ('pca', PCA(n_components=5)),
+        ('logit_regression', LogisticRegression())
+        
+    ])
+    chain = chain.fit(X_train, y_train)
+
+.. code:: ipython3
+
+    prediction = chain.predict(X_test)
+
+.. code:: ipython3
+
+    accuracy_score(y_test, prediction)
+
+
+
+
+.. parsed-literal::
+
+    0.5004061738424046
+
+
+
+Let's now try ``PipeLineChain`` with ``XDataFrameTransformer``.
+
+Imagine data set of feature columns gender (0 or 1), age (int), series(
+pandas.Series), target (0 or 1). Let's try to create ``PipeLineChain``
+that extracts features from series and performs ``PCA`` over all feature
+set and then performs LogitRegression classification.
+
+.. code:: ipython3
+
+    n = 100
+    
+    df_features = XDataFrame({
+        'gender': XSeries(np.random.binomial(1, 0.7, n)),
+        'age': XSeries(np.random.poisson(25, n)),
+        'series': XSeries([
+            pd.Series(np.random.normal(size=500))
+        ] * n)
+    })
+    
+    target = XSeries(np.random.binomial(1, 0.45, n))
+
+.. code:: ipython3
+
+    features_transformer = XDataFrameTransformer({
+        'series': TimeSeriesTransformer()
+    })
+
+.. code:: ipython3
+
+    pipe_line = PipeLineChain([
+        ('extract_from_series', features_transformer),
+        ('pca', PCA(n_components=5)),
+        ('logit_regression', LogisticRegression())
+    ])
+
+.. code:: ipython3
+
+    df_features_train, df_features_test, \
+            y_train, y_test = train_test_split(df_features, target)
+
+.. code:: ipython3
+
+    pipe_line.fit(df_features_train, y_train)
+
+
+
+
+.. parsed-literal::
+
+    PipeLineChain(steps=[('extract_from_series', XDataFrameTransformer(transformations={'series': [TimeSeriesTransformer(features=None)]})), ('pca', PCA(copy=True, iterated_power='auto', n_components=5, random_state=None,
+      svd_solver='auto', tol=0.0, whiten=False)), ('logit_regression', LogisticRegression(C=1.0, cla...ty='l2', random_state=None, solver='liblinear', tol=0.0001,
+              verbose=0, warm_start=False))])
+
+
+
+.. code:: ipython3
+
+    pipe_line.predict(df_features_test)
+
+
+
+
+.. parsed-literal::
+
+    array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+           0, 0])
+
+
