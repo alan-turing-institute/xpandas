@@ -1,11 +1,11 @@
 from setuptools import setup
 
 setup(name='XPandas',
-      version='0.1',
+      version='1.0',
       description='1d/2d data container with map-reduce transformers',
-      url='https://github.com/kiraly-group/XPandas/tree/development',
-      author='Vitaly Davydov',
+      url='https://github.com/kiraly-group/XPandas',
+      author='Vitaly Davydov (@iwitaly)',
       author_email='1061040@gmail.com',
       license='BSD',
-      packages=['XPandas'],
+      packages=['xpandas'],
       zip_safe=False)
