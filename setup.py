@@ -7,5 +7,6 @@ setup(name='XPandas',
       author='Vitaly Davydov (@iwitaly)',
       author_email='1061040@gmail.com',
       license='BSD',
+      keywords='data container sklearn pandas map reduce transformer',
       packages=['xpandas'],
       zip_safe=False)
