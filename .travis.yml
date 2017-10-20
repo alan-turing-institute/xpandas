@@ -13,7 +13,7 @@ install:
 
 script:
   - set -e
-  - pip install -e xpandas
+  - pip install -e .
   - cd docs
   - make buildapi
   - make html
