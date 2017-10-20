@@ -4,11 +4,11 @@ python:
 
 install:
   - pip install -r requirements.txt
-  - pip install -r requirements-docs.txt
 
 script:
   - set -e
   - cd docs
+  - pip install -r requirements-docs.txt
   - make buildapi
   - make html
   - pip install doctr
