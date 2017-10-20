@@ -4,7 +4,7 @@ Introduction
 TODO
 
 Features
-^^^^^^^^
++++++++++++
 
 The package offers a variety of features and specifically allows for
 

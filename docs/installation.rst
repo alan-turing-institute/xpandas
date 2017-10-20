@@ -1,11 +1,15 @@
 Installation
 ************
 
+Stable
+^^^^^^^^^^^^^
+
 The installation of the latest stable version is easy using the python package manager `pip`_. ::
 
     pip install xpandas
 
 That's it. You are now ready to go. We recommend reading the :doc:`/ExampleUsage.rst` to get started.
+
 
 Bleeding edge
 ^^^^^^^^^^^^^
@@ -25,6 +29,11 @@ to install the package into the activated Python environment. To build the docum
     cd docs/ && make html
 
 Note that bleeding edge installations are likely contain bugs are not recommended for productive environments.
+
+
+You can also install directly from Git repository ::
+
+    pip install git+https://github.com/jkbr/httpie.git
 
 
 .. _pip: http://www.pip-installer.org/

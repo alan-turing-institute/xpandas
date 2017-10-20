@@ -20,7 +20,8 @@ import sys
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-# sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('../xpandas'))
+
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if on_rtd:
     import inspect
@@ -45,7 +46,7 @@ if on_rtd:
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo',
               'sphinx.ext.autosummary', 'sphinx.ext.viewcode', 'sphinx.ext.coverage',
               'sphinx.ext.doctest', 'sphinx.ext.ifconfig', 'sphinx.ext.pngmath',
-              'sphinx.ext.napoleon', 'nbsphinx']
+              'sphinx.ext.napoleon', 'nbsphinx', 'IPython.sphinxext.ipython_console_highlighting']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
