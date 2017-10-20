@@ -46,7 +46,8 @@ if on_rtd:
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo',
               'sphinx.ext.autosummary', 'sphinx.ext.viewcode', 'sphinx.ext.coverage',
               'sphinx.ext.doctest', 'sphinx.ext.ifconfig', 'sphinx.ext.pngmath',
-              'sphinx.ext.napoleon', 'nbsphinx', 'IPython.sphinxext.ipython_console_highlighting']
+              'sphinx.ext.napoleon', 'nbsphinx', 'IPython.sphinxext.ipython_console_highlighting',
+              'sphinx.ext.autosectionlabel']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

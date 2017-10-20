@@ -1,7 +1,9 @@
 Example
 =======
 
-.. toctree::
-   :maxdepth: 4
+# TODO Link to github
 
-   ExampleUsage
+.. toctree::
+    :maxdepth: 4
+
+    ExampleUsage
