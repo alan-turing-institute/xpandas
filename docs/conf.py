@@ -124,7 +124,11 @@ html_theme = 'alabaster'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-# html_theme_options = {}
+html_logo = 'Logo.png'
+# html_theme_options = {
+#     'logo': 'Logo.png',
+#     'description': 'Privet',
+# }
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = []#sphinx_rtd_theme.get_html_theme_path()]
@@ -165,7 +169,12 @@ html_static_path = ['_static']
 # html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-# html_sidebars = {}
+# html_sidebars = {
+#         '**': [
+#                  '_templates/test.html'
+#             ]
+#
+#         }
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -181,10 +190,10 @@ html_static_path = ['_static']
 # html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
-# html_show_sourcelink = True
+html_show_sourcelink = False
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-# html_show_sphinx = True
+html_show_sphinx = False
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 # html_show_copyright = True
@@ -203,7 +212,7 @@ htmlhelp_basename = 'XPandas-doc'
 
 # -- Options for LaTeX output --------------------------------------------------
 
-latex_elements = {
+# latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     # 'papersize': 'letterpaper',
 
@@ -212,7 +221,7 @@ latex_elements = {
 
     # Additional stuff for the LaTeX preamble.
     # 'preamble': '',
-}
+# }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).

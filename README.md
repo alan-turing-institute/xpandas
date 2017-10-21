@@ -7,7 +7,7 @@ and encapsulates feature extraction and transformation modelling in an sklearn-c
 
 ## Documentation
 
-Please read the user documentation for understanding basic functionality of `XPandas`. To build the docs run ``make html`` from the [docs directory](/docs).
+Full documentation is available here [https://kiraly-group.github.io/xpandas/](https://kiraly-group.github.io/xpandas/).
 
 ## Requirements
 
