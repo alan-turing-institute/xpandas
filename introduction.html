@@ -40,13 +40,43 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="introduction">
+  <p>This is a copy-paste from projects <a class="reference external" href="https://github.com/kiraly-group/xpandas">Github</a>.</p>
+<div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<dl class="docutils">
-<dt>XPandas (extended <a href="#id1"><span class="problematic" id="id2">`Pandas &lt;https://pandas.pydata.org`_</span></a>.) implements 1D and 2D data containers for storing type-heterogeneous</dt>
-<dd>tabular data of any type, and encapsulates feature extraction
-and transformation modelling in an sklearn-compatible transformer interface.</dd>
-</dl>
+<p>XPandas (extended <a class="reference external" href="https://pandas.pydata.org/">Pandas</a>.) implements 1D and 2D data containers for storing type-heterogeneous
+tabular data of any type, and encapsulates feature extraction
+and transformation modelling in an sklearn-compatible transformer interface.</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p><strong>XPandas</strong> provides universal 1D typed list (<cite>XSeries</cite>) and 2D type-heterogeneous data-frame (<cite>XDataFrame</cite>) containers
+and provides an extended sklearn-like transformer classes interfacing said containers.
+Transformers can be used for automated feature extraction and map-reduce style transformations but are not limited to it.</p>
+<p><cite>XSeries</cite> is based on <cite>pandas.Series</cite> that can store objects of any type.
+Example would be a series of image containers, or a series of <cite>pandas.Series</cite> objects stored as <cite>XSeries</cite>.
+<cite>XSeries</cite> can be visualised according to a schema.</p>
+<img alt="_images/XSeries.png" src="_images/XSeries.png" />
+<p><cite>XDataFrame</cite> extends <cite>pandas.DataFrame</cite> by allowing arbitrary object types per column.
+It provides the same convenient sub-setting interface and extended abstract access methods.
+Each column is internally stored as an <cite>XSeries</cite> container, all of same length.
+One example could be a medical data set where each row is a different patient, say, in a hospital.
+The columns would correspond to a type-heterogeneous set of features like numbers (age, height, weight, etc.),
+categorical (gender, hair color, etc.), images (x-ray pictures), time series (heat beat, lab history),
+and other parts of a medical record.
+With <cite>XDataFrame</cite> one can store all this information in a single 2D data container instead of a tedious collection of custom nested lists or arrays.</p>
+<img alt="_images/XDataFrame.png" src="_images/XDataFrame.png" />
+<p>Another advantage of XPandas is the clean interface it provides to ready-to-go machine learning algorithms in
+[scikit-learn](scikit-learn.org). The transformers interface can be used to easily convert the types in a <cite>XDataFrame</cite>
+to the primitive types with which sklearn can interface, as part of a modelling pipeline.
+In the example with patients data, one may want to extract summary features from
+each <cite>pandas.Series</cite>, or extract features from each image, say via a fancy deep learning model.</p>
+<p>More technically, the implemented <cite>XSeriesTransformer</cite> class allows implementation of transformation defaults
+for <cite>XSeries</cite>, similarly <cite>XDataFrameTransformer</cite> implements transforation for <cite>XDataFrame</cite> type objects.
+More mathematically <cite>XSeriesTransformer</cite> encapsulates abstract functions of type <cite>XSeries -&gt; XSeries or XDataFrame</cite>,
+<cite>XDataFrameTransformer</cite> encaplsulates functions <cite>XDataFrame -&gt; XDataFrame</cite>,
+both following the familiar fit/transform/parameters API from sklearn.</p>
+<img alt="_images/Transformer.png" src="_images/Transformer.png" />
+<p>XPandas comes with several pre-implemented transformers for the most common non-primitive data types:</p>
+</div>
 </div>
 
 
@@ -54,7 +84,18 @@ and transformation modelling in an sklearn-compatible transformer interface.</dd
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/Logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
@@ -63,13 +104,6 @@ and transformation modelling in an sklearn-compatible transformer interface.</dd
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/introduction.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -91,9 +125,6 @@ and transformation modelling in an sklearn-compatible transformer interface.</dd
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
-      |
-      <a href="_sources/introduction.rst.txt"
-          rel="nofollow">Page source</a>
     </div>
 
     

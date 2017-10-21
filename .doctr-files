@@ -1,4 +1,8 @@
 ./ExampleUsage.html
+./_images/GitHub-Mark-32px.png
+./_images/Transformer.png
+./_images/XDataFrame.png
+./_images/XSeries.png
 ./_modules/index.html
 ./_modules/xpandas/data_container/data_container.html
 ./_modules/xpandas/transformers/bag_of_features_transformer/bag_of_features_transformer.html
@@ -34,6 +38,8 @@
 ./_sources/installation.rst.txt
 ./_sources/introduction.rst.txt
 ./_sources/license.rst.txt
+./_static/GitHub-Mark-32px.png
+./_static/Logo.png
 ./_static/ajax-loader.gif
 ./_static/alabaster.css
 ./_static/basic.css

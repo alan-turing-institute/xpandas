@@ -42,11 +42,36 @@
             
   <div class="section" id="contributions">
 <h1>Contributions<a class="headerlink" href="#contributions" title="Permalink to this headline">¶</a></h1>
-<p># TODO</p>
-<p>Описать как делать контрибуцию для новых пользователей:
-1. Упомянуть про кастомный make для составления документации
-2. Описать процесс билда
-3. Рассказать про хардкоденное имя файла с туториалом</p>
+<div class="section" id="how-to-build-the-docs">
+<h2>How to build the docs?<a class="headerlink" href="#how-to-build-the-docs" title="Permalink to this headline">¶</a></h2>
+<p>If you take a look at <em>Makefile</em> in the repository you find out that
+there is a custom command</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">buildapi</span>\<span class="p">:</span>
+    <span class="n">sphinx</span><span class="o">-</span><span class="n">apidoc</span> <span class="o">-</span><span class="n">fMeT</span> <span class="o">../</span><span class="n">xpandas</span> <span class="o">-</span><span class="n">o</span> <span class="n">api</span>
+    <span class="nd">@echo</span> <span class="s2">&quot;Auto-generation of API documentation finished. &quot;</span> \
+          <span class="s2">&quot;The generated files are in &#39;api/&#39;&quot;</span>
+</pre></div>
+</div>
+<p>This command generates a list of <em>.rst</em> files in <em>docs/api</em> folder. Each file
+documents entity (class or module) of <strong>XPandas</strong> package.</p>
+<p>Thus, before building documentation one has to regenerate entity files with a command
+<code class="docutils literal"><span class="pre">make</span> <span class="pre">buildapi</span></code>.</p>
+<p>After this run <code class="docutils literal"><span class="pre">make</span> <span class="pre">html</span></code>. This command is also have been changed from default.
+Before actually building Sphinx docs it converts <cite>examples/ExampleUsage.ipynb</cite> into
+<em>ExampleUsage.rst</em> file and then performs building. <strong>YES, ExampleUsage.ipynb name is hardcoded!</strong>.</p>
+</div>
+<div class="section" id="how-to-deploy-docs">
+<h2>How to deploy docs?<a class="headerlink" href="#how-to-deploy-docs" title="Permalink to this headline">¶</a></h2>
+<p>This docs are hosted on Github Pages. The question is how and why?</p>
+<p>One can easily host docs using <a class="reference external" href="https://readthedocs.org/">READTHEDOCS</a> service.
+But this service is paid and thus they put ads banner on your website. Plus
+it feels more <em>natively</em> to host everything on Github.</p>
+<p>Natively GH Pages doesn’t support Sphinx docs. In order to host it, one needs
+to use <a class="reference external" href="https://drdoctr.github.io/doctr/">Doctr</a> package.
+<a class="reference external" href="https://drdoctr.github.io/doctr/">Doctr</a> automatically update
+your docs on GH Pages using Travis-CI if it hasn’t failed running
+tests on a <cite>master</cite> branch. Please take a look at <code class="docutils literal"><span class="pre">.travis.yml</span></code> file for settings.</p>
+</div>
 </div>
 
 
@@ -54,7 +79,19 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/Logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Contributions</a><ul>
+<li><a class="reference internal" href="#how-to-build-the-docs">How to build the docs?</a></li>
+<li><a class="reference internal" href="#how-to-deploy-docs">How to deploy docs?</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
@@ -63,13 +100,6 @@
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/contributions.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -91,9 +121,6 @@
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
-      |
-      <a href="_sources/contributions.rst.txt"
-          rel="nofollow">Page source</a>
     </div>
 
     
