@@ -1,4 +1,4 @@
-﻿[![Build Status](https://travis-ci.org/kiraly-group/xpandas.svg?branch=master)](https://travis-ci.org/kiraly-group/xpandas)
+﻿[![Build Status](https://travis-ci.org/alan-turing-institute/xpandas.svg?branch=master)](https://travis-ci.org/alan-turing-institute/xpandas)
 
 ![Logo](/examples/imgs/Logo.png)
 
