@@ -52,13 +52,8 @@
 </div>
 <div class="section" id="bleeding-edge">
 <h2>Bleeding edge<a class="headerlink" href="#bleeding-edge" title="Permalink to this headline">¶</a></h2>
-<p>To test or develop new features you may want to install the latest package version
-from the master branch (bleeding edge installation). You can install directly from Git repository</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">alan</span><span class="o">-</span><span class="n">turing</span><span class="o">-</span><span class="n">institute</span><span class="o">/</span><span class="n">xpandas</span><span class="o">.</span><span class="n">git</span>
-</pre></div>
-</div>
-<p>Or clone the source from our <a class="reference external" href="https://github.com/alan-turing-institute/xpandas">public code repository</a> on GitHub and change into the XPandas directory.
-Make sure that all dependencies are installed</p>
+<p>To test or develop new features you may want to install the latest package version from the master branch (bleeding edge installation).</p>
+<p>Clone the source from our <a class="reference external" href="https://github.com/alan-turing-institute/xpandas">public code repository</a> on GitHub and change into the XPandas directory. Make sure that all dependencies are installed</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
@@ -66,9 +61,15 @@ Make sure that all dependencies are installed</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">develop</span>
 </pre></div>
 </div>
-<p>to install the package into the activated Python environment.
-If you would like to contribute to documentation please refer to <a class="reference internal" href="contributing.html#contributing"><span class="std std-ref">Contributing</span></a>.</p>
+<p>to install the package into the activated Python environment. To build the documentation run</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span><span class="o">/</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">html</span>
+</pre></div>
+</div>
 <p>Note that bleeding edge installations are likely contain bugs are not recommended for productive environments.</p>
+<p>You can also install directly from Git repository</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">alan</span><span class="o">-</span><span class="n">turing</span><span class="o">-</span><span class="n">institute</span><span class="o">/</span><span class="n">xpandas</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
 </div>
 </div>
 
