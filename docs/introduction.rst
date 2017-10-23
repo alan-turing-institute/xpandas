@@ -4,7 +4,7 @@ Introduction
 XPandas (extended `Pandas <https://pandas.pydata.org/>`_.) implements 1D and 2D data containers for storing type-heterogeneous tabular data of any type, and encapsulates feature extraction and transformation modelling in an sklearn-compatible transformer interface.
 
 Description
-+++++++++++++
++++++++++++
 
 **XPandas** provides universal 1D typed list (`XSeries`) and 2D type-heterogeneous data-frame (`XDataFrame`) containers and provides an extended sklearn-like transformer classes interfacing said containers. Transformers can be used for automated feature extraction and map-reduce style transformations but are not limited to it.
 
@@ -28,4 +28,39 @@ More technically, the implemented `XSeriesTransformer` class allows for the impl
 
 .. image:: ../examples/imgs/Transformer.png
 
+Data types
+++++++++++
+
 Notably, XPandas comes with several pre-implemented transformers for the most common non-primitive data types.
+
+Time series
+
+
+-  ``TimeSeriesTransformer(features)`` — extract ``features`` from each
+   series. ``features`` is a subset of [ 'mean', 'std', 'max', 'min',
+   'median', 'quantile\_25', 'quantile\_75', 'quantile\_90',
+   'quantile\_95']
+
+-  ``TimeSeriesWindowTransformer(windows_size)`` — calculate rolling
+   mean with given ``windows_size``
+-  ``TsFreshSeriesTransformer`` — extract features using
+   `tsfresh <tsfresh.readthedocs.io>`__ package
+
+Image
+
+
+-  ``ImageTransformer`` — Performs image transformation based on skimage
+   `transformation
+   function <http://scikit-image.org/docs/dev/api/skimage.transform.html>`__
+
+Categorical data
+
+
+-  ``BagOfWordsTransformer(dictionary)`` — Performs bag-of-features
+   transformer for strings of any categorical data
+
+XPandas also allows for pipelining, via the ``PipeLineChain``
+transformer, which can chain multiple transformers and ``scikit-learn``
+predictor into a single pipeline. ``PipeLineChain`` is based on the
+``scikit-learn``
+`Pipeline <http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline>`__.
