@@ -6,7 +6,7 @@ html_theme_path = [alabaster.get_path()]
 
 sys.path.insert(0, os.path.abspath('../xpandas'))
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo',
+extensions = ['alabaster', 'sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo',
               'sphinx.ext.autosummary', 'sphinx.ext.viewcode', 'sphinx.ext.coverage',
               'sphinx.ext.doctest', 'sphinx.ext.ifconfig', 'sphinx.ext.pngmath',
               'sphinx.ext.napoleon', 'nbsphinx', 'IPython.sphinxext.ipython_console_highlighting',
@@ -26,15 +26,16 @@ release = ''  # Is set by calling `setup.py docs`
 
 exclude_patterns = ['_build', '**.ipynb_checkpoints']
 
-pygments_style = 'sphinx'
+# pygments_style = 'sphinx'
 
 html_theme = 'alabaster'
 
-# html_logo = 'Logo.png'
-
 html_theme_options = {
     'logo': 'Logo.png',
-    'description': 'Privet',
+    'github_user': 'kiraly-group',
+    'github_repo': 'xpandas',
+    'travis_button': True,
+    'analytics_id': 'UA-108477151-1'
 }
 
 
@@ -47,12 +48,15 @@ else:
 
 html_static_path = ['_static']
 
-# html_sidebars = {
-#         '**': [
-#                  '_templates/test.html'
-#             ]
-#
-#         }
+html_sidebars = {
+    '**': [
+        'about.html',
+        'navigation.html',
+        'searchbox.html',
+        'donate.html',
+    ]
+}
+
 html_show_sourcelink = False
 
 html_show_sphinx = False
