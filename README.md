@@ -92,12 +92,6 @@ If anything is broken an exception will be raised; otherwise "OK" will be printe
 - **Haoran Xue (@HaoranXue)**, who, under the supervision of Franz Kiraly, earlier completed a thesis for a degree at UCL on the topic, and who wrote a similar package as part of it. No code was re-used in the creation of the XPandas package.
 
 
-## Developers and contributors
+List of [Developers and contributors](AUTHORS.rst)
 
-Current:
-- **Vitaly Davydov [iwitaly](https://github.com/iwitaly)**: principal developer and curator
-- **Franz Kiraly [fkiraly](https://github.com/fkiraly)**: project manager and designated point of contact
-- **Frithjof Gressmann [frthjf](https://github.com/frthjf)**: contributor
 
-Former/inactive:
-none

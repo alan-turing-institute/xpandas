@@ -1,4 +1,4 @@
-## How to contribute to skpro
+## How to contribute to xpandas
 
 #### **Did you find a bug?**
 
