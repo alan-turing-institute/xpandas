@@ -8,7 +8,7 @@ The installation of the latest stable version is easy using the python package m
 
     pip install xpandas
 
-That's it. You are now ready to go. We recommend reading the :doc:`/ExampleUsage.rst` to get started.
+That's it. You are now ready to go. We recommend reading the :doc:`examples <ExampleUsage>` to get started.
 
 
 Bleeding edge
@@ -33,7 +33,7 @@ Note that bleeding edge installations are likely contain bugs are not recommende
 
 You can also install directly from Git repository ::
 
-    pip install git+https://github.com/jkbr/httpie.git
+    pip install git+https://github.com/kiraly-group/xpandas.git
 
 
 .. _pip: http://www.pip-installer.org/

@@ -8,18 +8,17 @@ Welcome to XPandas documentation!
 .. |git label image| image:: _static/GitHub-Mark-32px.png
     :target: xpandasgit_
 
-**XPandas** -- data containers and transformations for storing 1D/2D data of any type.
-Source code is available on |git label image|
+Welcome to the documentation of **XPandas** -- data containers and transformations for storing 1D and 2D data of any type. The source code is available on |git label image|
 
 
 tl;dr
-######
+#####
 
-:code:`pip install xpandas` and then go to :ref:`Example`.
+Install :code:`pip install xpandas` and check out the :ref:`Example`.
 
 
-Content
-########
+Table of Contents
+#################
 
 .. toctree::
    :maxdepth: 2
@@ -28,7 +27,7 @@ Content
    installation
    example
    docsapi
-   contributions
+   contributing
    changes
    authors
    license
