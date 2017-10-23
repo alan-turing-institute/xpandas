@@ -1,23 +1,23 @@
-﻿[![Build Status](https://travis-ci.org/alan-turing-institute/xpandas.svg?branch=master)](https://travis-ci.org/alan-turing-institute/xpandas)
+﻿![Logo](/examples/imgs/Logo.png)
 
-![Logo](/examples/imgs/Logo.png)
+[![Build Status](https://travis-ci.org/alan-turing-institute/xpandas.svg?branch=master)](https://travis-ci.org/alan-turing-institute/xpandas)
 
 **XPandas** (extended [`Pandas`](https://pandas.pydata.org/)) implements 1D and 2D data containers for storing type-heterogeneous tabular data of any type, 
 and encapsulates feature extraction and transformation modelling in an sklearn-compatible transformer interface.
 
+## Quickstart
+
+Install the latest version
+
+    $ pip install xpandas
+    
+and run the example jupyter notebook
+    
+    $ jupyter examples/ExampleUsage.ipynb
+
 ## Documentation
 
 The full documentation is available at [https://alan-turing-institute.github.io/xpandas/](https://alan-turing-institute.github.io/xpandas/).
-
-## Requirements
-
-XPandas' requirements are part of the [Anaconda](https://www.continuum.io/downloads) distribution. To install the requirements manually run `pip install -r requirements.txt`.
-
-## Tests
-
-To run tests run the command ```pytest``` in the root folder.
-If anything is broken an exception will be raised; otherwise "OK" will be printed.
-
 
 ## Acknowledgements
 
@@ -26,6 +26,6 @@ If anything is broken an exception will be raised; otherwise "OK" will be printe
 - **Haoran Xue (@HaoranXue)**, who, under the supervision of Franz Kiraly, earlier completed a thesis for a degree at UCL on the topic, and who wrote a similar package as part of it. No code was re-used in the creation of the XPandas package.
 
 
-List of [Developers and contributors](AUTHORS.rst)
+List of [developers and contributors](AUTHORS.rst)
 
 
