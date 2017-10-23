@@ -45,7 +45,7 @@
 <dl class="class">
 <dt id="xpandas.transformers.transformer.XDataFrameTransformer">
 <em class="property">class </em><code class="descclassname">xpandas.transformers.transformer.</code><code class="descname">XDataFrameTransformer</code><span class="sig-paren">(</span><em>transformations</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xpandas/transformers/transformer.html#XDataFrameTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xpandas.transformers.transformer.XDataFrameTransformer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v0.19.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v0.19.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v0.19.1)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v0.19.1)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
 <p>XDataFrameTransformer is a set of XSeriesTransformer instances.
 XDataFrameTransformer can transform XDataFrame object to another XDataFrame
 based on set of XSeriesTransformer transformers.</p>
@@ -68,7 +68,7 @@ based on set of XSeriesTransformer transformers.</p>
 <dl class="class">
 <dt id="xpandas.transformers.transformer.XSeriesTransformer">
 <em class="property">class </em><code class="descclassname">xpandas.transformers.transformer.</code><code class="descname">XSeriesTransformer</code><span class="sig-paren">(</span><em>transform_function=None</em>, <em>data_types=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xpandas/transformers/transformer.html#XSeriesTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xpandas.transformers.transformer.XSeriesTransformer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v0.19.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v0.19.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v0.19.1)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v0.19.1)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
 <p>XSeriesTransformer is a base class for all custom transformers.
 XSeriesTransformer is a high level abstraction to transform XSeries of
 specific data_types to an another XSeries or XDataFrame.
@@ -106,23 +106,71 @@ Must be overwritten in child classes
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/Logo.png" alt="Logo"/>
-            </a></p><div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="../docsapi.html">API Documentation</a><ul>
-  <li><a href="xpandas.html">xpandas package</a><ul>
-  <li><a href="xpandas.transformers.html">xpandas.transformers package</a><ul>
-      <li>Previous: <a href="xpandas.transformers.text_transformer.text_transformer.html" title="previous chapter">xpandas.transformers.text_transformer.text_transformer module</a></li>
-      <li>Next: <a href="../contributions.html" title="next chapter">Contributions</a></li>
-  </ul></li>
-  </ul></li>
-  </ul></li>
-  </ul></li>
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/Logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=kiraly-group&repo=xpandas&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a href="https://travis-ci.org/kiraly-group/xpandas">
+    <img
+        alt="https://secure.travis-ci.org/kiraly-group/xpandas.svg?branch=master"
+        src="https://secure.travis-ci.org/kiraly-group/xpandas.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example.html">Example</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../docsapi.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="xpandas.html">xpandas package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.data_container.html">xpandas.data_container package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.data_container.data_container.html">xpandas.data_container.data_container module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.html">xpandas.transformers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.bag_of_features_transformer.html">xpandas.transformers.bag_of_features_transformer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.bag_of_features_transformer.bag_of_features_transformer.html">xpandas.transformers.bag_of_features_transformer.bag_of_features_transformer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.identity_transformer.html">xpandas.transformers.identity_transformer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.identity_transformer.identity_transformer.html">xpandas.transformers.identity_transformer.identity_transformer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.image_transformer.html">xpandas.transformers.image_transformer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.image_transformer.image_transformer.html">xpandas.transformers.image_transformer.image_transformer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.pipeline_transformer.html">xpandas.transformers.pipeline_transformer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.pipeline_transformer.pipeline_transformer.html">xpandas.transformers.pipeline_transformer.pipeline_transformer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.series_transformers.html">xpandas.transformers.series_transformers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.series_transformers.series_transformer.html">xpandas.transformers.series_transformers.series_transformer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.text_transformer.html">xpandas.transformers.text_transformer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpandas.transformers.text_transformer.text_transformer.html">xpandas.transformers.text_transformer.text_transformer module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">xpandas.transformers.transformer module</a></li>
 </ul>
-</div>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributions.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -141,13 +189,29 @@ Must be overwritten in child classes
       &copy;2017, UCL.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
 
     
 
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-108477151-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
     
   </body>
 </html>
