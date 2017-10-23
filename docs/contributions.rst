@@ -8,7 +8,7 @@ How to build the docs?
 If you take a look at *Makefile* in the repository you find out that
 there is a custom command ::
 
-    buildapi\:
+    buildapi:
         sphinx-apidoc -fMeT ../xpandas -o api
         @echo "Auto-generation of API documentation finished. " \
               "The generated files are in 'api/'"
