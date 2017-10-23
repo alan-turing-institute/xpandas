@@ -29,7 +29,7 @@
 
 We use a custom [Makefile](docs/Makefile) that configures an automatic generation of the `*.rst` API documentation of each entity (class or module) in the [docs/api](docs/api) directory:
 
-    buildapi\:
+    buildapi:
         sphinx-apidoc -fMeT ../xpandas -o api
         @echo "Auto-generation of API documentation finished. " \
               "The generated files are in 'api/'"
