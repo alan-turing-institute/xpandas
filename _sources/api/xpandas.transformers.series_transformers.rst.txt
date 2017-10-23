@@ -9,7 +9,12 @@ xpandas\.transformers\.series\_transformers package
 Submodules
 ----------
 
-.. toctree::
+xpandas\.transformers\.series\_transformers\.series\_transformer module
+-----------------------------------------------------------------------
 
-   xpandas.transformers.series_transformers.series_transformer
+.. automodule:: xpandas.transformers.series_transformers.series_transformer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 

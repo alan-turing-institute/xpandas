@@ -44,14 +44,14 @@
 <span class="kn">from</span> <span class="nn">...data_container</span> <span class="k">import</span> <span class="n">XDataFrame</span><span class="p">,</span> <span class="n">XSeries</span>
 
 
-<div class="viewcode-block" id="PipeLineChain"><a class="viewcode-back" href="../../../../api/xpandas.transformers.pipeline_transformer.pipeline_transformer.html#xpandas.transformers.pipeline_transformer.pipeline_transformer.PipeLineChain">[docs]</a><span class="k">class</span> <span class="nc">PipeLineChain</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">):</span>
+<div class="viewcode-block" id="PipeLineChain"><a class="viewcode-back" href="../../../../api/xpandas.transformers.pipeline_transformer.html#xpandas.transformers.pipeline_transformer.pipeline_transformer.PipeLineChain">[docs]</a><span class="k">class</span> <span class="nc">PipeLineChain</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    PipeLine transformer. Can chain multiple transformers and estimator from scikit-learn.</span>
 <span class="sd">    Based on scikit-learn Pipeline</span>
 <span class="sd">    http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-<div class="viewcode-block" id="PipeLineChain.transform"><a class="viewcode-back" href="../../../../api/xpandas.transformers.pipeline_transformer.pipeline_transformer.html#xpandas.transformers.pipeline_transformer.pipeline_transformer.PipeLineChain.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="PipeLineChain.transform"><a class="viewcode-back" href="../../../../api/xpandas.transformers.pipeline_transformer.html#xpandas.transformers.pipeline_transformer.pipeline_transformer.PipeLineChain.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">transformed_object</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">PipeLineChain</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">transformed_object</span><span class="p">)</span> <span class="o">!=</span> <span class="n">XSeries</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">transformed_object</span><span class="p">)</span> <span class="o">!=</span> <span class="n">XDataFrame</span><span class="p">:</span>
             <span class="n">transformed_object</span> <span class="o">=</span> <span class="n">XDataFrame</span><span class="p">(</span><span class="n">transformed_object</span><span class="p">)</span>
@@ -102,7 +102,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../example.html">Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../docsapi.html">API Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../contributions.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changes.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>

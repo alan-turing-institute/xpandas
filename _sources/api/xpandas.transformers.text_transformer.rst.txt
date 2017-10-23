@@ -9,7 +9,12 @@ xpandas\.transformers\.text\_transformer package
 Submodules
 ----------
 
-.. toctree::
+xpandas\.transformers\.text\_transformer\.text\_transformer module
+------------------------------------------------------------------
 
-   xpandas.transformers.text_transformer.text_transformer
+.. automodule:: xpandas.transformers.text_transformer.text_transformer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 

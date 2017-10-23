@@ -44,7 +44,7 @@
 <span class="kn">from</span> <span class="nn">..data_container</span> <span class="k">import</span> <span class="n">XDataFrame</span><span class="p">,</span> <span class="n">XSeries</span>
 
 
-<div class="viewcode-block" id="XSeriesTransformer"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XSeriesTransformer">[docs]</a><span class="k">class</span> <span class="nc">XSeriesTransformer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="XSeriesTransformer"><a class="viewcode-back" href="../../../api/xpandas.transformers.html#xpandas.transformers.transformer.XSeriesTransformer">[docs]</a><span class="k">class</span> <span class="nc">XSeriesTransformer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    XSeriesTransformer is a base class for all custom transformers.</span>
 <span class="sd">    XSeriesTransformer is a high level abstraction to transform XSeries of</span>
@@ -85,7 +85,7 @@
                 <span class="ow">and</span> <span class="n">input_data</span><span class="o">.</span><span class="n">data_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_types</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Estimator does not support </span><span class="si">{}</span><span class="s1"> type&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">data_type</span><span class="p">))</span>
 
-<div class="viewcode-block" id="XSeriesTransformer.fit"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XSeriesTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="XSeriesTransformer.fit"><a class="viewcode-back" href="../../../api/xpandas.transformers.html#xpandas.transformers.transformer.XSeriesTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Fit transformer for giver data.</span>
 <span class="sd">        Must be overwritten in child classes</span>
@@ -108,7 +108,7 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">custom_series</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_function</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-<div class="viewcode-block" id="XSeriesTransformer.transform"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XSeriesTransformer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="viewcode-block" id="XSeriesTransformer.transform"><a class="viewcode-back" href="../../../api/xpandas.transformers.html#xpandas.transformers.transformer.XSeriesTransformer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Apply transformation to X with current transformer</span>
 <span class="sd">        :param X: input XSeries</span>
@@ -128,7 +128,7 @@
         <span class="k">return</span> <span class="n">transform_series</span></div></div>
 
 
-<div class="viewcode-block" id="XDataFrameTransformer"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XDataFrameTransformer">[docs]</a><span class="k">class</span> <span class="nc">XDataFrameTransformer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="XDataFrameTransformer"><a class="viewcode-back" href="../../../api/xpandas.transformers.html#xpandas.transformers.transformer.XDataFrameTransformer">[docs]</a><span class="k">class</span> <span class="nc">XDataFrameTransformer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    XDataFrameTransformer is a set of XSeriesTransformer instances.</span>
 <span class="sd">    XDataFrameTransformer can transform XDataFrame object to another XDataFrame</span>
@@ -165,7 +165,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_transformations</span><span class="p">(</span><span class="n">transformations</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrap_transformers_in_list</span><span class="p">(</span><span class="n">transformations</span><span class="p">)</span>
 
-<div class="viewcode-block" id="XDataFrameTransformer.fit"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XDataFrameTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="XDataFrameTransformer.fit"><a class="viewcode-back" href="../../../api/xpandas.transformers.html#xpandas.transformers.transformer.XDataFrameTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Fit each transformer at self.transformations dictionary</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -178,7 +178,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="XDataFrameTransformer.transform"><a class="viewcode-back" href="../../../api/xpandas.transformers.transformer.html#xpandas.transformers.transformer.XDataFrameTransformer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">columns_mapping</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="XDataFrameTransformer.transform"><a class="viewcode-back" href="../../../api/xpandas.transformers.html#xpandas.transformers.transformer.XDataFrameTransformer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">columns_mapping</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Transform X with fitted dictionary self.transformations.</span>
 <span class="sd">        :param columns_mapping: {old_col: new_col} mapping between columns in fit data set and current X</span>
@@ -253,7 +253,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../example.html">Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docsapi.html">API Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../contributions.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>

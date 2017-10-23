@@ -78,7 +78,7 @@
     <span class="k">return</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">primitives</span>
 
 
-<div class="viewcode-block" id="XSeries"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XSeries">[docs]</a><span class="k">class</span> <span class="nc">XSeries</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+<div class="viewcode-block" id="XSeries"><a class="viewcode-back" href="../../../api/xpandas.data_container.html#xpandas.data_container.data_container.XSeries">[docs]</a><span class="k">class</span> <span class="nc">XSeries</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    XSeries is an homogeneous abstract 1d container that encapsulates any data type inside.</span>
 <span class="sd">    It is an extension of pandas.Series class.</span>
@@ -118,7 +118,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-<div class="viewcode-block" id="XSeries.apply"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XSeries.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="XSeries.apply"><a class="viewcode-back" href="../../../api/xpandas.data_container.html#xpandas.data_container.data_container.XSeries.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Overwrite standart pandas.Series method.</span>
 <span class="sd">        Apply transform function to all elements in self.</span>
@@ -185,7 +185,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">=</span> <span class="n">data_type</span>
 
-<div class="viewcode-block" id="XSeries.to_pandas_series"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XSeries.to_pandas_series">[docs]</a>    <span class="k">def</span> <span class="nf">to_pandas_series</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="XSeries.to_pandas_series"><a class="viewcode-back" href="../../../api/xpandas.data_container.html#xpandas.data_container.data_container.XSeries.to_pandas_series">[docs]</a>    <span class="k">def</span> <span class="nf">to_pandas_series</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Convert self to pandas.Series if data_type is a primitive type</span>
 <span class="sd">        etc. number of string</span>
@@ -215,7 +215,7 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">XSeries</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="XDataFrame"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XDataFrame">[docs]</a><span class="k">class</span> <span class="nc">XDataFrame</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<div class="viewcode-block" id="XDataFrame"><a class="viewcode-back" href="../../../api/xpandas.data_container.html#xpandas.data_container.data_container.XDataFrame">[docs]</a><span class="k">class</span> <span class="nc">XDataFrame</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    XDataFrame is 2d container that stores XSeries objects</span>
 <span class="sd">    XDataFrame is an extension of pandas.DataFrame object</span>
@@ -254,7 +254,7 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;All data must be XSeries instances&#39;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">XDataFrame</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="XDataFrame.get_columns_of_type"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XDataFrame.get_columns_of_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_columns_of_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_type</span><span class="p">):</span>
+<div class="viewcode-block" id="XDataFrame.get_columns_of_type"><a class="viewcode-back" href="../../../api/xpandas.data_container.html#xpandas.data_container.data_container.XDataFrame.get_columns_of_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_columns_of_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_type</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get all columns from XDataFrame with given column_type</span>
 <span class="sd">        :param column_type: list of types or a single type</span>
@@ -271,7 +271,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">columns_to_select</span><span class="p">],</span> <span class="n">columns_to_select</span></div>
 
-<div class="viewcode-block" id="XDataFrame.get_data_types"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XDataFrame.get_data_types">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="XDataFrame.get_data_types"><a class="viewcode-back" href="../../../api/xpandas.data_container.html#xpandas.data_container.data_container.XDataFrame.get_data_types">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get a list of data_types of each XSeries inside XDataFrame</span>
 <span class="sd">        :return: list of data_type</span>
@@ -282,7 +282,7 @@
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">data_types</span></div>
 
-<div class="viewcode-block" id="XDataFrame.to_pandas_dataframe"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XDataFrame.to_pandas_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">to_pandas_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="XDataFrame.to_pandas_dataframe"><a class="viewcode-back" href="../../../api/xpandas.data_container.html#xpandas.data_container.data_container.XDataFrame.to_pandas_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">to_pandas_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Convert self to pandas.DataFrame if all columns are primitive types.</span>
 <span class="sd">        See more at XSeries.to_pandas_series</span>
@@ -299,7 +299,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unable to cast to pd.DataFrame. </span><span class="si">{}</span><span class="s1"> is not all primitives.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_types</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="XDataFrame.concat_dataframes"><a class="viewcode-back" href="../../../api/xpandas.data_container.data_container.html#xpandas.data_container.data_container.XDataFrame.concat_dataframes">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="XDataFrame.concat_dataframes"><a class="viewcode-back" href="../../../api/xpandas.data_container.html#xpandas.data_container.data_container.XDataFrame.concat_dataframes">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">concat_dataframes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data_frames</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Concatenate XDataFrame using pandas.concat method</span>
@@ -355,7 +355,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../example.html">Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docsapi.html">API Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../contributions.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>

@@ -9,7 +9,12 @@ xpandas\.data\_container package
 Submodules
 ----------
 
-.. toctree::
+xpandas\.data\_container\.data\_container module
+------------------------------------------------
 
-   xpandas.data_container.data_container
+.. automodule:: xpandas.data_container.data_container
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
