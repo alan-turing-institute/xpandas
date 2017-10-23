@@ -9,7 +9,12 @@ xpandas\.transformers\.image\_transformer package
 Submodules
 ----------
 
-.. toctree::
+xpandas\.transformers\.image\_transformer\.image\_transformer module
+--------------------------------------------------------------------
 
-   xpandas.transformers.image_transformer.image_transformer
+.. automodule:: xpandas.transformers.image_transformer.image_transformer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 

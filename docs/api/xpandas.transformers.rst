@@ -21,7 +21,12 @@ Subpackages
 Submodules
 ----------
 
-.. toctree::
+xpandas\.transformers\.transformer module
+-----------------------------------------
 
-   xpandas.transformers.transformer
+.. automodule:: xpandas.transformers.transformer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 

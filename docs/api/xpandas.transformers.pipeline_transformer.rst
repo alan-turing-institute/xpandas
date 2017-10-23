@@ -9,7 +9,12 @@ xpandas\.transformers\.pipeline\_transformer package
 Submodules
 ----------
 
-.. toctree::
+xpandas\.transformers\.pipeline\_transformer\.pipeline\_transformer module
+--------------------------------------------------------------------------
 
-   xpandas.transformers.pipeline_transformer.pipeline_transformer
+.. automodule:: xpandas.transformers.pipeline_transformer.pipeline_transformer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 

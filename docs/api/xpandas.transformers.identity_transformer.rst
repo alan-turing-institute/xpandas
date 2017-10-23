@@ -9,7 +9,12 @@ xpandas\.transformers\.identity\_transformer package
 Submodules
 ----------
 
-.. toctree::
+xpandas\.transformers\.identity\_transformer\.identity\_transformer module
+--------------------------------------------------------------------------
 
-   xpandas.transformers.identity_transformer.identity_transformer
+.. automodule:: xpandas.transformers.identity_transformer.identity_transformer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 

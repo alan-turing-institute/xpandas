@@ -182,6 +182,6 @@ pseudoxml:
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
 
 buildapi:
-	sphinx-apidoc -fMeT ../xpandas -o api
+	sphinx-apidoc -fMT ../xpandas -o api
 	@echo "Auto-generation of API documentation finished. " \
           "The generated files are in 'api/'"
