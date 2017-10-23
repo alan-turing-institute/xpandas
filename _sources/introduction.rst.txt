@@ -21,7 +21,7 @@ With `XDataFrame` one can store all this information in a single 2D data contain
 
 .. image:: ../examples/imgs/XDataFrame.png
 
-Another advantage of XPandas is the clean interface it provides to ready-to-go machine learning algorithms in [scikit-learn](scikit-learn.org). The transformers interface can be used to easily convert the types in a `XDataFrame` to the primitive types with which sklearn can interface, as part of a modelling pipeline. In the example with patients data, one may want to extract summary features from each `pandas.Series`, or extract features from each image, say in a deep learning model.
+Another advantage of XPandas is the clean interface it provides to ready-to-go machine learning algorithms in `scikit-learn <http://scikit-learn.org>`_. The transformers interface can be used to easily convert the types in a `XDataFrame` to the primitive types with which sklearn can interface, as part of a modelling pipeline. In the example with patients data, one may want to extract summary features from each `pandas.Series`, or extract features from each image, say in a deep learning model.
 
 More technically, the implemented `XSeriesTransformer` class allows for the implementation of transformation defaults for `XSeries`; similarly `XDataFrameTransformer` implements a transformation for `XDataFrame` type objects. From a mathematical point of view `XSeriesTransformer` encapsulate abstract functions of the type `XSeries -> XSeries or XDataFrame` whereas
 `XDataFrameTransformer` represents mappings from `XDataFrame -> XDataFrame`. Each of the transformers follow the familiar fit/transform/parameters API of sklearn.
