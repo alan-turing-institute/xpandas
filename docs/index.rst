@@ -9,8 +9,8 @@ This is the documentation of **XPandas** -- data containers and transformations 
 Source code is available here
 
 .. image:: _static/GitHub-Mark-32px.png
-   :target: https://github.com/kiraly-group/xpandas
-
+    :target: https://github.com/kiraly-group/xpandas
+    :class: inline-image
 
 **tl;dr**
 

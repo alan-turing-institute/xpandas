@@ -260,3 +260,7 @@ intersphinx_mapping = {
     'pandas': ('http://pandas.pydata.org/pandas-docs/stable', None),
     'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
 }
+
+
+def setup(app):
+    app.add_stylesheet('css/custom.css')  # may also be an URL
