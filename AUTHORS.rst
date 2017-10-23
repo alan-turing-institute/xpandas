@@ -7,14 +7,14 @@ Developers
 **Active**
 
 * Vitaly Davydov `iwitaly <https://github.com/iwitaly>`_: principal developer and curator
-* Franz Kiraly <f.kiraly@ucl.ac.uk> `fkiraly <https://github.com/fkiraly>`_: project manager and designated point of contact
+* Franz Kiraly `fkiraly <https://github.com/fkiraly>`_: project manager and designated point of contact
 * Frithjof Gressmann `frthjf <https://github.com/frthjf>`_: contributor
 
 **Former/inactive**
 
 None
 
-If you like to contribute, read our `contribution guide <https://github.com/kiraly-group/XPandas/CONTRIBUTING.md>`_.
+If you like to contribute, read our `contribution guide <https://github.com/alan-turing-institute/xpandas/CONTRIBUTING.md>`_.
 
-.. _public code repository: https://github.com/kiraly-group/XPandas
+.. _public code repository: https://github.com/alan-turing-institute/xpandas
 .. _Dr Franz Király: https://www.ucl.ac.uk/statistics/people/franz-kiraly

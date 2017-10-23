@@ -32,7 +32,7 @@ html_theme = 'alabaster'
 
 html_theme_options = {
     'logo': 'Logo.png',
-    'github_user': 'kiraly-group',
+    'github_user': 'alan-turing-institute',
     'github_repo': 'xpandas',
     'travis_button': True,
     'analytics_id': 'UA-108477151-1'

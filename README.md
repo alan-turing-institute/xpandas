@@ -7,7 +7,7 @@ and encapsulates feature extraction and transformation modelling in an sklearn-c
 
 ## Documentation
 
-The full documentation is available at [https://kiraly-group.github.io/xpandas/](https://kiraly-group.github.io/xpandas/).
+The full documentation is available at [https://alan-turing-institute.github.io/xpandas/](https://alan-turing-institute.github.io/xpandas/).
 
 ## Requirements
 

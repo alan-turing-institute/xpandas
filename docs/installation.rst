@@ -33,8 +33,8 @@ Note that bleeding edge installations are likely contain bugs are not recommende
 
 You can also install directly from Git repository ::
 
-    pip install git+https://github.com/kiraly-group/xpandas.git
+    pip install git+https://github.com/alan-turing-institute/xpandas.git
 
 
 .. _pip: http://www.pip-installer.org/
-.. _public code repository: https://github.com/kiraly-group/XPandas
+.. _public code repository: https://github.com/alan-turing-institute/xpandas
