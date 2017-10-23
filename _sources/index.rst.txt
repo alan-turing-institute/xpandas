@@ -2,7 +2,7 @@
 Welcome to XPandas documentation!
 =======
 
-.. _xpandasgit: https://github.com/kiraly-group/xpandas
+.. _xpandasgit: https://github.com/alan-turing-institute/xpandas
 
 
 .. |git label image| image:: _static/GitHub-Mark-32px.png
