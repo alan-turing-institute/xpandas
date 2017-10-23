@@ -1,10 +1,14 @@
-## How to contribute to xpandas
+## How to contribute to XPandas
 
 #### **Did you find a bug?**
 
 * **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/alan-turing-institute/xpandas/issues).
 
-* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/alan-turing-institute/xpandas/issues/new). Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
+* If you're unable to find an open issue addressing the problem,
+[open a new one](https://github.com/alan-turing-institute/xpandas/issues/new).
+Be sure to include a **title and clear description**,
+as much relevant information as possible, and a **code sample** or an **executable test case**
+demonstrating the expected behavior that is not occurring.
 
 * Please follow the further discussion in case more information is needed or questions arise.
 
@@ -47,4 +51,4 @@ XPandas is a team effort. We encourage you to pitch in and join us!
 
 Thanks! :heart: :heart: :heart:
 
-Xpandas Team
+**Xpandas Team**
