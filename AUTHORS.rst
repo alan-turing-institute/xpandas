@@ -14,7 +14,7 @@ Developers
 
 None
 
-If you like to contribute, read our `contribution guide <https://github.com/alan-turing-institute/xpandas/CONTRIBUTING.md>`_.
+If you like to contribute, read our `contribution guide <https://github.com/alan-turing-institute/xpandas/blob/master/CONTRIBUTING.md>`_.
 
 .. _public code repository: https://github.com/alan-turing-institute/xpandas
 .. _Dr Franz Király: https://www.ucl.ac.uk/statistics/people/franz-kiraly
