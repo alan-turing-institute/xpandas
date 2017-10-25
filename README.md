@@ -1,6 +1,7 @@
 ﻿![Logo](/examples/imgs/Logo.png)
 
 [![Build Status](https://travis-ci.org/alan-turing-institute/xpandas.svg?branch=master)](https://travis-ci.org/alan-turing-institute/xpandas)
+[![PyPI version](https://badge.fury.io/py/XPandas.svg)](https://badge.fury.io/py/XPandas)
 
 **XPandas** (extended [`Pandas`](https://pandas.pydata.org/)) implements 1D and 2D data containers for storing type-heterogeneous tabular data of any type, 
 and encapsulates feature extraction and transformation modelling in an sklearn-compatible transformer interface.
