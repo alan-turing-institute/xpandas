@@ -1,5 +1,5 @@
-xpandas\.transformers\.identity\_transformer package
-====================================================
+xpandas.transformers.identity_transformer package
+=================================================
 
 .. automodule:: xpandas.transformers.identity_transformer
     :members:
@@ -9,8 +9,8 @@ xpandas\.transformers\.identity\_transformer package
 Submodules
 ----------
 
-xpandas\.transformers\.identity\_transformer\.identity\_transformer module
---------------------------------------------------------------------------
+xpandas.transformers.identity_transformer.identity_transformer module
+---------------------------------------------------------------------
 
 .. automodule:: xpandas.transformers.identity_transformer.identity_transformer
     :members:

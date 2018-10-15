@@ -1,28 +1,30 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>xpandas.transformers.series_transformers.series_transformer &#8212; XPandas  documentation</title>
+    
+    <title>xpandas.transformers.series_transformers.series_transformer &mdash; XPandas  documentation</title>
+    
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="index" title="Index" href="../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="top" title="XPandas  documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" />
    
   <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
   
@@ -30,22 +32,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body>
+  <body role="document">
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <h1>Source code for xpandas.transformers.series_transformers.series_transformer</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">tsfresh.feature_extraction.extraction</span> <span class="k">import</span> <span class="n">_do_extraction_on_chunk</span>
-<span class="kn">from</span> <span class="nn">tsfresh.feature_extraction.settings</span> <span class="k">import</span> <span class="n">ComprehensiveFCParameters</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">tsfresh.feature_extraction.extraction</span> <span class="kn">import</span> <span class="n">_do_extraction_on_chunk</span>
+<span class="kn">from</span> <span class="nn">tsfresh.feature_extraction.settings</span> <span class="kn">import</span> <span class="n">ComprehensiveFCParameters</span>
 
-<span class="kn">from</span> <span class="nn">..transformer</span> <span class="k">import</span> <span class="n">XSeriesTransformer</span>
+<span class="kn">from</span> <span class="nn">..transformer</span> <span class="kn">import</span> <span class="n">XSeriesTransformer</span>
 
 
 <div class="viewcode-block" id="TimeSeriesTransformer"><a class="viewcode-back" href="../../../../api/xpandas.transformers.series_transformers.html#xpandas.transformers.series_transformers.series_transformer.TimeSeriesTransformer">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesTransformer</span><span class="p">(</span><span class="n">XSeriesTransformer</span><span class="p">):</span>
@@ -61,7 +65,7 @@
         <span class="s1">&#39;quantile_90&#39;</span><span class="p">,</span> <span class="s1">&#39;quantile_95&#39;</span>
     <span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        :param features: list of features from FEATURES property</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -69,12 +73,12 @@
             <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
         <span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FEATURES</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">f</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">FEATURES</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unrecognized feature </span><span class="si">{}</span><span class="s1">. Available features </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FEATURES</span><span class="p">))</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unrecognized feature {}. Available features {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FEATURES</span><span class="p">))</span>
 
         <span class="k">def</span> <span class="nf">series_transform</span><span class="p">(</span><span class="n">series</span><span class="p">):</span>
             <span class="n">transformed_series</span> <span class="o">=</span> <span class="p">{}</span>
@@ -98,7 +102,7 @@
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Calculate rolling mean over XSeries of pandas.Series.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">windows_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">windows_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        :param windows_size: size of window for rolling mean</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -119,11 +123,11 @@
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Example transformer</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">total_mean</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_mean</span> <span class="o">=</span> <span class="bp">None</span>
 
-        <span class="k">def</span> <span class="nf">mean_minus_mean_function</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">total_mean</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">total_mean</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">mean_minus_mean_function</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">total_mean</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">total_mean</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">total_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_mean</span>
             <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">total_mean</span>
 
@@ -134,7 +138,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">MeanSeriesTransformer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data_types</span><span class="o">=</span><span class="n">accepted_types</span><span class="p">,</span>
                                                     <span class="n">transform_function</span><span class="o">=</span><span class="n">mean_minus_mean_function</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MeanSeriesTransformer.fit"><a class="viewcode-back" href="../../../../api/xpandas.transformers.series_transformers.html#xpandas.transformers.series_transformers.series_transformer.MeanSeriesTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="MeanSeriesTransformer.fit"><a class="viewcode-back" href="../../../../api/xpandas.transformers.series_transformers.html#xpandas.transformers.series_transformers.series_transformer.MeanSeriesTransformer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MeanSeriesTransformer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">sum_and_size</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
         <span class="n">sum_total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sum_and_size</span><span class="p">])</span>
@@ -149,7 +153,7 @@
 <span class="sd">    Performs transformation with tsfresh http://tsfresh.readthedocs.io/en/latest/ package</span>
 <span class="sd">    over XSeries of pandas.Series.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">accepted_types</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
         <span class="p">]</span>
@@ -157,11 +161,11 @@
         <span class="n">default_fc_parameters</span> <span class="o">=</span> <span class="n">ComprehensiveFCParameters</span><span class="p">()</span>
         <span class="n">extraction_function</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_do_extraction_on_chunk</span><span class="p">,</span>
                                       <span class="n">default_fc_parameters</span><span class="o">=</span><span class="n">default_fc_parameters</span><span class="p">,</span>
-                                      <span class="n">kind_to_fc_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                                      <span class="n">kind_to_fc_parameters</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">series_transform</span><span class="p">(</span><span class="n">series</span><span class="p">):</span>
             <span class="n">series_name</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">name</span>
-            <span class="k">if</span> <span class="n">series_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">series_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">series_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 
             <span class="n">input_series</span> <span class="o">=</span> <span class="p">(</span>
@@ -175,7 +179,7 @@
             <span class="k">return</span> <span class="n">extracted_data_flat</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">TsFreshSeriesTransformer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data_types</span><span class="o">=</span><span class="n">accepted_types</span><span class="p">,</span>
-                                                       <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                       <span class="n">columns</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                                                        <span class="n">transform_function</span><span class="o">=</span><span class="n">series_transform</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TsFreshSeriesTransformer.transform"><a class="viewcode-back" href="../../../../api/xpandas.transformers.series_transformers.html#xpandas.transformers.series_transformers.series_transformer.TsFreshSeriesTransformer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
@@ -184,6 +188,7 @@
 </pre></div>
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -212,7 +217,7 @@
     
 
 <p>
-<a href="https://travis-ci.org/alan-turing-institute/xpandas">
+<a class="badge" href="https://travis-ci.org/alan-turing-institute/xpandas">
     <img
         alt="https://secure.travis-ci.org/alan-turing-institute/xpandas.svg?branch=master"
         src="https://secure.travis-ci.org/alan-turing-institute/xpandas.svg?branch=master"
@@ -244,6 +249,14 @@
     </form>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -252,8 +265,8 @@
       &copy;2017, UCL.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

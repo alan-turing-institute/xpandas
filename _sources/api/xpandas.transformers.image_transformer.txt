@@ -1,5 +1,5 @@
-xpandas\.transformers\.image\_transformer package
-=================================================
+xpandas.transformers.image_transformer package
+==============================================
 
 .. automodule:: xpandas.transformers.image_transformer
     :members:
@@ -9,8 +9,8 @@ xpandas\.transformers\.image\_transformer package
 Submodules
 ----------
 
-xpandas\.transformers\.image\_transformer\.image\_transformer module
---------------------------------------------------------------------
+xpandas.transformers.image_transformer.image_transformer module
+---------------------------------------------------------------
 
 .. automodule:: xpandas.transformers.image_transformer.image_transformer
     :members:

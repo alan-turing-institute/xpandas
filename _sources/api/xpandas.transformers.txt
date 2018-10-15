@@ -1,5 +1,5 @@
-xpandas\.transformers package
-=============================
+xpandas.transformers package
+============================
 
 .. automodule:: xpandas.transformers
     :members:
@@ -21,8 +21,8 @@ Subpackages
 Submodules
 ----------
 
-xpandas\.transformers\.transformer module
------------------------------------------
+xpandas.transformers.transformer module
+---------------------------------------
 
 .. automodule:: xpandas.transformers.transformer
     :members:

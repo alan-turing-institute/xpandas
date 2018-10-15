@@ -1,5 +1,5 @@
-xpandas\.transformers\.text\_transformer package
-================================================
+xpandas.transformers.text_transformer package
+=============================================
 
 .. automodule:: xpandas.transformers.text_transformer
     :members:
@@ -9,8 +9,8 @@ xpandas\.transformers\.text\_transformer package
 Submodules
 ----------
 
-xpandas\.transformers\.text\_transformer\.text\_transformer module
-------------------------------------------------------------------
+xpandas.transformers.text_transformer.text_transformer module
+-------------------------------------------------------------
 
 .. automodule:: xpandas.transformers.text_transformer.text_transformer
     :members:

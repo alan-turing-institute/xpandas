@@ -1,28 +1,30 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Example dataset &#8212; XPandas  documentation</title>
+    
+    <title>Example dataset &mdash; XPandas  documentation</title>
+    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="XPandas  documentation" href="index.html" />
+    <link rel="up" title="Example" href="example.html" />
     <link rel="next" title="API Documentation" href="docsapi.html" />
     <link rel="prev" title="Example" href="example.html" />
    
@@ -32,12 +34,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body>
+  <body role="document">
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <p>This notebook presents basic usage examples of the XPandas package.</p>
@@ -65,7 +69,7 @@
 <p>The usage example shown is based on open source time series <a class="reference external" href="http://timeseriesclassification.com/Downloads/FordA.zip">data
 set</a>.</p>
 <p>The first thing we need to do is to read data. Here, we use the
-<code class="docutils literal"><span class="pre">urlopen</span></code> function from Python’s built-in urllib to download data set
+<code class="docutils literal"><span class="pre">urlopen</span></code> function from Python&#8217;s built-in urllib to download data set
 and limit the length of each data series.</p>
 <div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://timeseriesclassification.com/Downloads/FordA.zip&quot;</span>
 <span class="n">series_offset</span> <span class="o">=</span> <span class="mi">505</span>
@@ -98,7 +102,7 @@ separated format that we can convert into floats</p>
  <span class="o">-</span><span class="mf">1.574</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Let’s convert each embedded list into more convenient <code class="docutils literal"><span class="pre">pandas.Series</span></code>
+<p>Let&#8217;s convert each embedded list into more convenient <code class="docutils literal"><span class="pre">pandas.Series</span></code>
 object.</p>
 <div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
 </pre></div>
@@ -258,12 +262,12 @@ create a simple 2d matrix of training data.</p>
 extracting features from some complex objects (for example series)
 before proceeding with the machine learning.</p>
 <p>Given a <code class="docutils literal"><span class="pre">XSeries</span></code> of <code class="docutils literal"><span class="pre">pandas.Series</span></code> one would, for instance, like
-to extract features from each series. That’s where <em>Transformers</em> play a
+to extract features from each series. That&#8217;s where <em>Transformers</em> play a
 vital role.</p>
 <p>Each <code class="docutils literal"><span class="pre">Transformer</span></code> object support <code class="docutils literal"><span class="pre">fit,</span> <span class="pre">transform</span></code> methods just like
 <a class="reference external" href="http://scikit-learn.org/stable/data_transforms.html">scikit-learn
 transformers</a>.</p>
-<p>Let’s explore some examples.</p>
+<p>Let&#8217;s explore some examples.</p>
 </div>
 </div>
 <div class="section" id="timeserieswindowtransformer">
@@ -316,7 +320,7 @@ data_type: &lt;class &#39;pandas.core.series.Series&#39;&gt;
 </div>
 <div class="section" id="timeseriestransformer">
 <h1>TimeSeriesTransformer<a class="headerlink" href="#timeseriestransformer" title="Permalink to this headline">¶</a></h1>
-<p>Let’s try another transformer, probably the most common one. It extract
+<p>Let&#8217;s try another transformer, probably the most common one. It extract
 several quantitative features from each pandas.Series like mean, std,
 quantiles. You can also pass you own list of features. As a result we
 retrieve a <code class="docutils literal"><span class="pre">XDataFrame</span></code> object.</p>
@@ -494,10 +498,10 @@ logic for the columns that should be transformed using a
 <strong>XDataFrameTransformer</strong>.</p>
 <p>The constructor of <strong>XDataFrameTransformer</strong> input mapping dictionary of
 {col_name: XSeries transformer}.</p>
-<p>For example, let’s apply <strong>TimeSeriesWindowTransformer</strong> to the
+<p>For example, let&#8217;s apply <strong>TimeSeriesWindowTransformer</strong> to the
 <span class="math">X</span> column and <strong>TimeSeriesTransformer</strong> to the <span class="math">X_1</span>
 column.</p>
-<p>When apply transformation to the column, <em>it’s replaced with
+<p>When apply transformation to the column, <em>it&#8217;s replaced with
 transformed</em>.</p>
 <div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">xpandas.transformers</span> <span class="kn">import</span> <span class="n">XDataFrameTransformer</span>
 </pre></div>
@@ -586,13 +590,13 @@ transformed</em>.</p>
     </tr>
   </tbody>
 </table>
-</div><p>Well, that’s a nice transformer, but can I create
+</div><p>Well, that&#8217;s a nice transformer, but can I create
 <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">pipelines</a>
 as in scikit-learn?</p>
-<p>Sure! Let’s see on example where we combine <code class="docutils literal"><span class="pre">TimeSeriesTransformer</span></code>
+<p>Sure! Let&#8217;s see on example where we combine <code class="docutils literal"><span class="pre">TimeSeriesTransformer</span></code>
 and <code class="docutils literal"><span class="pre">TimeSeriesWindowTransformer</span></code> into a combined pipeline using a
 <code class="docutils literal"><span class="pre">PipeLineChain</span></code>.</p>
-<p>First let’s see example of <code class="docutils literal"><span class="pre">PipeLineChain</span></code> with <code class="docutils literal"><span class="pre">XSeries</span></code> and then
+<p>First let&#8217;s see example of <code class="docutils literal"><span class="pre">PipeLineChain</span></code> with <code class="docutils literal"><span class="pre">XSeries</span></code> and then
 with <code class="docutils literal"><span class="pre">XDataFrame</span></code>.</p>
 <div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">xpandas.transformers</span> <span class="kn">import</span> <span class="n">PipeLineChain</span>
 </pre></div>
@@ -669,8 +673,8 @@ with <code class="docutils literal"><span class="pre">XDataFrame</span></code>.<
     </tr>
   </tbody>
 </table>
-</div><p>All right! Let’s try to add scikit-learn transformer to the
-PipeLineChain. For example, let’s do PCA on transformed_X.</p>
+</div><p>All right! Let&#8217;s try to add scikit-learn transformer to the
+PipeLineChain. For example, let&#8217;s do PCA on transformed_X.</p>
 <div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
 </pre></div>
 </div>
@@ -760,7 +764,7 @@ PipeLineChain. For example, let’s do PCA on transformed_X.</p>
     </tr>
   </tbody>
 </table>
-</div><p>Let’s do even more interesting things! Adding a scikit-learn estimator
+</div><p>Let&#8217;s do even more interesting things! Adding a scikit-learn estimator
 at the end of PipeLineChain!</p>
 <div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
@@ -798,9 +802,9 @@ at the end of PipeLineChain!</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">0.5004061738424046</span>
 </pre></div>
 </div>
-<p>Let’s now try <code class="docutils literal"><span class="pre">PipeLineChain</span></code> with <code class="docutils literal"><span class="pre">XDataFrameTransformer</span></code>.</p>
+<p>Let&#8217;s now try <code class="docutils literal"><span class="pre">PipeLineChain</span></code> with <code class="docutils literal"><span class="pre">XDataFrameTransformer</span></code>.</p>
 <p>Imagine data set of feature columns gender (0 or 1), age (int), series(
-pandas.Series), target (0 or 1). Let’s try to create <code class="docutils literal"><span class="pre">PipeLineChain</span></code>
+pandas.Series), target (0 or 1). Let&#8217;s try to create <code class="docutils literal"><span class="pre">PipeLineChain</span></code>
 that extracts features from series and performs <code class="docutils literal"><span class="pre">PCA</span></code> over all feature
 set and then performs LogitRegression classification.</p>
 <div class="highlight-ipython3"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
@@ -851,6 +855,7 @@ set and then performs LogitRegression classification.</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -879,7 +884,7 @@ set and then performs LogitRegression classification.</p>
     
 
 <p>
-<a href="https://travis-ci.org/alan-turing-institute/xpandas">
+<a class="badge" href="https://travis-ci.org/alan-turing-institute/xpandas">
     <img
         alt="https://secure.travis-ci.org/alan-turing-institute/xpandas.svg?branch=master"
         src="https://secure.travis-ci.org/alan-turing-institute/xpandas.svg?branch=master"
@@ -919,6 +924,14 @@ set and then performs LogitRegression classification.</p>
     </form>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -927,8 +940,8 @@ set and then performs LogitRegression classification.</p>
       &copy;2017, UCL.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

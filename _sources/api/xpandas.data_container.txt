@@ -1,5 +1,5 @@
-xpandas\.data\_container package
-================================
+xpandas.data_container package
+==============================
 
 .. automodule:: xpandas.data_container
     :members:
@@ -9,8 +9,8 @@ xpandas\.data\_container package
 Submodules
 ----------
 
-xpandas\.data\_container\.data\_container module
-------------------------------------------------
+xpandas.data_container.data_container module
+--------------------------------------------
 
 .. automodule:: xpandas.data_container.data_container
     :members:

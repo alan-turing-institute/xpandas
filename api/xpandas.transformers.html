@@ -1,28 +1,30 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>xpandas.transformers package &#8212; XPandas  documentation</title>
+    
+    <title>xpandas.transformers package &mdash; XPandas  documentation</title>
+    
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="XPandas  documentation" href="../index.html" />
+    <link rel="up" title="xpandas package" href="xpandas.html" />
     <link rel="next" title="xpandas.transformers.bag_of_features_transformer package" href="xpandas.transformers.bag_of_features_transformer.html" />
     <link rel="prev" title="xpandas.data_container package" href="xpandas.data_container.html" />
    
@@ -32,12 +34,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body>
+  <body role="document">
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="module-xpandas.transformers">
@@ -87,7 +91,7 @@
 <dl class="class">
 <dt id="xpandas.transformers.transformer.XDataFrameTransformer">
 <em class="property">class </em><code class="descclassname">xpandas.transformers.transformer.</code><code class="descname">XDataFrameTransformer</code><span class="sig-paren">(</span><em>transformations</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xpandas/transformers/transformer.html#XDataFrameTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xpandas.transformers.transformer.XDataFrameTransformer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v0.19.1)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v0.19.1)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v0.20.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v0.20.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
 <p>XDataFrameTransformer is a set of XSeriesTransformer instances.
 XDataFrameTransformer can transform XDataFrame object to another XDataFrame
 based on set of XSeriesTransformer transformers.</p>
@@ -110,7 +114,7 @@ based on set of XSeriesTransformer transformers.</p>
 <dl class="class">
 <dt id="xpandas.transformers.transformer.XSeriesTransformer">
 <em class="property">class </em><code class="descclassname">xpandas.transformers.transformer.</code><code class="descname">XSeriesTransformer</code><span class="sig-paren">(</span><em>transform_function=None</em>, <em>data_types=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/xpandas/transformers/transformer.html#XSeriesTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xpandas.transformers.transformer.XSeriesTransformer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v0.19.1)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v0.19.1)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v0.20.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v0.20.0)"><code class="xref py py-class docutils literal"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
 <p>XSeriesTransformer is a base class for all custom transformers.
 XSeriesTransformer is a high level abstraction to transform XSeries of
 specific data_types to an another XSeries or XDataFrame.
@@ -145,6 +149,7 @@ Must be overwritten in child classes
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -173,7 +178,7 @@ Must be overwritten in child classes
     
 
 <p>
-<a href="https://travis-ci.org/alan-turing-institute/xpandas">
+<a class="badge" href="https://travis-ci.org/alan-turing-institute/xpandas">
     <img
         alt="https://secure.travis-ci.org/alan-turing-institute/xpandas.svg?branch=master"
         src="https://secure.travis-ci.org/alan-turing-institute/xpandas.svg?branch=master"
@@ -216,6 +221,14 @@ Must be overwritten in child classes
     </form>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -224,8 +237,8 @@ Must be overwritten in child classes
       &copy;2017, UCL.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 
