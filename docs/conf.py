@@ -1,6 +1,7 @@
 import os, sys
 import alabaster
 
+needs_sphinx = '1.4.3'
 
 html_theme_path = [alabaster.get_path()]
 
